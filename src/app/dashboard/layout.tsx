@@ -51,6 +51,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
           toggleEmail={toggleEmail}
           togglePassword={togglePassword}
           profile={profile}
+          user={user}
         />
         <main>{children}</main>
       </UserProvider>

@@ -5,6 +5,7 @@ import DeleteModal from "./customerBookingModal/DeleteModal";
 import SuccessModal from "../SuccessModal";
 import { useRef, useEffect } from "react";
 import { set } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 
 
@@ -32,7 +33,7 @@ export const CustomerBookingsGrid = ({filteredBookings, successMessage, setSucce
 )=>{
 
   
-
+   const router = useRouter();
 
 const dropdownRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -178,7 +179,7 @@ useEffect(() => {
       </div>
 
       {/* Provider */}
-      <div className="flex items-center gap-3">
+      <div onClick={()=> router.push(`/dashboard/provider/${booking.provider.id}`)} className=" cursor-pointer flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
           <User className="w-5 h-5 text-chart-2/60" />
         </div>

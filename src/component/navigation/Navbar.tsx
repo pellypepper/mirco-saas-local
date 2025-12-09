@@ -4,9 +4,10 @@ import { useEffect, useRef } from "react";
 import CustomerNav from "./CustomerNav"
 import ProviderNav from "./ProviderNav"
 import useStripe from "@/hooks/useStripe";
+import AdminNav from "./AdminNav";
 
 
-const Navbar = ({  profile , handleLogout, togglePassword, open, setOpen, toggleEmail,  toggleProfile}: {  profile: any , handleLogout: () => void, open: boolean, setOpen: (open: boolean) => void, toggleEmail: () => void, toggleProfile: () => void, togglePassword: () => void }) => {
+const Navbar = ({  profile ,user, handleLogout, togglePassword, open, setOpen, toggleEmail,  toggleProfile}: {  profile: any , handleLogout: () => void, open: boolean, setOpen: (open: boolean) => void, toggleEmail: () => void, toggleProfile: () => void, togglePassword: () => void , user: any }) => {
 
 
     const role = profile?.role?.toLowerCase();
@@ -35,7 +36,10 @@ const Navbar = ({  profile , handleLogout, togglePassword, open, setOpen, toggle
    
 
   return (
-    <div>
+        <div>
+             {role === "admin" ? (
+        <AdminNav user={user} profile={profile} handleLogout={handleLogout}  />
+      ) :   <div>
         <nav className="bg-primary-white flex justify-between items-center rounded-xl w-full p-3 px-5 ">
             <h1>logo</h1>
 
@@ -81,12 +85,15 @@ const Navbar = ({  profile , handleLogout, togglePassword, open, setOpen, toggle
 </div>
           {open && (
             <div ref={menuRef} className="absolute z-90  bg-primary-white  w-[200px]  top-17 right-5 mt-4">
-              { role === 'provider' ? (<ProviderNav onChangeEmail={toggleEmail} onChangePassword={togglePassword} setOpen={setOpen} toggleProfile={toggleProfile}  handleLogout={handleLogout} />) : (<CustomerNav onChangePassword={togglePassword}  onChangeEmail={toggleEmail} setOpen={setOpen} toggleProfile={toggleProfile} handleLogout={handleLogout} />)}
+              { role === 'provider' ?
+               (<ProviderNav onChangeEmail={toggleEmail} onChangePassword={togglePassword} setOpen={setOpen} toggleProfile={toggleProfile}  handleLogout={handleLogout} />)
+                : (<CustomerNav onChangePassword={togglePassword}  onChangeEmail={toggleEmail} setOpen={setOpen} toggleProfile={toggleProfile} handleLogout={handleLogout} />)}
             </div>
           )}
 
         </nav>
-    </div>
+    </div>}
+        </div>
   )
 }
 
