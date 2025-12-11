@@ -184,7 +184,7 @@ useEffect(() => {
           <User className="w-5 h-5 text-chart-2/60" />
         </div>
         <div>
-          <p className="text-xs md:text-sm text-slate-500">Provider</p>
+          <p className="text-xs md:text-sm text-slate-500">Service Provider</p>
           <p className="font-semibold text-sm text-slate-900">
             {booking.provider.full_name}
           </p>

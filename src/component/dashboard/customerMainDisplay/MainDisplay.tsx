@@ -16,7 +16,7 @@ export default function CustomerDashboard() {
     <LandingProviderSearch
       providers={providers}
       loading={loading}
-      onSelectProvider={(provider) => router.push(`/dashboard/provider/${provider.id}`)}
+      onSelectProvider={(provider) => router.push(`/dashboard/Customer/provider/${provider.id}`)}
     />
   );
 }

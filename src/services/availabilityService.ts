@@ -19,6 +19,20 @@ export async function fetchAvailability(providerId: string): Promise<Availabilit
   return data || [];
 }
 
+
+export async function fetchAvailabilityProvider(providerId: string): Promise<AvailabilityRecord[]> {
+  const { data, error } = await supabase
+    .from("availability")
+    .select("*")
+    .eq("provider_id", providerId)
+    .order("date", { ascending: true })
+    .order("start_time", { ascending: true });
+
+  if (error) throw error;
+  return data || [];
+}
+
+
 /**
  * Save (upsert) new availability records
  */

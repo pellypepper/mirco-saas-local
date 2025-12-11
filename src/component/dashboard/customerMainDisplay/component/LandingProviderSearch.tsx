@@ -39,7 +39,7 @@ export function LandingProviderSearch({ providers, loading,  onSelectProvider }:
         <div className="relative max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-black mb-4 bg-gradient-to-r from-chart-2 via-chart-3 to-chart-2 bg-clip-text text-transparent leading-tight">
-              Find Your Perfect Provider
+              Find Your Perfect Service Provider
             </h1>
             <p className="text-lg md:text-2xl text-gray-600 font-medium">
               Connect with experienced professionals for your wellness journey
@@ -85,7 +85,7 @@ export function LandingProviderSearch({ providers, loading,  onSelectProvider }:
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm">
             <div className="bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg border border-violet-100">
               <span className="font-semibold text-gray-700">
-                {filteredProviders.length} {filteredProviders.length === 1 ? 'Provider' : 'Providers'} Found
+                {filteredProviders.length} {filteredProviders.length === 1 ? 'Service Provider' : 'Service Providers'} Found
               </span>
             </div>
             {activeFilterCount > 0 && (

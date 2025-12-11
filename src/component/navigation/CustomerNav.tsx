@@ -45,7 +45,7 @@ const CustomerNav = ({
       <ul className="flex flex-row space-x-6 w-full relative items-center">
         <li
           onClick={() => {
-            router.replace("/dashboard");
+            router.replace("/dashboard/Customer");
             setOpen?.(false);
           }}
           className="cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700 font-medium text-center"
@@ -54,7 +54,7 @@ const CustomerNav = ({
         </li>
           <li
           onClick={() => {
-      router.replace("/dashboard/customerBooking");
+      router.replace("/dashboard/Customer/booking");
             setOpen?.(false);
           }}
           className="cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700 font-medium text-center"
@@ -125,7 +125,7 @@ const CustomerNav = ({
       <ul className="flex flex-col w-full relative">
         <li
           onClick={() => {
-            router.replace("/dashboard");
+            router.replace("/dashboard/Customer");
             setOpen?.(false);
           }}
           className="cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700 font-medium text-center border-b"
@@ -134,7 +134,7 @@ const CustomerNav = ({
         </li>
           <li
           onClick={() => {
-      router.replace("/dashboard/customerBooking");
+      router.replace("/dashboard/Customer/booking");
             setOpen?.(false);
           }}
           className="cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700 font-medium text-center"

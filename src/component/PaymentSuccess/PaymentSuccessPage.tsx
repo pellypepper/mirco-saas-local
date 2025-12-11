@@ -42,6 +42,7 @@ export default function PaymentSuccessPage() {
   const bookingId = booking.id;
   const serviceName = serviceDetails?.title;
   const providerName = providerData?.full_name;
+  const providerId = providerData?.id;
   const iso = booking.booking_date;
   const dateObj = new Date(iso);
   const formattedDate = dateObj.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
@@ -66,6 +67,7 @@ export default function PaymentSuccessPage() {
     formattedDate={formattedDate}
     bookingTime={bookingTime}
     location={location}
+    providerId={providerId}
     confirmationEmail={confirmationEmail}
     amount={amount}
     downloadReceipt={() => downloadReceipt(bookingId, serviceName, providerName, formattedDate, bookingTime, location, amount, booking)}

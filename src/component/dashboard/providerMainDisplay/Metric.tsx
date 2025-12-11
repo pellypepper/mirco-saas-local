@@ -22,17 +22,17 @@ export default function MetricsGrid({ stats }: any) {
           <StatIcon Icon={Calendar} color={colorMap.violet} />
           <div>
             <p className="font-semibold text-chart-2 text-xs md:text-sm mb-1">Today's Bookings</p>
-            <p className="text-xl md:text-2xl font-black">{stats.todayBookings}</p>
+            <p className="text-sm md:text-2xl font-black">{stats.todayBookings}</p>
           </div>
         </div>
       </CardGradient>
       <CardGradient>
         <div className="flex items-center gap-4">
           <StatIcon Icon={DollarSign} color={colorMap.green} />
-          <div>
+          <div className="flex flex-col">
             <p className="font-semibold text-chart-22 text-xs md:text-sm mb-1">This Week Revenue</p>
             <div className="flex items-center gap-2">
-              <p className="text-xl md:text-2xl font-black">${stats.weeklyRevenue}</p>
+              <p className="text-sm md:text-2xl font-black">${stats.weeklyRevenue}</p>
               <TrendPercent percent={stats.weeklyRevenueChange} />
             </div>
           </div>
@@ -44,7 +44,7 @@ export default function MetricsGrid({ stats }: any) {
           <div>
             <p className="font-semibold text-chart-3 text-xs md:text-sm mb-1">This Month's Clients</p>
             <div className="flex items-center gap-2">
-              <p className="text-xl md:text-2xl font-black">{stats.monthlyClients}</p>
+              <p className="text-sm  md:text-2xl font-black">{stats.monthlyClients}</p>
               <TrendPercent percent={stats.monthlyClientsChange} />
             </div>
           </div>
@@ -60,7 +60,7 @@ export default function MetricsGrid({ stats }: any) {
                 value={stats.averageRating * 20} // out of 5
                 color={colorMap.yellow}
               />
-              <span className="font-black text-xl">{stats.averageRating}</span>
+              <span className="font-black text-sm">{stats.averageRating}</span>
             </div>
           </div>
         </div>

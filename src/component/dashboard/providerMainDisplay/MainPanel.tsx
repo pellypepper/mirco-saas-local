@@ -36,7 +36,7 @@ export default function MainPanels({ upcoming, quickActions }: any) {
         </h2>
         <div className="space-y-3">
           {quickActions.map((a: any, i: number) => (
-            console.log(a),
+        
             <a
               key={i}
               href={a.link}

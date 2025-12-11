@@ -42,28 +42,28 @@ const ProviderNav = ({
     {
       label: "Dashboard",
       action: () => {
-        router.replace("/dashboard");
+        router.replace("/dashboard/Providers");
         setOpen?.(false);
       },
     },
     {
       label: "Availability",
       action: () => {
-        router.replace("/dashboard/availability");
+        router.replace("/dashboard/Providers/availability");
         setOpen?.(false);
       },
     },
     {
       label: "Bookings",
       action: () => {
-        router.replace("/dashboard/booking");
+        router.replace("/dashboard/Providers/booking");
         setOpen?.(false);
       },
     },
     {
       label: "Services",
       action: () => {
-        router.replace("/dashboard/service");
+        router.replace("/dashboard/Providers/service");
         setOpen?.(false);
       },
     },

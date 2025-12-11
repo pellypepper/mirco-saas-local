@@ -128,7 +128,7 @@ export const useProviderBooking = ({user}: {user: {id: string}}) => {
     selectedBooking?.availability.id || ""
 
   );
-  console.log(markAvailable, "amrkled")
+
 
   if (!updated) return;
   if (!markAvailable ) return;
@@ -155,7 +155,7 @@ const onConfirmDelete = async (booking: any) => {
   if (!booking) return;
 
   let deleted = null;
-  console.log("Deleting booking:", booking);
+
 
 
   const providerRole = booking.provider?.role;

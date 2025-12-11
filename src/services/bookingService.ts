@@ -69,7 +69,7 @@ class BookingService {
   } 
 
   static async fetchBookingsByProvider(providerId: string) {
-    console.log("Fetching bookings for providerId:", providerId);
+
   const { data, error } = await supabaseAdmin
     .from("bookings")
     .select(

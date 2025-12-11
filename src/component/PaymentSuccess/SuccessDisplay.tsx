@@ -17,6 +17,7 @@ const SuccessDisplay = ({  confetti,
   addToCalendar,
   shareBooking,
   showShareMenu,
+  providerId,
   setShowShareMenu} : {
     confetti: boolean;
     bookingId: string;
@@ -32,13 +33,14 @@ const SuccessDisplay = ({  confetti,
     addToCalendar: () => void;
     shareBooking: (platform: string) => void;
     showShareMenu: boolean;
+      providerId: string;
     setShowShareMenu: React.Dispatch<React.SetStateAction<boolean>>;
   }) => {
 
     const router = useRouter();
   return (
        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 relative overflow-hidden">
-      {/* Rest of the component remains the same... */}
+
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
@@ -249,7 +251,7 @@ const SuccessDisplay = ({  confetti,
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button 
-            onClick={() => router.push('/dashboard/customerBooking')}
+            onClick={() => router.push('/dashboard/Customer/booking')}
             className="group flex items-center justify-center space-x-2 bg-gradient-to-r from-chart-2 to-chart-3 hover:from-chart-2 hover:to-chart-3 text-white font-bold py-5 px-8 rounded-xl shadow-2xl hover:shadow-chartd-500/50 transition-all duration-300 transform hover:scale-105"
           >
             <span>View My Bookings</span>
@@ -257,7 +259,7 @@ const SuccessDisplay = ({  confetti,
           </button>
           
           <button 
-            onClick={() => router.push('/dashboard/providers')}
+            onClick={() => router.push(`/dashboard/Customer/provider/${providerId}`)}
             className="flex items-center justify-center space-x-2 bg-white hover:bg-gray-50 text-gray-900 font-semibold py-5 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-gray-200 hover:border-gray-300"
           >
             <span>Book Another Service</span>

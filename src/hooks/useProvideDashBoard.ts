@@ -1,25 +1,32 @@
-import {
-   Calendar,   Users, 
- Eye, Settings
-} from "lucide-react";
+"use client";
+
+import { Calendar, Users, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import BookingService from "@/services/bookingService";
 import { supabase } from "@/libs/supabaseClient";
-import { fetchAvailability } from "@/services/availabilityService";
+import { fetchAvailabilityProvider } from "@/services/availabilityService";
 
+import {
+  normalizeDate,
+  getMonthStr,
+  getWeekRange,
+} from "@/lib/dashboardDateUtils";
+
+import {
+  calculatePercentageChange,
+  formatActivityMessage,
+} from "@/hooks/dashboardCalculations";
 
 const useProvideDashBoard = () => {
-
-      const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [providerId, setProviderId] = useState<string | null>(null);
 
-  // === REAL DATA ===
   const [stats, setStats] = useState({
     todayBookings: 0,
     weeklyRevenue: 0,
-    weeklyRevenueChange: 0, // percent vs last week
+    weeklyRevenueChange: 0,
     monthlyClients: 0,
-    monthlyClientsChange: 0, // percent vs last month
+    monthlyClientsChange: 0,
     averageRating: 0,
     ratingChange: 0,
     totalReviews: 0,
@@ -31,160 +38,203 @@ const useProvideDashBoard = () => {
 
   const [upcomingBookings, setUpcomingBookings] = useState<any[]>([]);
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
-  const colorStyles = {
-  "chart-2": {
-    border: "border-chart-2",
-    text: "text-chart-2"
-  },
-  "chart-3": {
-    border: "border-chart-22",
-    text: "text-chart-22"
-  },
-  "chart-22": {
-    border:  "border-chart-2/50",
-    text: "text-chart-2/50"
-  },
-  "chart-4": {
-    border: "border-chart-1",
-    text: "text-chart-1"
-  }
-};
-  const [quickActions] = useState([
-    { icon: Calendar, label: "View Availability", link: "/dashboard/availability", color: colorStyles["chart-2"]},
-    { icon: Users, label: "Manage Bookings", link: "/dashboard/booking", color: colorStyles["chart-3"]},
-    { icon: Settings, label: "Update Services", link: "/dashboard/services", color: colorStyles["chart-4"] }
-  ]);
   const [tips, setTips] = useState<string>("");
 
-  // ==========================
-  // 🔥 FETCH PROVIDER SESSION
-  // ==========================
-  async function loadProvider() {
-    const { data: { session } } = await supabase.auth.getSession();
-    const providerId = session?.user?.id;
-    setProviderId(providerId || null);
-    return providerId;
-  }
+  const colorStyles = {
+    "chart-2": { border: "border-chart-2", text: "text-chart-2" },
+    "chart-3": { border: "border-chart-22", text: "text-chart-22" },
+    "chart-22": { border: "border-chart-2/50", text: "text-chart-2/50" },
+    "chart-4": { border: "border-chart-1", text: "text-chart-1" },
+  };
 
-  // ==========================
-  // 🔥 FETCH DASHBOARD DATA
-  // ==========================
-  async function loadDashboard(providerId: string) {
+  const [quickActions] = useState([
+    {
+      icon: Calendar,
+      label: "View Availability",
+      link: "/dashboard/Providers/availability",
+      color: colorStyles["chart-2"],
+    },
+    {
+      icon: Users,
+      label: "Manage Bookings",
+      link: "/dashboard/Providers/booking",
+      color: colorStyles["chart-3"],
+    },
+    {
+      icon: Settings,
+      label: "Update Services",
+      link: "/dashboard/Providers/services",
+      color: colorStyles["chart-4"],
+    },
+  ]);
+
+  // ------------------------------
+  const loadProvider = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    const id = session?.user?.id || null;
+    setProviderId(id);
+    return id;
+  };
+
+  // ------------------------------
+  const loadDashboard = async (providerId: string) => {
     try {
       setLoading(true);
 
-      // Bookings & historical (dummy data for change/tips)
       const bookings = await BookingService.fetchBookingsByProvider(providerId);
-      const lastWeekBookings = []; // Fetch or mock historical for analytics
-      const lastMonthBookings = [];
 
-      // Today
-      const today = new Date().toISOString().split("T")[0];
+      const todayStr = normalizeDate(new Date().toISOString());
+      const currentWeek = getWeekRange(0);
+      const lastWeek = getWeekRange(1);
+      const thisMonth = getMonthStr(0);
+      const lastMonth = getMonthStr(1);
 
+      let currentWeekRevenue = 0;
+      let lastWeekRevenue = 0;
 
+      const monthlyClientsMap = new Map();
+      const lastMonthClientsMap = new Map();
 
-const todaysAppointments = bookings.filter((b: any) => {
-  // Normalize appointment date
-  const apptDate = b.availability?.date
-    ? new Date(b.availability.date).toISOString().split("T")[0]
-    : null;
+      const todaysAppointments: any[] = [];
+      const pending: any[] = [];
+      const activity: any[] = [];
 
-  // Return only if:
-  // 1. Date matches today
-  // 2. Booking is confirmed
-  return apptDate === today && b.status === "confirmed";
-});
+      bookings.forEach((b: any) => {
+        if (!b.booking_date || !b.customer?.id) return;
 
-      // Monthly clients
-      const thisMonth = new Date().toISOString().slice(0, 7);
-   const monthlyClientsMap = new Map<string, any>();
+        const bookingDateObj = new Date(b.booking_date);
+        const bookingDateStr = normalizeDate(b.booking_date);
+        const bookingMonth = `${bookingDateObj.getUTCFullYear()}-${String(
+          bookingDateObj.getUTCMonth() + 1
+        ).padStart(2, "0")}`;
 
-bookings.forEach((booking) => {
-  const customerId = booking.customer.id;
-  const isThisMonth = booking.booking_date.startsWith(thisMonth);
+        const customer = Array.isArray(b.customer)
+          ? b.customer[0]
+          : b.customer;
 
-  if (isThisMonth && !monthlyClientsMap.has(customerId)) {
-    monthlyClientsMap.set(customerId, booking.customer);
-  }
-});
+        // Today bookings
+        if (bookingDateStr === todayStr && b.status === "confirmed")
+          todaysAppointments.push(b);
 
-const monthlyClients = Array.from(monthlyClientsMap.values());
+        // Weekly revenue
+        if (b.status === "confirmed") {
+          if (
+            bookingDateObj >= currentWeek.start &&
+            bookingDateObj <= currentWeek.end
+          )
+            currentWeekRevenue += b.amount;
 
-console.log(monthlyClients);
-      const lastMonth = new Date(
-        new Date().setMonth(new Date().getMonth() - 1)
-      ).toISOString().slice(0, 7);
+          if (
+            bookingDateObj >= lastWeek.start &&
+            bookingDateObj <= lastWeek.end
+          )
+            lastWeekRevenue += b.amount;
+        }
 
-      const monthlyClientsLast = lastMonthBookings.length || 5; // replace with real historical
+        // Monthly clients
+        if (bookingMonth === thisMonth)
+          monthlyClientsMap.set(customer.id, customer);
 
-      // Weekly revenue (current week)
-      const weekRevenue = bookings
-        .filter((b: any) => b.status === "approved")
-        .reduce((sum: number, b: any) => sum + b.amount, 0);
+        if (bookingMonth === lastMonth)
+          lastMonthClientsMap.set(customer.id, customer);
 
-      // Weekly revenue change (dummy)
-      const lastWeekRevenue = 1700; // replace with historical
+        if (b.status === "pending") pending.push(b);
 
-      // Change calculations
-      const weeklyRevenueChange = lastWeekRevenue
-        ? Math.round(((weekRevenue - lastWeekRevenue) / lastWeekRevenue) * 100)
-        : 0;
-      const monthlyClientsChange = monthlyClientsLast
-        ? Math.round(((monthlyClients.length - monthlyClientsLast) / monthlyClientsLast) * 100)
-        : 0;
+        activity.push({
+          id: b.id,
+          message: formatActivityMessage(b, customer),
+          time: bookingDateObj.toLocaleString(),
+        });
+      });
 
-      // Pending approvals
-      const pending = bookings.filter((b: any) => b.status === "pending");
+      // Only latest 5
+      activity.sort(
+        (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
+      );
+      activity.splice(5);
 
-      // Recent activity
-      const activity = bookings.slice(0, 5).map((b: any) => ({
-        id: b.id,
-        type: "booking",
-        message: `New ${b.services?.title} booking from ${b.customer?.full_name}`,
-        time: new Date(b.booking_date).toLocaleString(),
-      }));
+      // Weekly revenue change
+      const weeklyRevenueChange = calculatePercentageChange(
+        currentWeekRevenue,
+        lastWeekRevenue
+      );
 
-      // Review analytics
+      // Monthly client change
+      const monthlyClientsChange = calculatePercentageChange(
+        monthlyClientsMap.size,
+        lastMonthClientsMap.size
+      );
+
+      // Reviews
       const { data: reviews } = await supabase
         .from("reviews")
         .select("rating")
         .eq("provider_id", providerId);
 
-      const avgRating =
-        reviews && reviews.length > 0
-          ? (reviews.reduce((a: number, b: any) => a + b.rating, 0) / reviews.length).toFixed(1)
-          : 0;
-      const ratingChange = reviews && reviews.length > 6
-        ? Number(avgRating) - reviews.slice(0, -1).reduce((a, b) => a + b.rating, 0) / (reviews.length - 1)
+      const avgRating = reviews?.length
+        ? Number(
+            (
+              reviews.reduce((a, b) => a + b.rating, 0) / reviews.length
+            ).toFixed(1)
+          )
         : 0;
 
+      const ratingChange =
+        reviews && reviews.length > 1
+          ? avgRating -
+            reviews
+              .slice(0, -1)
+              .reduce((a, b) => a + b.rating, 0) /
+              (reviews.length - 1)
+          : 0;
+
       // Availability
-      const availability = await fetchAvailability(providerId);
+      const availability = await fetchAvailabilityProvider(providerId);
       const totalSlots = availability.length;
       const filledSlots = availability.filter((a) => a.is_booked).length;
+
       const availabilityFilled = totalSlots
         ? Math.round((filledSlots / totalSlots) * 100)
         : 0;
 
-      // Change (dummy, can add logic)
-      const lastWeekAvailability = 90;
-      const availabilityChange = lastWeekAvailability 
-        ? availabilityFilled - lastWeekAvailability
+      // Last week availability
+      const { data: lastWeekAvailabilityData } = await supabase
+        .from("availability")
+        .select("*")
+        .eq("provider_id", providerId)
+        .gte("date", lastWeek.start.toISOString())
+        .lte("date", lastWeek.end.toISOString());
+
+      const lastWeekTotal = lastWeekAvailabilityData?.length || 0;
+      const lastWeekFilled =
+        lastWeekAvailabilityData?.filter((a) => a.is_booked).length || 0;
+
+      const lastWeekFillRate = lastWeekTotal
+        ? Math.round((lastWeekFilled / lastWeekTotal) * 100)
         : 0;
 
-      // Smart tips
-      let tip = "";
-      if (weeklyRevenueChange > 20) tip = "Revenue is up 🟢 compared to last week!";
-      else if (weeklyRevenueChange < -10) tip = "Revenue dropped last week. Check your service offering!";
-      else tip = "Your dashboard is steady. Try adding new availability slots for more bookings.";
+      const availabilityChange = availabilityFilled - lastWeekFillRate;
 
+      // Tips
+      let tip = "";
+      if (weeklyRevenueChange > 20)
+        tip = "Revenue is up 🟢 compared to last week!";
+      else if (weeklyRevenueChange < -10)
+        tip = "Revenue dropped last week. Check your service offering!";
+      else
+        tip =
+          "Your dashboard is steady. Try adding new availability slots for more bookings.";
+
+      // Set dashboard stats
       setStats({
         todayBookings: todaysAppointments.length,
-        weeklyRevenue: weekRevenue,
+        weeklyRevenue: currentWeekRevenue,
         weeklyRevenueChange,
-        monthlyClients: monthlyClients.length,
+        monthlyClients: monthlyClientsMap.size,
         monthlyClientsChange,
-        averageRating: Number(avgRating),
+        averageRating: avgRating,
         ratingChange,
         totalReviews: reviews?.length || 0,
         upcomingToday: todaysAppointments.length,
@@ -201,7 +251,7 @@ console.log(monthlyClients);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     loadProvider().then((pid) => {
@@ -210,16 +260,13 @@ console.log(monthlyClients);
   }, []);
 
   return {
+    stats,
+    upcomingBookings,
+    recentActivity,
+    quickActions,
+    tips,
+    loading,
+  };
+};
 
-     stats,
-     upcomingBookings,
-        recentActivity,
-        quickActions,
-        tips,
-        loading,
-
-
-  }
-}
-
-export default useProvideDashBoard
+export default useProvideDashBoard;
