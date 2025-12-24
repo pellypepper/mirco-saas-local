@@ -21,6 +21,7 @@ export default function DataTable<T extends Record<string, any>>({
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(pageSizeOptions[0]);
+  const [selectedProvider, setSelectedProvider] = useState<T | null>(null);
 
   const sorted = useMemo(() => {
     if (!sortKey) return rows;
@@ -53,7 +54,7 @@ export default function DataTable<T extends Record<string, any>>({
 
   return (
     <div className="w-full">
-      {/* Table Container */}
+      {/* Table */}
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -70,7 +71,6 @@ export default function DataTable<T extends Record<string, any>>({
                         <button
                           onClick={() => toggleSort(col.key)}
                           className="inline-flex items-center justify-center w-6 h-6 rounded-md hover:bg-slate-200 transition-colors"
-                          aria-label={`Sort by ${col.label}`}
                         >
                           {sortKey === col.key ? (
                             sortDir === "asc" ? (
@@ -92,13 +92,11 @@ export default function DataTable<T extends Record<string, any>>({
               {pageRows.map((r, i) => (
                 <tr
                   key={i}
-                  className="hover:bg-slate-50/50 transition-colors duration-150"
+                  className="hover:bg-slate-50/50 cursor-pointer transition-colors duration-150"
+                  onClick={() => setSelectedProvider(r)}
                 >
                   {columns.map((c) => (
-                    <td
-                      key={c.key}
-                      className="px-6 py-4 text-sm text-slate-600 first:pl-8 last:pr-8"
-                    >
+                    <td key={c.key} className="px-6 py-4 text-sm text-slate-600 first:pl-8 last:pr-8">
                       {c.render ? c.render(r) : String(r[c.key] ?? "")}
                     </td>
                   ))}
@@ -106,32 +104,14 @@ export default function DataTable<T extends Record<string, any>>({
               ))}
               {pageRows.length === 0 && (
                 <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="px-6 py-16 text-center"
-                  >
+                  <td colSpan={columns.length} className="px-6 py-16 text-center">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
-                        <svg
-                          className="w-6 h-6 text-slate-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                          />
+                        <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                         </svg>
                       </div>
-                      <p className="text-sm font-medium text-slate-700">
-                        No results found
-                      </p>
-                      <p className="text-xs text-slate-500">
-                        Try adjusting your filters or search criteria
-                      </p>
+                      <p className="text-sm font-medium text-slate-700">No results found</p>
                     </div>
                   </td>
                 </tr>
@@ -141,20 +121,17 @@ export default function DataTable<T extends Record<string, any>>({
         </div>
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
-        {/* Rows per page */}
         <div className="flex items-center gap-3">
-          <label className="text-sm font-medium text-slate-700">
-            Rows per page:
-          </label>
+          <label className="text-sm font-medium text-slate-700">Rows per page:</label>
           <select
             value={pageSize}
             onChange={(e) => {
               setPageSize(Number(e.target.value));
               setPage(1);
             }}
-            className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+            className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700"
           >
             {pageSizeOptions.map((s) => (
               <option key={s} value={s}>
@@ -163,8 +140,6 @@ export default function DataTable<T extends Record<string, any>>({
             ))}
           </select>
         </div>
-
-        {/* Page info and navigation */}
         <div className="flex items-center gap-4">
           <div className="text-sm text-slate-600 font-medium">
             {total === 0 ? (
@@ -172,63 +147,70 @@ export default function DataTable<T extends Record<string, any>>({
             ) : (
               <>
                 Showing <span className="text-slate-900">{startRow}</span> to{" "}
-                <span className="text-slate-900">{endRow}</span> of{" "}
-                <span className="text-slate-900">{total}</span> entries
+                <span className="text-slate-900">{endRow}</span> of <span className="text-slate-900">{total}</span>{" "}
+                entries
               </>
             )}
           </div>
-
           <div className="flex items-center gap-2">
-            <button
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow"
-              aria-label="Previous page"
-            >
+            <button disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
               <ChevronLeft className="w-4 h-4" />
             </button>
-
-            {/* Page numbers */}
-            <div className="hidden sm:flex items-center gap-1">
-              {Array.from({ length: Math.min(5, pages) }, (_, i) => {
-                let pageNum;
-                if (pages <= 5) {
-                  pageNum = i + 1;
-                } else if (page <= 3) {
-                  pageNum = i + 1;
-                } else if (page >= pages - 2) {
-                  pageNum = pages - 4 + i;
-                } else {
-                  pageNum = page - 2 + i;
-                }
-
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setPage(pageNum)}
-                    className={`inline-flex items-center justify-center w-9 h-9 rounded-lg text-sm font-medium transition-all ${
-                      page === pageNum
-                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/30"
-                        : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm hover:shadow"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-            </div>
-
-            <button
-              disabled={page >= pages}
-              onClick={() => setPage((p) => Math.min(pages, p + 1))}
-              className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow"
-              aria-label="Next page"
-            >
+            {Array.from({ length: Math.min(5, pages) }, (_, i) => {
+              let pageNum;
+              if (pages <= 5) pageNum = i + 1;
+              else if (page <= 3) pageNum = i + 1;
+              else if (page >= pages - 2) pageNum = pages - 4 + i;
+              else pageNum = page - 2 + i;
+              return (
+                <button key={pageNum} onClick={() => setPage(pageNum)} className={`w-9 h-9 rounded-lg ${page === pageNum ? "bg-indigo-600 text-white" : "bg-white border"}`}>
+                  {pageNum}
+                </button>
+              );
+            })}
+            <button disabled={page >= pages} onClick={() => setPage((p) => Math.min(pages, p + 1))}>
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       </div>
+
+      {/* Modal for selected provider */}
+      {selectedProvider && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white p-6 rounded-2xl w-full max-w-2xl overflow-y-auto max-h-[90vh] relative">
+            <button className="absolute top-4 right-4 text-gray-500" onClick={() => setSelectedProvider(null)}>
+              ✕
+            </button>
+            <h2 className="text-xl font-bold mb-4">{selectedProvider.name}</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <p><strong>Service Type:</strong> {selectedProvider.service_type}</p>
+              <p><strong>Location:</strong> {selectedProvider.location}</p>
+              <p><strong>Country:</strong> {selectedProvider.country}</p>
+              <p><strong>Phone:</strong> {selectedProvider.phone_number || "N/A"}</p>
+              <p><strong>Email:</strong> {selectedProvider.email}</p>
+              <p><strong>Website:</strong> {selectedProvider.website || "N/A"}</p>
+              <p><strong>Payout Enabled:</strong> {selectedProvider.payout_enabled ? "Yes" : "No"}</p>
+              <p><strong>Stripe Account:</strong> {selectedProvider.stripe_account_id || "N/A"}</p>
+              <p><strong>Years of Experience:</strong> {selectedProvider.years_of_experience || "N/A"}</p>
+              <p><strong>Total Revenue:</strong> ${Number(selectedProvider.revenue || 0).toLocaleString()}</p>
+              <p><strong>Total Bookings:</strong> {selectedProvider.bookings}</p>
+              <div className="col-span-2">
+                <strong>Monthly Revenue:</strong>
+                {selectedProvider.monthly?.length ? (
+                  <ul className="list-disc ml-6">
+                    {selectedProvider.monthly.map((m: any, idx: number) => (
+                      <li key={idx}>{m.month}: ${Number(m.total || 0).toLocaleString()}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <span> No monthly data</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
