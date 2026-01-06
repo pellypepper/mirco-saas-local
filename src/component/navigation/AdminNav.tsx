@@ -1,5 +1,5 @@
 "use client";
-import { Bell, Settings, LogOut, Shield, Menu } from "lucide-react";
+import { Bell, Settings, LogOut,  CalendarCheck, Shield, Menu , Users, DollarSign} from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -98,19 +98,35 @@ const AdminNav = ({
               <div className="absolute top-12 right-14 w-48 bg-white rounded-xl shadow-lg border border-slate-200 z-50 overflow-hidden">
                 <ul className="flex flex-col">
                         <li 
-                    onClick={() => router.push("/dashboard/Admin")}
+                    onClick={() => (router.push("/dashboard/Admin"), setMenuOpen(false))}
                     className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
                   >
                     <Settings className="w-4 h-4 inline mr-2 text-gray-600" />
-           Home
+          Dashboard
                   </li>
                   <li 
-                    onClick={() => router.push("/dashboard/Admin/revenue")}
+                    onClick={() => (router.push("/dashboard/Admin/revenue"), setMenuOpen(false))}
                     className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
                   >
-                    <Settings className="w-4 h-4 inline mr-2 text-gray-600" />
-                  All Revenue
+                  <DollarSign className="w-4 h-4 inline mr-2 text-gray-600" />
+                Revenue & Payout
                   </li>
+                      <li 
+                    onClick={() => (router.push("/dashboard/Admin/users"), setMenuOpen(false))}
+                    className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
+                  >
+                   <Users className="w-4 h-4 inline mr-2 text-gray-600" />
+                User Management
+                  </li>
+             
+                      <li 
+                    onClick={() => (router.push("/dashboard/Admin/booking"), setMenuOpen(false))}
+                    className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
+                  >
+                     <CalendarCheck className="w-4 h-4 inline mr-2 text-gray-600" />
+                  Bookings
+                  </li>
+                  
                   <li
                     onClick={handleLogout}
                     className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors flex items-center"

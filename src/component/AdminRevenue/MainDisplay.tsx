@@ -20,8 +20,7 @@ categoryData
   
   } = useRevenue({ providers });
 
-  console.log('categoryData', categoryData);
-  console.log('filtered', filtered);
+
 
 
     

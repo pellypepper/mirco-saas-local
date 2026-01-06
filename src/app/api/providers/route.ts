@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/libs/supabaseAdmin";
 
 export async function GET() {
-  // 1. Fetch ONLY providers
+  // Fetch ONLY providers
   const { data: profiles, error: profileError } = await supabaseAdmin
     .from("profiles")
     .select("*")
@@ -12,7 +12,7 @@ export async function GET() {
     return NextResponse.json({ error: profileError.message }, { status: 500 });
   }
 
-  // 2. Fetch auth emails
+  // Fetch auth emails
   const { data: authUsers, error: authError } =
     await supabaseAdmin.auth.admin.listUsers();
 
@@ -25,7 +25,7 @@ export async function GET() {
     emails[user.id] = user.email ?? "";
   });
 
-  // 3. Fetch provider revenue + bookings
+  //  Fetch provider revenue + bookings
   const { data: revenueData } = await supabaseAdmin.rpc("calculate_provider_revenue");
 
   const revenueMap: Record<string, any> = {};
@@ -33,7 +33,7 @@ export async function GET() {
     revenueMap[r.provider_id] = r;
   });
 
-  // 4. Normalize final provider object
+  //  Normalize final provider object
   const providers = profiles.map((p) => ({
    ...p,
     email: emails[p.id] || "No email",
@@ -44,6 +44,7 @@ export async function GET() {
     revenue: revenueMap[p.id]?.total_revenue ?? 0,
     bookings: revenueMap[p.id]?.total_bookings ?? 0,
     monthly: revenueMap[p.id]?.monthly || [],
+    adminFee: revenueMap[p.id]?.total_admin_fee ?? 0,
 
     raw: p, // keep full profile
   }));

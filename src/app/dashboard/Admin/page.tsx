@@ -1,7 +1,7 @@
 "use client";
 
 
-import AdminDashboard from "@/component/admin/AdminMainDisplay";
+import AdminDashboard from "@/component/dashboard/admin/AdminMainDisplay";
 
 
 

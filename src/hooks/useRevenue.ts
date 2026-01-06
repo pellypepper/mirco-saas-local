@@ -30,7 +30,7 @@ const useRevenue = ({ providers = [], bookings = [] }: UseRevenueProps) => {
   // ----------------------------
   const rows = useMemo(() => {
     if (bookings.length > 0) return bookings;
-console.log('providers in useRevenue', providers);
+
     return providers.map((p) => ({
    ...p,
     }));
@@ -53,8 +53,7 @@ console.log('providers in useRevenue', providers);
       );
     }
 
-    // Apply filterState (date, category, range, etc.)
-    // Add here if needed later.
+  
 
     return r;
   }, [rows, debouncedQuery]);
