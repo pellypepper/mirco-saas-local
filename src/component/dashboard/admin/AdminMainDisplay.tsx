@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 
 import AdminHeader from "./component/AdminHeader";
 import TimeRange from "./component/TimeRange";
@@ -12,9 +12,9 @@ import FooterStats from "./component/FooterStats";
 import StatCard from "./component/StatsCard";
 import { useAdminDashboard } from "@/hooks/useAdminDashboard";
 
-
-
 export default function AdminDashboard() {
+  const [timeRange, setTimeRange] = useState('6m');
+
   const {
     overview,
     revenueData,
@@ -22,37 +22,18 @@ export default function AdminDashboard() {
     topProviders,
     recentCustomers,
     categoryData
-  } = useAdminDashboard();
-
-
-  // HANDLERS FOR ADMIN HEADER
-  // -------------------------------
- 
-
-
-
-
-
-
-
- 
-
+  } = useAdminDashboard(timeRange);
 
 
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        {/* ⭐ Admin Header with full functionality */}
-        <AdminHeader 
-
-        />
-
-     
+      <div className=" mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Admin Header */}
+        <AdminHeader />
 
         {/* Time Range Selector */}
-        <TimeRange />
+        <TimeRange timeRange={timeRange} setTimeRange={setTimeRange} />
 
         {/* Overview Stats */}
         <OverviewStat overview={overview} StatCard={StatCard} />
@@ -78,10 +59,6 @@ export default function AdminDashboard() {
         {/* Footer Stats */}
         <FooterStats overview={overview} />
       </div>
-
-     
     </div>
   );
 }
-
-

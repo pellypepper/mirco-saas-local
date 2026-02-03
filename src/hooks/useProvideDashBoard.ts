@@ -42,9 +42,9 @@ const useProvideDashBoard = () => {
 
   const colorStyles = {
     "chart-2": { border: "border-chart-2", text: "text-chart-2" },
-    "chart-3": { border: "border-chart-22", text: "text-chart-22" },
-    "chart-22": { border: "border-chart-2/50", text: "text-chart-2/50" },
-    "chart-4": { border: "border-chart-1", text: "text-chart-1" },
+    "chart-4": { border: "border-chart-4", text: "text-chart-4" },
+    "chart-3": { border: "border-chart-3/50", text: "text-chart-3/50" },
+    "chart-5": { border: "border-chart-5", text: "text-chart-5" },
   };
 
   const [quickActions] = useState([
@@ -58,13 +58,13 @@ const useProvideDashBoard = () => {
       icon: Users,
       label: "Manage Bookings",
       link: "/dashboard/Providers/booking",
-      color: colorStyles["chart-3"],
+      color: colorStyles["chart-2"],
     },
     {
       icon: Settings,
       label: "Update Services",
       link: "/dashboard/Providers/services",
-      color: colorStyles["chart-4"],
+      color: colorStyles["chart-2"],
     },
   ]);
 

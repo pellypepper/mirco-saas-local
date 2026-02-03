@@ -1,7 +1,12 @@
+"use client"; 
+
 import { useState, useEffect } from "react";
 import { supabase } from "../libs/supabaseClient";
 import { useRouter } from "next/navigation";
 import { getCurrentSession, getUserRole } from "@/services/authService";
+import { sanitize, isValidEmail, isStrongPassword } from "@/lib/sanitizehelper";
+
+
 
 // Hook for email/password signup
 export const useSignUp = () => {
@@ -14,23 +19,56 @@ export const useSignUp = () => {
     setError(null);
     setMessage(null);
 
+    const cleanEmail = sanitize(email).toLowerCase();
+    const cleanName = sanitize(fullName, 100);
+
+    if (!isValidEmail(cleanEmail)) {
+      const err = "Invalid email address.";
+      setError(err);
+      setLoading(false);
+      throw new Error(err);
+    }
+
+    if (!isStrongPassword(password)) {
+      const err = "Password must be at least 8 characters.";
+      setError(err);
+      setLoading(false);
+      throw new Error(err);
+    }
+
+    if (!cleanName) {
+      const err = "Full name is required.";
+      setError(err);
+      setLoading(false);
+      throw new Error(err);
+    }
+
     try {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: cleanEmail,
         password,
-        options: { data: { full_name: fullName , role : "customer"} }
+        options: {
+          data:  {
+            full_name: cleanName,
+            role: "customer",
+          },
+        },
       });
 
       if (error) {
         setError(error.message);
-      } else if (data?.user) {
-        setMessage("Signup successful! Please check your email to confirm your account.");
+        throw error;
+      }
+      
+      if (data?.user) {
+        setMessage("Signup successful! Please check your email to confirm.");
+        return data;
       }
 
-      return data;
+      throw new Error("Signup failed - no user data returned");
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
-      return null;
+      setError(err.message || "Unexpected error occurred.");
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -38,6 +76,9 @@ export const useSignUp = () => {
 
   return { signUp, loading, error, message };
 };
+
+
+
 
 
 export const useProviderSignUp = () => {
@@ -51,36 +92,48 @@ export const useProviderSignUp = () => {
     fullName: string,
     serviceType: string,
     location: string,
-    country: string,
-
+    country: string
   ) => {
     setLoading(true);
     setError(null);
     setMessage(null);
 
+    const cleanEmail = sanitize(email).toLowerCase();
+
+    if (!isValidEmail(cleanEmail)) {
+      setError("Invalid email address.");
+      setLoading(false);
+      return;
+    }
+
+    if (!isStrongPassword(password)) {
+      setError("Password must be at least 8 characters.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: cleanEmail,
         password,
         options: {
           data: {
-            full_name: fullName,
+            full_name: sanitize(fullName, 100),
             role: "provider",
-            service_type: serviceType,
-            location,
-            country,
-       
-          }
-        }
+            service_type: sanitize(serviceType, 100),
+            location: sanitize(location, 150),
+            country: sanitize(country, 100),
+          },
+        },
       });
 
       if (error) setError(error.message);
-      else if (data?.user) setMessage("Provider signup successful! Please check your email to confirm your account.");
+      else if (data?.user)
+        setMessage("Provider signup successful! Please confirm your email.");
 
       return data;
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
-      return null;
+    } catch {
+      setError("Unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -88,6 +141,7 @@ export const useProviderSignUp = () => {
 
   return { signUpProvider, loading, error, message };
 };
+
 
 
 // sending password reset email
@@ -107,6 +161,9 @@ export const useForgotPassword = ({setIsForgotPassword, setIsLogin}: {setIsForgo
     setError(null);
 
     try {
+        if (!isValidEmail(email)) {
+    throw new Error("Invalid email address.");
+  }
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: redirectTo || `${window.location.origin}/reset-password`,
       });
@@ -195,15 +252,21 @@ export function useAuthCallback() {
 
       const { profile, error } = await getUserRole(user.id);
 
-      if (!profile?.role) {
-             router.replace("/?message=Please create an account first");
-      } else if (error) {
-        // No role found, redirect to login with message
-        router.replace("/?message=Error fetching profile. Please log in again.");
-      } else {
-        // User has a role, go to dashboard
-        router.replace("/dashboard");
+      if (error && error.code !== 'PGRST116') {
+        // Error other than "no rows returned"
+        console.error("Error fetching profile:", error);
+        router.replace("/login?message=Error fetching profile. Please try again.");
+        return;
       }
+
+      if (!profile || !profile.role) {
+        // No profile exists or no role set - redirect to role selection
+        router.replace("/select-role");
+        return;
+      }
+
+      // User has a role, go to dashboard
+      router.replace("/dashboard");
     };
 
     processSession();

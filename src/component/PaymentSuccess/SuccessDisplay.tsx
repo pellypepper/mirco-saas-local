@@ -2,6 +2,7 @@
 
 import { CheckCircle, Calendar, Clock, MapPin, ArrowRight, Download, Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useMainNavBar } from "@/hooks/MainNavContext";
 
 const SuccessDisplay = ({  confetti,
     receiptRef,
@@ -38,14 +39,15 @@ const SuccessDisplay = ({  confetti,
   }) => {
 
     const router = useRouter();
+    const { isDarkMode } = useMainNavBar();
   return (
-       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 relative overflow-hidden">
+       <div className={`min-h-screen ${isDarkMode ? "bg-zinc-800" : "bg-white"} relative overflow-hidden`}>
 
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-        <div className="absolute top-40 right-10 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-75"></div>
-        <div className="absolute -bottom-20 left-1/3 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-150"></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-chart-2 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+        <div className="absolute top-40 right-10 w-96 h-96 bg-chart-3 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-75"></div>
+        <div className="absolute -bottom-20 left-1/3 w-80 h-80 bg-chart-4 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-150"></div>
       </div>
 
       {/* Confetti Effect */}
@@ -58,7 +60,7 @@ const SuccessDisplay = ({  confetti,
               style={{
                 left: `${Math.random() * 100}%`,
                 top: '-10px',
-                backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b'][Math.floor(Math.random() * 4)],
+                backgroundColor: ['#730071', '#390040', '#730071', '#390040'][Math.floor(Math.random() * 4)],
                 animationDelay: `${Math.random() * 3}s`,
                 animationDuration: `${2 + Math.random() * 3}s`
               }}
@@ -70,13 +72,13 @@ const SuccessDisplay = ({  confetti,
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
         {/* Success Icon with Animation */}
         <div className="text-center mb-8 animate-scale-in">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-chart-2/80 to-chart-3/80 rounded-full shadow-2xl mb-6 animate-bounce-slow">
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-chart-2 rounded-full shadow-2xl mb-6 animate-bounce-slow">
             <CheckCircle className="w-14 h-14 text-white" strokeWidth={2.5} />
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-3 bg-clip-text text-transparent bg-gradient-to-r from-chart-2 to-chart-3">
+          <h1 className={`text-4xl sm:text-5xl font-bold  mb-3 bg-clip-text ${isDarkMode ? "text-white" : "text-transparent"} bg-gradient-to-r from-chart-2 to-chart-3`}>
             Payment Successful!
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className={`text-xl ${isDarkMode ? "text-gray-300" : "text-gray-600"} max-w-2xl mx-auto`}>
             Your booking has been confirmed. {confirmationEmail && (
               <>We've sent the details to{' '}
               <span className="font-semibold text-emerald-600">{confirmationEmail}</span></>
@@ -85,8 +87,8 @@ const SuccessDisplay = ({  confetti,
         </div>
 
         {/* Booking Details Card */}
-        <div ref={receiptRef} className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-8 transform hover:scale-[1.02] transition-all duration-300">
-          <div className="bg-gradient-to-r from-chart-2/80 to-chart-3/80 px-8 py-6">
+        <div ref={receiptRef} className={`rounded-3xl shadow-2xl overflow-hidden mb-8 transform hover:scale-[1.02] transition-all duration-300 ${isDarkMode ? "bg-white/5 border-white/10  hover:border-zinc-900" : "bg-white text-gray-900"}`}>
+          <div className="bg-chart-2 px-8 py-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-emerald-50 text-sm font-medium mb-1">Booking Reference</p>
@@ -100,42 +102,42 @@ const SuccessDisplay = ({  confetti,
 
           <div className="p-8 space-y-6">
             {/* Service */}
-            <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-chart-2 to-chart-3 rounded-xl flex items-center justify-center">
+            <div className={`flex items-start space-x-4 p-4 ${isDarkMode ? "bg-white/5 hover:bg-white/10" : "bg-gray-50 hover:bg-gray-100"} rounded-2xl transition-colors`}>
+              <div className="flex-shrink-0 w-12 h-12 bg-chart-2 rounded-xl flex items-center justify-center">
                 <Calendar className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500 mb-1">Service</p>
-                <p className="text-lg font-semibold text-gray-900">{serviceName}</p>
-                <p className="text-sm text-gray-600 mt-1">with {providerName}</p>
+                <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-500"} mb-1`}>Service</p>
+                <p className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>{serviceName}</p>
+                <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"} mt-1`}>with {providerName}</p>
               </div>
             </div>
 
             {/* Date & Time */}
-            <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
+            <div className={`flex items-start space-x-4 p-4 ${isDarkMode ? "bg-white/5 hover:bg-white/10" : "bg-gray-50 hover:bg-gray-100"} rounded-2xl transition-colors`}>
+              <div className="flex-shrink-0 w-12 h-12 bg-[#008800] rounded-xl flex items-center justify-center">
                 <Clock className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500 mb-1">Date & Time</p>
-                <p className="text-lg font-semibold text-gray-900">{formattedDate}</p>
-                <p className="text-sm text-gray-600 mt-1">{bookingTime}</p>
+                <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-500"} mb-1`}>Date & Time</p>
+                <p className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>{formattedDate}</p>
+                <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"} mt-1`}>{bookingTime}</p>
               </div>
             </div>
 
             {/* Location */}
-            <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center">
+            <div className={`flex items-start space-x-4 p-4 ${isDarkMode ? "bg-white/5 hover:bg-white/10" : "bg-gray-50 hover:bg-gray-100"} rounded-2xl transition-colors`}>
+              <div className="flex-shrink-0 w-12 h-12 bg-chart-2 rounded-xl flex items-center justify-center">
                 <MapPin className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500 mb-1">Location</p>
-                <p className="text-lg font-semibold text-gray-900">{location}</p>
+                <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-500"} mb-1`}>Location</p>
+                <p className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>{location}</p>
                 <a 
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-chart-2 hover:text-chart-3 font-medium mt-2 hover:underline inline-block"
+                  className={`text-sm ${isDarkMode ? "text-chart-5" : "text-chart-2"} hover:text-chart-3 font-medium mt-2 hover:underline inline-block`}
                 >
                   Open in Maps →
                 </a>
@@ -148,7 +150,7 @@ const SuccessDisplay = ({  confetti,
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <button 
             onClick={downloadReceipt}
-            className="flex items-center justify-center space-x-2 bg-white hover:bg-gray-50 text-gray-900 font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200"
+            className={`flex items-center justify-center space-x-2 ${isDarkMode ? "bg-white/5 hover:bg-white/10 text-white border-gray-300" : "border-gray-200 bg-white hover:bg-gray-50 text-gray-900"} font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border `}
           >
             <Download className="w-5 h-5" />
             <span>Download Receipt</span>
@@ -156,7 +158,7 @@ const SuccessDisplay = ({  confetti,
           
           <button 
             onClick={addToCalendar}
-            className="flex items-center justify-center space-x-2 bg-white hover:bg-gray-50 text-gray-900 font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200"
+            className={`flex items-center justify-center space-x-2 ${isDarkMode ? "bg-white/5 hover:bg-white/10 text-white border-gray-300" : "border-gray-200 bg-white hover:bg-gray-50 text-gray-900"} font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border `}
           >
             <Calendar className="w-5 h-5" />
             <span>Add to Calendar</span>
@@ -165,7 +167,7 @@ const SuccessDisplay = ({  confetti,
           <div className="relative">
             <button 
               onClick={() => setShowShareMenu(!showShareMenu)}
-              className="w-full flex items-center justify-center space-x-2 bg-white hover:bg-gray-50 text-gray-900 font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200"
+         className={`flex items-center w-full justify-center space-x-2 ${isDarkMode ? "bg-white/5 hover:bg-white/10 text-white border-gray-300" : "border-gray-200 bg-white hover:bg-gray-50 text-gray-900"} font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border `}
             >
               <Share2 className="w-5 h-5" />
               <span>Share</span>
@@ -173,8 +175,8 @@ const SuccessDisplay = ({  confetti,
             
             {/* Share Menu */}
             {showShareMenu && (
-              <div className="absolute top-full mt-2 right-0 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-10 min-w-[200px]">
-                {navigator.share && (
+              <div className={`absolute top-full mt-2 right-0 rounded-xl shadow-2xl border overflow-hidden z-10 min-w-[200px] ${isDarkMode ? "bg-white/5 border-gray-300" : "bg-white border-gray-200"}`}>
+                {typeof navigator !== 'undefined' && typeof navigator.share === 'function' && (
                   <button
                     onClick={() => shareBooking('native')}
                     className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors text-gray-700 font-medium"
@@ -218,14 +220,14 @@ const SuccessDisplay = ({  confetti,
         </div>
 
         {/* What's Next Section */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 mb-8 border border-blue-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">What happens next?</h2>
+        <div className={`${isDarkMode ? "bg-white/5 border-gray-300" : "bg-white/50 border-gray-300"} rounded-3xl p-8 mb-8 border `}>
+          <h2 className={`text-2xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"} mb-4`}>What happens next?</h2>
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0 w-8 h-8 bg-chart-2 text-white rounded-full flex items-center justify-center font-bold text-sm">
                 1
               </div>
-              <p className="text-gray-700 pt-1">
+              <p className={`${isDarkMode ? "text-white" : "text-gray-700"} pt-1`}>
                 You'll receive a confirmation email with all the booking details
               </p>
             </div>
@@ -233,7 +235,7 @@ const SuccessDisplay = ({  confetti,
               <div className="flex-shrink-0 w-8 h-8 bg-chart-2 text-white rounded-full flex items-center justify-center font-bold text-sm">
                 2
               </div>
-              <p className="text-gray-700 pt-1">
+              <p className={`${isDarkMode ? "text-white" : "text-gray-700"} pt-1`}>
                 We'll send you a reminder 24 hours before your appointment
               </p>
             </div>
@@ -241,7 +243,7 @@ const SuccessDisplay = ({  confetti,
               <div className="flex-shrink-0 w-8 h-8 bg-chart-2 text-white rounded-full flex items-center justify-center font-bold text-sm">
                 3
               </div>
-              <p className="text-gray-700 pt-1">
+              <p className={`${isDarkMode ? "text-white" : "text-gray-700"} pt-1`}>
                 You can manage or reschedule your booking from your dashboard
               </p>
             </div>
@@ -252,7 +254,7 @@ const SuccessDisplay = ({  confetti,
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button 
             onClick={() => router.push('/dashboard/Customer/booking')}
-            className="group flex items-center justify-center space-x-2 bg-gradient-to-r from-chart-2 to-chart-3 hover:from-chart-2 hover:to-chart-3 text-white font-bold py-5 px-8 rounded-xl shadow-2xl hover:shadow-chartd-500/50 transition-all duration-300 transform hover:scale-105"
+            className="group flex items-center justify-center space-x-2 bg-chart-2 hover:from-chart-2 hover:to-chart-3 text-white font-bold py-5 px-8 rounded-xl shadow-2xl hover:shadow-chartd-500/50 transition-all duration-300 transform hover:scale-105"
           >
             <span>View My Bookings</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -267,10 +269,10 @@ const SuccessDisplay = ({  confetti,
         </div>
 
         {/* Support Section */}
-        <div className="text-center mt-12 p-6 bg-white/50 backdrop-blur-sm rounded-2xl">
-          <p className="text-gray-600">
+        <div className={` border-gray-300 text-center mt-12 p-6 ${isDarkMode ? "bg-white/5 " : "bg-white/50"} backdrop-blur-sm rounded-2xl`}>
+          <p className={` ${isDarkMode ? "text-white" : "text-gray-600"}`}>
             Need help? Contact us at{' '}
-            <a href="mailto:support@example.com" className="text-chart-2 hover:text-chart-3 font-semibold hover:underline">
+            <a href="mailto:support@example.com" className={`${isDarkMode ? "text-gray-400" : "text-chart-3"} hover:text-chart-3 font-semibold hover:underline`}>
               Booking@ppeliance.co.uk
             </a>
           </p>

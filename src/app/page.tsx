@@ -1,34 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Navbar from "../component/Navbar";
-import { useSearchParams } from "next/navigation";
-import ErrorModal from "@/component/ErrorModal";
+
+import MainDisplay from "@/component/Homepage/MainDisplay";
 
 export default function Home() {
 
-   const searchParams = useSearchParams();
-  const message = searchParams.get("message");
 
-  const [showError, setShowError] = useState(false);
 
-  // Open modal if there's a message
-  useEffect(() => {
-    if (message) setShowError(true);
-  }, [message]);
+
+
   return (
-    <main className="  h-screen p-4">
-      <Navbar />
-
- {message && (
-        <ErrorModal
-          open={showError}
-          message={message}
-          onClose={() => setShowError(false)}
-        />
-      )}
+    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    
+      <MainDisplay />
     </main>
   );
 }
-
- 

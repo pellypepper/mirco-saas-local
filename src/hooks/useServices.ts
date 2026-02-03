@@ -1,3 +1,5 @@
+"use client"; 
+
 import { useState, useEffect, useCallback } from "react";
 import {Service} from "@/types/type";
 import { getServices, addService , updateService, deleteService} from "@/services/Services";

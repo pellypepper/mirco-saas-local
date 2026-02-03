@@ -66,13 +66,21 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: #f54900;
-  --chart-2: #009689;
-  --chart-22: #0e524c;
-  --chart-3: #104e64;
-  --chart-4: #eab308;
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
+  --chart-1: #f50000;
+  --chart-2: #0077b6;
+
+    --chart-6: #dc9596;  
+  --chart-22: #008000;
+  --chart-3: #8ecae6; 
+  --chart-9: #104e64;
+  --chart-4: #fb8500;
+  --h:  #52525b40;
+  --g: #a1a1aa40;
+  --i: #e4e4e740;
+  --j: #71717a40;
+  --gi: #ffffff;  
+  --chart-5: #ffb703;
+  --sidebar: lch(98.27% 0.01 296.81);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -132,7 +140,7 @@ body{
 .loader {
   width: 50px;
   aspect-ratio: 1;
-  --_c: no-repeat radial-gradient(farthest-side,#25b09b 92%,#0000);
+  --_c: no-repeat radial-gradient(farthest-side,#0077b6 92%,#0000);
   background: 
     var(--_c) top,
     var(--_c) left,

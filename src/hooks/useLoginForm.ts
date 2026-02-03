@@ -1,27 +1,17 @@
+"use client"; 
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginWithEmail } from "@/services/loginService";
 
-export function useLoginForm({ setIsLogin, setIsForgotPassword, setIsOpen }: {
-  setIsForgotPassword: (value: boolean) => void,
-  setIsLogin: (value: boolean) => void,
-  setIsOpen: (value: boolean) => void
-}) {
+export function useLoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
 
-  function handleForgotPassword() {
-    setIsForgotPassword(true);
-    setIsLogin(false);
-  }
 
-  function handleSignup() {
-    setIsLogin(false);
-    setIsOpen(true);
-  }
 
   async function handleEmailSignIn(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -57,8 +47,7 @@ export function useLoginForm({ setIsLogin, setIsForgotPassword, setIsOpen }: {
     errorMsg,
     successOpen,
     errorOpen,
-    handleForgotPassword,
-    handleSignup,
+ 
     handleEmailSignIn,
     handleSuccessClose,
     handleErrorClose,

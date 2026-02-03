@@ -1,3 +1,6 @@
+"use client"; 
+
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { exchangeTokenForSession, resetPassword } from "@/services/resetPasswordService";

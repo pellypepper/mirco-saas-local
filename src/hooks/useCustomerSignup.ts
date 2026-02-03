@@ -1,8 +1,10 @@
+"use client"; 
+
 import { useState } from "react";
 import { useSignUp } from "./useAuth";
-import { upsertUserProfile } from "@/services/authService";
 
-export default function useCustomerSignup({ setIsLogin, setIsOpen }: any) {
+
+export default function useCustomerSignup() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,22 +13,24 @@ export default function useCustomerSignup({ setIsLogin, setIsOpen }: any) {
   const [errorMessage, setErrorMessage] = useState("");
   const { signUp, loading } = useSignUp();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const data = await signUp(email, password, fullName);
-      if (data?.user) await upsertUserProfile(data.user.id, "customer", fullName);
-      setSuccessOpen(true);
-    } catch (err: any) {
-      setErrorMessage(err.message || "Signup failed");
-      setErrorOpen(true);
-    }
-  };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  try {
 
-  const handleLogin = () => {
-    setIsLogin(true);
-    setIsOpen(false);
-  };
+    
+    const data = await signUp(email, password, fullName);
+    if (!data) {
+      throw new Error("Signup failed");
+    }
+    setSuccessOpen(true);
+  } catch (err: any) {
+    console.error("Signup error:", err);
+    setErrorMessage(err.message || "Signup failed");
+    setErrorOpen(true);
+  }
+};
+
 
   return {
     fullName,
@@ -42,6 +46,6 @@ export default function useCustomerSignup({ setIsLogin, setIsOpen }: any) {
     setSuccessOpen,
     setErrorOpen,
     handleSubmit,
-    handleLogin,
+
   };
 }

@@ -1,9 +1,10 @@
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,  } from "@/components/ui/dialog";
 import { CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export default function SuccessModal({
   open,
@@ -21,6 +22,17 @@ export default function SuccessModal({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md rounded-2xl text-center p-6">
+
+        
+        <VisuallyHidden>
+    <DialogTitle>Become a Service Provider</DialogTitle>
+  </VisuallyHidden>
+
+    <VisuallyHidden>
+    <DialogDescription>
+      Provider signup form to create a service provider account.
+    </DialogDescription>
+  </VisuallyHidden>
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}

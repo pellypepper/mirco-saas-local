@@ -1,20 +1,24 @@
 "use client";
-import { Calendar, ChevronLeft, ChevronRight, Sparkles, Clock } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Sparkles, Clock, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DayCard from "@/component/ProviderAvailability/component/DayCard";
 import Loader from "@/component/Spinner";
 import useAvailability from "@/hooks/useAvailability";
-import { useAvailabilityTab} from "@/hooks/useAvailability";
+import { useAvailabilityTab } from "@/hooks/useAvailability";
 import SaveSection from "./component/SaveSection";
 import SuccessModal from "@/component/SuccessModal";
 import ErrorModal from "@/component/ErrorModal";
 import ViewAvailabilityModal from "@/component/ProviderAvailability/component/ViewAvailabilityModal";
+import { useMainNavBar } from "@/hooks/MainNavContext";
+
 
 interface AvailabilityTabProps {
   providerId: string;
 }
 
 export default function AvailabilityTab({ providerId }: AvailabilityTabProps) {
+  const { isDarkMode } = useMainNavBar(); // Add this hook
+  
   const {
     today,
     daySlots,
@@ -50,145 +54,144 @@ export default function AvailabilityTab({ providerId }: AvailabilityTabProps) {
     cancelNavigation,
     confirmNavigation
   } = useAvailabilityTab(today, addCustomSlot, removeSlot, handleSave, errorModal);
-  
-  // ===============================
-  // LOADING & ERROR fallback
-  // ===============================
 
+  /* THEME TOKENS */
+  const bgPrimary = isDarkMode ? "bg-zinc-950" : "bg-white";
+  const bgSecondary = isDarkMode ? "bg-zinc-800" : "bg-white";
+  const border = isDarkMode ? "border-zinc-700" : "border-zinc-200";
+  const textPrimary = isDarkMode ? "text-white" : "text-zinc-900";
+  const textSecondary = isDarkMode ? "text-zinc-400" : "text-zinc-600";
+  const textError = isDarkMode ? "text-red-400" : "text-red-600";
+  const bgError = isDarkMode ? "bg-red-500/20" : "bg-red-100";
+  const borderError = isDarkMode ? "border-red-500" : "border-red-300";
+  
   if (loading)
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 via-violet-50/20 to-purple-50/20">
+      <div className={`flex items-center justify-center min-h-screen ${bgPrimary}`}>
         <Loader message="Loading your availability..." />
       </div>
     );
 
   if (error)
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 via-violet-50/20 to-purple-50/20 text-center px-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className={`flex flex-col items-center justify-center min-h-screen ${bgPrimary} text-center px-4`}>
+        <div className={`${bgSecondary} border-2 ${border} rounded-3xl shadow-2xl p-8 max-w-md`}>
+          <div className={`w-16 h-16 ${bgError} rounded-full flex items-center justify-center mx-auto mb-4 border-2 ${borderError}`}>
+            <svg className={`w-8 h-8 ${textError}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <p className="text-red-600 font-bold text-lg mb-2">
-            Failed to load availability
-          </p>
-          <p className="text-gray-500 text-sm">{error}</p>
+          <p className={`${textError} font-black text-xl mb-2`}>Failed to load availability</p>
+          <p className={`${textSecondary} text-sm`}>{error}</p>
         </div>
       </div>
     );
 
-  // ===============================
-  // MAIN UI
-  // ===============================
-
   return (
-    <div className="min-h-screen   p-6">
-      <div className=" mx-auto">
-        {/* HEADER */}
-        <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 border-2 border-gray-100">
-          <div className="flex flex-col gap-6">
-            {/* Title Section */}
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-5">
-                <div className="bg-gradient-to-br from-chart-2 to-chart-3 p-2 md:p-4 rounded-2xl shadow-lg">
-                  <Calendar className="w-6 h-6 md:w-8 md:h-8 text-white" />
+    <div className={`min-h-screen ${bgPrimary} p-4 md:p-6 transition-colors duration-300`}>
+      {/* Ambient background effects */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className={`absolute top-0 right-1/4 w-96 h-96 bg-chart-2/30 rounded-full blur-3xl ${isDarkMode ? "opacity-5" : "opacity-5"}`}></div>
+        <div className={`absolute bottom-1/4 left-1/4 w-80 h-80 bg-chart-2/30 rounded-full blur-3xl ${isDarkMode ? "opacity-5" : "opacity-10"}`}></div>
+      </div>
+
+      <div className="relative mx-auto max-w-8xl">
+        {/* HERO HEADER */}
+        <div className="mb-8">
+          <div className="relative bg-gradient-to-br from-chart-2 to-chart-3 rounded-3xl shadow-2xl p-6 md:p-8  overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full -ml-24 -mb-24"></div>
+            
+            {/* Geometric pattern */}
+            <div className="absolute inset-0 opacity-10" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}></div>
+
+            <div className="relative">
+              {/* Title Section */}
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <div className="relative p-3 md:p-4 bg-chart-2 rounded-2xl shadow-lg">
+                      <Calendar className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                    </div>
+                  </div>
+                  <div>
+                    <h1 className="text-2xl md:text-4xl font-black text-white mb-1">
+                      Availability Manager
+                    </h1>
+                    <p className="text-white/80 text-sm md:text-base font-medium flex items-center gap-2">
+                      <Clock size={14} />
+                      {dateLabel}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="text-xl md:text-3xl font-black text-gray-900 mb-1">
-                    Availability Manager
-                  </h1>
-                  <p className="text-gray-600 text-xs font-medium">
-                    Set your available time slots • {dateLabel}
-                  </p>
+
+                {/* Total Slots Badge */}
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-white rounded-2xl blur-md opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                  <div className="relative flex items-center gap-3 bg-white/20 backdrop-blur-xl px-6 py-3 rounded-2xl border-2 border-white/30">
+                    <div className="p-2 bg-white/20 rounded-lg">
+                      <Sparkles size={18} className="text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white/70 text-xs font-bold uppercase">Total Slots</p>
+                      <p className="text-2xl font-black text-white">{getTotalSlots()}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              {/* Total Slots Badge */}
-              <div className="flex items-center gap-2 bg-gradient-to-br from-chart-2/10 to-chart-3/10 px-5 py-3 rounded-xl border-2 border-chart-2/10">
-                <Sparkles size={18} className="text-chart-2" />
-                <span className="text-xs font-bold text-gray-700">
-                  {getTotalSlots()} Total Slots
-                </span>
-              </div>
-            </div>
 
-            {/* View Toggle & Navigation */}
-            <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between pt-6 border-t-2 border-gray-100">
-              {/* View Toggle */}
-              <div className="flex  gap-0.5 md:gap-2">
-                <Button
-                  variant={view === "week" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => {
-                    setView("week");
-                    setTimeOffset(0);
-                  }}
-                  className={`px-6 py-2 text-xs rounded-xl font-bold transition-all duration-300 ${
-                    view === "week"
-                      ? "bg-gradient-to-br from-chart-2/80 to-chart-3/80 text-white shadow-lg hover:from-chart-2/90 hover:to-chart-3/90"
-                      : "bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-violet-200"
-                  }`}
-                >
-                  <Clock size={16} className="mr-2" />
-                  Week
-                </Button>
+              {/* View Toggle & Navigation */}
+              <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between pt-6 border-t-2 border-white/20">
+                {/* View Toggle */}
+                <div className="flex gap-2">
+                  {[
+                    { value: "week", label: "Week", icon: Clock },
+                    { value: "month", label: "Month", icon: Calendar },
+                    { value: "year", label: "Year", icon: Calendar }
+                  ].map(({ value, label, icon: Icon }) => (
+                    <Button
+                      key={value}
+                      size="sm"
+                      onClick={() => {
+                        setView(value as any);
+                        setTimeOffset(0);
+                      }}
+                      className={`px-4 md:px-6 py-2.5 text-xs md:text-sm rounded-xl font-bold transition-all duration-300 ${
+                        view === value
+                          ? "bg-white text-chart-2 shadow-lg hover:bg-zinc-800 hover:text-white"
+                          : "bg-white/10 border-2 border-white/30 text-white hover:bg-white/20 hover:border-white"
+                      }`}
+                    >
+                      <Icon size={16} className="mr-2" />
+                      {label}
+                    </Button>
+                  ))}
+                </div>
 
-                <Button
-                  variant={view === "month" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => {
-                    setView("month");
-                    setTimeOffset(0);
-                  }}
-                  className={`px-6 py-2 text-xs rounded-xl font-bold transition-all duration-300 ${
-                    view === "month"
-                      ? "bg-gradient-to-br from-chart-2/80 to-chart-3/80 text-white shadow-lg hover:from-violet-700 hover:to-purple-700"
-                      : "bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-violet-200"
-                  }`}
-                >
-                  <Calendar size={16} className="mr-2" />
-                  Month
-                </Button>
+                {/* Navigation Buttons */}
+                <div className="flex gap-3">
+                  <Button
+                    size="sm"
+                    disabled={timeOffset <= 0}
+                    onClick={() => setTimeOffset((prev) => prev - 1)}
+                    className={`px-5 py-2.5 ${isDarkMode ? "bg-zinc-800 border-zinc-700" : "bg-white border-zinc-300"} border-2 ${textPrimary} rounded-xl font-bold ${
+                      isDarkMode ? "hover:bg-zinc-700" : "hover:bg-zinc-100"
+                    } disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300`}
+                  >
+                    <ChevronLeft size={18} className="mr-1" /> Previous
+                  </Button>
 
-                <Button
-                  variant={view === "year" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => {
-                    setView("year");
-                    setTimeOffset(0);
-                  }}
-                  className={`px-6 py-2 text-xs rounded-xl font-bold transition-all duration-300 ${
-                    view === "year"
-                      ? "bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg hover:from-violet-700 hover:to-purple-700"
-                      : "bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-violet-200"
-                  }`}
-                >
-                  <Calendar size={16} className="mr-2" />
-                  Year
-                </Button>
-              </div>
-
-              {/* Navigation Buttons */}
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={timeOffset <= 0}
-                  onClick={() => setTimeOffset((prev) => prev - 1)}
-                  className="px-5 py-3 bg-gradient-to-r from-gray-700 to-gray-800 text-white rounded-xl font-semibold hover:from-gray-800 hover:to-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl border-0 disabled:from-gray-400 disabled:to-gray-500"
-                >
-                  <ChevronLeft size={18} className="mr-1" /> Previous
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setTimeOffset((prev) => prev + 1)}
-                  className="px-5 py-3 bg-gradient-to-br from-chart-2 to-chart-3 text-white rounded-xl cursor-pointer font-semibold hover:from-chart-2/90 hover:to-chart-3/90 transition-all duration-300 shadow-lg hover:shadow-xl border-0"
-                >
-                  Next <ChevronRight size={18} className="ml-1" />
-                </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => setTimeOffset((prev) => prev + 1)}
+                    className="px-5 py-2.5 bg-white text-chart-2 rounded-xl font-bold hover:bg-white/90 transition-all duration-300 shadow-lg"
+                  >
+                    Next <ChevronRight size={18} className="ml-1" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -214,6 +217,7 @@ export default function AvailabilityTab({ providerId }: AvailabilityTabProps) {
               addCustomSlot={handleAddSlot}
               removeSlot={handleRemoveSlot}
               setNewSlot={setNewSlot}
+              isDarkMode={isDarkMode}
             />
           ))}
         </div>
@@ -224,12 +228,13 @@ export default function AvailabilityTab({ providerId }: AvailabilityTabProps) {
           handleSave={handleLoading}
           getTotalSlots={getTotalSlots}
           daySlots={daySlots}
+               isDarkMode={isDarkMode}
         />
 
         {/* SAVE LOADING OVERLAY */}
         {loader && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white rounded-2xl p-8 shadow-2xl">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50">
+            <div className={`${bgSecondary} border-2 ${border} rounded-3xl p-8 shadow-2xl`}>
               <Loader message="Saving your availability..." />
             </div>
           </div>
@@ -240,6 +245,7 @@ export default function AvailabilityTab({ providerId }: AvailabilityTabProps) {
           open={showAvailabilityModal}
           onClose={() => setShowAvailabilityModal(false)}
           daySlots={daySlots}
+               isDarkMode={isDarkMode}
         />
 
         {successModal && (

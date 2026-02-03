@@ -1,3 +1,5 @@
+"use client"; 
+
 import { useState,useEffect, useCallback } from "react";
 import BookingService from '@/services/bookingService';
 import { set } from "react-hook-form";

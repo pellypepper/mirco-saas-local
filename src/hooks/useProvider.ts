@@ -1,3 +1,5 @@
+"use client"; 
+
 import { useState, useEffect } from "react";
 import { fetchProviderProfile, fetchProviderById } from "@/services/providerService";
 import { set } from "react-hook-form";

@@ -1,4 +1,5 @@
-// /hooks/useDebouncedValue.ts
+"use client"; 
+
 import { useEffect, useState } from "react";
 
 export default function useDebouncedValue<T>(value: T, delay = 400) {

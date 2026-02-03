@@ -8,10 +8,20 @@ export const upsertUserProfile = async (
 ) => {
   const { error } = await supabase
     .from("profiles")
-    .upsert({ id: userId, role, full_name: fullName, ...extraFields });
+    .upsert(
+      { 
+        id: userId, 
+        role, 
+        full_name: fullName, 
+        ...extraFields,
+        updated_at: new Date().toISOString()
+      },
+      {
+        onConflict: 'id'
+      }
+    );
   if (error) throw error;
 };
-
 
 export async function getCurrentSession() {
   const {
@@ -24,10 +34,37 @@ export async function getCurrentSession() {
 export async function getUserRole(userId: string) {
   const { data: profile, error } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, full_name, id")
     .eq("id", userId)
-    .single();
+    .maybeSingle(); // Use maybeSingle() instead of single() to avoid error when no row exists
+
   return { profile, error };
 }
 
+// Check if user has a profile
+export async function hasUserProfile(userId: string) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", userId)
+    .maybeSingle();
 
+  return { exists: !!data, error };
+}
+
+// Create initial profile for OAuth users
+export async function createOAuthProfile(userId: string, email: string, fullName?: string) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .insert({
+      id: userId,
+      full_name: fullName || email.split('@')[0],
+      role: null, // Role will be set later
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    })
+    .select()
+     .maybeSingle();
+
+  return { data, error };
+}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/libs/supabaseClient";
-import type { Provider } from "@supabase/auth-js";
+import type { Provider } from "@supabase/supabase-js";
 
 export default function useOAuthLogin() {
   const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null);
@@ -8,10 +8,21 @@ export default function useOAuthLogin() {
   const handleOAuth = async (provider: Provider) => {
     setLoadingProvider(provider);
     try {
-      await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider,
-        options: { redirectTo: `${window.location.origin}/auth/callback` },
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
       });
+
+      if (error) {
+        console.error("OAuth error:", error);
+        setLoadingProvider(null);
+      }
     } catch (error) {
       console.error("OAuth error:", error);
       setLoadingProvider(null);

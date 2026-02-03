@@ -18,9 +18,7 @@ class BookingService {
 
 
   static async createBooking({ paymentId, metadata, customer_email }: any) {
-    console.log("Creating booking with metadata:", metadata);
-    console.log("Customer email:", customer_email);
-    console.log("Payment ID:", paymentId);
+  
     const { error } = await supabaseAdmin.from("bookings").insert({
       provider_id: metadata.provider_id,
       customer_id: metadata.customer_id,
@@ -169,8 +167,8 @@ static async cancelBooking(bookingId: string, availabilityId: string) {
   
 static async fetchAvailableSlots(providerId: string, date: string) {
   try {
+
     // Define start and end of the day as time strings
-    console.log('Fetching available slots for providerId:', providerId, 'on date:', date);
     const startTime = "00:00:00";
     const endTime = "23:59:59";
 
@@ -193,7 +191,7 @@ static async fetchAvailableSlots(providerId: string, date: string) {
       console.error("fetchAvailableSlots error:", error);
       return [];
     }
-console.log('Availability fetch result:', data);
+
     // Filter only unbooked slots
     const availableSlots = data?.filter((slot: any) => !slot.is_booked) || [];
 
@@ -232,7 +230,7 @@ static async makeSlotAvailable(
 availabilityId: string
 ) {
   try {
-   console.log("Making slot available:", availabilityId, "for provider:", providerId);
+  
     const { data, error } = await supabaseAdmin
       .from("availability")
       .update({ is_booked: false })
@@ -292,7 +290,7 @@ static async deleteBookingForCustomer(bookingId: string) {
 }
 
 static async deleteBookingForProvider(bookingId: string) {
-  console.log("Deleting booking for provider, bookingId:", bookingId);
+ 
   try {
     const { data, error } = await supabaseAdmin
       .from("bookings")

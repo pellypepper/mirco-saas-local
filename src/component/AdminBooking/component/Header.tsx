@@ -3,7 +3,6 @@ import {
   Calendar,
   CalendarCheck,
 
-  CheckCircle2, 
   XCircle, 
   Clock, 
 
@@ -12,7 +11,7 @@ import {
   Download
 } from "lucide-react";
 
-const Header = ({ totalBookings, confirmedBookings, completedBookings, pendingBookings, cancelledBookings, totalRevenue }: { totalBookings: number; confirmedBookings: number; completedBookings: number; pendingBookings: number; cancelledBookings: number; totalRevenue: number }) => {
+const Header = ({ totalBookings, confirmedBookings,  pendingBookings, cancelledBookings, totalRevenue }: { totalBookings: number; confirmedBookings: number; completedBookings: number; pendingBookings: number; cancelledBookings: number; totalRevenue: number }) => {
   return (
     <div>
            <div className="mb-8">

@@ -1,174 +1,216 @@
 "use client";
 
-import { MapPin,   Mail, Phone, Globe, Briefcase, Users, } from "lucide-react";
+import {
+  MapPin,
+  Mail,
+  Phone,
+  Globe,
+  Briefcase,
+  Users,
+  TrendingUp,
+  Clock,
+  Award,
+} from "lucide-react";
 import { useGetProviderEmail } from "@/hooks/useUserProfile";
 import useExtraService from "@/hooks/extraServices";
-
-
-
+import { useMainNavBar } from "@/hooks/MainNavContext";
 
 const About = ({ provider }: { provider: any }) => {
   const providerWithEmail = useGetProviderEmail(provider.id);
-  const { services} = useExtraService(provider.id);
+  const { services } = useExtraService(provider.id);
+  const { isDarkMode } = useMainNavBar();
 
+  /* THEME TOKENS */
+  const surface = isDarkMode ? "bg-zinc-800" : "bg-white";
+  const surfaceSoft = isDarkMode ? "bg-zinc-900/50" : "bg-zinc-100";
+  const border = isDarkMode ? "border-zinc-500" : "border-chart-2/20";
 
+  const textPrimary = isDarkMode ? "text-white" : "text-zinc-900";
+  const textSecondary = isDarkMode ? "text-zinc-300" : "text-zinc-700";
+  const textMuted = isDarkMode ? "text-zinc-400" : "text-gray-700";
 
   return (
-      <div className="px-8 pb-8">
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Main About Content */}
-              <div className="lg:col-span-2 space-y-6">
-                <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-indigo-100 rounded-lg">
-                      <Users size={24} className="text-chart-2" />
-                    </div>
-                    <h2 className="md:text-2xl text-xl font-bold text-gray-900">About Me</h2>
-                  </div>
-                  <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 border border-gray-200">
-                    <p className="text-gray-700 text-[12px] leading-relaxed">
-                      {provider.bio || "No biography provided yet."}
-                    </p>
-                  </div>
-                </div>
-                {/* Specializations/Skills */}
-                {services && services.length > 0 && (
-  <div>
-    <div className="flex items-center gap-3 mb-4">
-      <div className="p-2 border-chart-2/10  rounded-lg">
-        <Briefcase size={24} className="text-chart-2" />
-      </div>
-      <h3 className="md:text-xl text-lg font-bold text-gray-900">Services</h3>
-    </div>
-    <div className="flex flex-wrap gap-2">
-      {services.map((service: any) => (
-        <span
-          key={service.id}
-          className="px-4 py-2 text-sm bg-white border-2 border-chart-2/30 rounded-full text-chart-2 font-medium hover:bg-purple-50 transition-colors"
-        >
-          {service.title} 
-        </span>
-      ))}
-    </div>
-  </div>
-)}
+    <div className="px-8 pb-8">
+      <div className="grid lg:grid-cols-3 gap-8">
 
-                {/* Education/Certifications */}
-                {/* {provider.education && (
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-green-100 rounded-lg">
-                        <GraduationCap size={24} className="text-green-600" />
-                      </div>
-                      <h3 className="text-xl font-bold text-gray-900">Education & Credentials</h3>
-                    </div>
-                    <div className="bg-white rounded-2xl p-6 border border-gray-200 space-y-3">
-                      {provider.education.map((edu: string, idx: number) => (
-                        <div key={idx} className="flex items-start gap-3">
-                          <CheckCircle size={20} className="text-green-500 mt-0.5 flex-shrink-0" />
-                          <p className="text-gray-700">{edu}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )} */}
+        {/* MAIN CONTENT */}
+        <div className="lg:col-span-2 space-y-6">
+
+          {/* ABOUT */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-chart-2 rounded-xl shadow-lg">
+                <Users size={24} className="text-white" />
               </div>
+              <h2 className={`md:text-2xl text-xl font-bold ${textPrimary}`}>
+                About Me
+              </h2>
+            </div>
 
-              {/* Sidebar Info */}
-              <div className="space-y-6">
-                {/* Contact Information */}
-                <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-lg">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Contact Information</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <MapPin size={20} className="text-gray-400 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <div className="text-sm font-medium text-gray-500">Location</div>
-                        <div className="text-gray-900 text-[14px]">{provider.location}</div>
-                      </div>
-                    </div>
-
-                    {providerWithEmail && (
-                      <div className="flex items-start gap-3">
-                        <Mail size={20} className="text-gray-400 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <div className="text-sm font-medium text-gray-500">Email</div>
-                          <div className="text-gray-900 break-all text-[14px]">{providerWithEmail.email}</div>
-                        </div>
-                      </div>
-                    )}
-
-                    {provider.phone_number && (
-                      <div className="flex items-start gap-3">
-                        <Phone size={20} className="text-gray-400 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <div className="text-sm font-medium text-gray-500">Phone</div>
-                          <div className="text-gray-900 text-[14px]">{provider.phone_number}</div>
-                        </div>
-                      </div>
-                    )}
-
-                    {provider.website && (
-                      <div className="flex items-start gap-3">
-                        <Globe size={20} className="text-gray-400 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <div className="text-sm font-medium text-gray-500">Website</div>
-                          <a
-                            href={provider.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-chart-2 text-[14px] hover:text-chart-2 hover:underline"
-                          >
-                            Visit Website
-                          </a>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Pricing */}
-                {provider.hourly_rate && (
-                  <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
-                    <h3 className="text-lg font-bold mb-2">Session Rate</h3>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-5xl font-bold">${provider.hourly_rate}</span>
-                      <span className="text-indigo-200 text-lg">/hour</span>
-                    </div>
-                    <p className="text-indigo-100 text-sm mt-2">
-                      Professional consultation fee
-                    </p>
-                  </div>
-                )}
-
-                {/* Quick Stats */}
-                <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-lg">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Stats</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Experience</span>
-                      <span className="font-bold text-gray-900">
-                        {provider.years_of_experience || "N/A"} years
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Clients Served</span>
-                      <span className="font-bold text-gray-900">
-                        {provider.clients_served || "N/A"}+
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Response Time</span>
-                      <span className="font-bold text-gray-900">
-                        {provider.response_time || "< 24h"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+            <div className="relative group">
+              <div className="absolute inset-0 bg-chart-3 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition" />
+              <div
+                className={`relative border-2 rounded-2xl p-6 transition ${surfaceSoft} ${border}`}
+              >
+                <p className={`text-sm md:text-base leading-relaxed ${textSecondary}`}>
+                  {provider.bio || "No biography provided yet."}
+                </p>
               </div>
             </div>
           </div>
-  )
-}
 
-export default About
+          {/* SERVICES */}
+          {services?.length > 0 && (
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-chart-4 rounded-xl shadow-lg">
+                  <Briefcase size={24} className="text-white" />
+                </div>
+                <h3 className={`md:text-xl text-lg font-bold ${textPrimary}`}>
+                  Services Offered
+                </h3>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                {services.map((service: any) => (
+                  <span
+                    key={service.id}
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full border-2 cursor-pointer transition
+                      ${surface} ${border} ${textPrimary}
+                      hover:border-chart-2 hover:text-chart-2`}
+                  >
+                    <Award size={14} className="text-chart-2" />
+                    {service.title}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* SIDEBAR */}
+        <div className="space-y-6">
+
+          {/* CONTACT */}
+          <div className="relative group">
+            <div className="absolute inset-0 bg-chart-4 rounded-3xl opacity-0 group-hover:opacity-10 blur-2xl transition" />
+            <div
+              className={`relative border-2 rounded-3xl p-6 shadow-2xl transition ${surface} ${border}`}
+            >
+              <h3 className={`text-lg font-bold mb-6 ${textPrimary}`}>
+                Contact Info
+              </h3>
+
+              <div className="space-y-5">
+
+                {/* ITEM */}
+                {[
+                  { icon: MapPin, label: "Location", value: provider.location },
+                  providerWithEmail && {
+                    icon: Mail,
+                    label: "Email",
+                    value: providerWithEmail.email,
+                  },
+                  provider.phone_number && {
+                    icon: Phone,
+                    label: "Phone",
+                    value: provider.phone_number,
+                  },
+                ]
+                  .filter(Boolean)
+                  .map((item: any, i) => (
+                    <div key={i} className="flex items-start gap-4">
+                      <div
+                        className={`p-2 rounded-xl border ${surfaceSoft} ${border}`}
+                      >
+                        <item.icon size={18} className={`${isDarkMode ? "text-chart-2" : "text-chart-2"}`} />
+                      </div>
+                      <div>
+                        <div className={`text-xs uppercase font-semibold ${textMuted}`}>
+                          {item.label}
+                        </div>
+                        <div className={`font-medium text-sm ${textPrimary}`}>
+                          {item.value}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                {/* WEBSITE */}
+                {provider.website && (
+                  <div className="flex items-start gap-4">
+                    <div className={`p-2 rounded-xl border ${surfaceSoft} ${border}`}>
+                      <Globe size={18} className={`${isDarkMode ? "text-chart-2" : "text-chart-2"}`} />
+                    </div>
+                    <a
+                      href={provider.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-chart-2 text-sm font-medium "
+                    >
+                        <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Website</div>
+            
+                   <div className={`${isDarkMode ? "text-white" : "text-chart-2"} flex gap-2 items-center`}>
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                       Visit Website
+                       
+                   </div>
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* QUICK STATS */}
+          <div className="relative group">
+            <div className="absolute inset-0 bg-chart-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-2xl transition" />
+            <div
+              className={`relative border-2 rounded-3xl p-6 shadow-2xl transition ${surface} ${border}`}
+            >
+              <h3 className={`text-lg font-bold mb-6 ${textPrimary}`}>
+                Quick Stats
+              </h3>
+
+              {[
+                {
+                  label: "Experience",
+                  icon: TrendingUp,
+                  value: `${provider.years_of_experience || "N/A"} yrs`,
+                },
+                {
+                  label: "Clients Served",
+                  icon: Users,
+                  value: `${provider.clients_served || "N/A"}+`,
+                },
+                {
+                  label: "Response Time",
+                  icon: Clock,
+                  value: provider.response_time || "< 24h",
+                },
+              ].map((stat, i) => (
+                <div
+                  key={i}
+                  className={`flex items-center justify-between p-3 rounded-xl border mb-3 ${surfaceSoft} ${border}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <stat.icon size={18} className={`${isDarkMode ? "text-white" : "text-black"}`} />
+                    <span className={`text-sm ${textMuted}`}>{stat.label}</span>
+                  </div>
+                  <span className={`font-bold ${textPrimary}`}>
+                    {stat.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default About;

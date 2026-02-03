@@ -290,11 +290,11 @@ const errorMessage = unsavedMessage || errorModal
  
   //  Wrap slot actions to mark unsaved changes
   const handleAddSlot = (date: string) => {
-    console.log("Adding slot for date:", date);
+   
     const changed = addCustomSlot(date);
-    console.log("Slot added, changed:", changed);
+ 
     if (changed) setHasUnsavedChanges(true);
-    console.log("hasUnsavedChanges:", hasUnsavedChanges);
+
   };
 
   const handleRemoveSlot = async (date: string, id: string) => {

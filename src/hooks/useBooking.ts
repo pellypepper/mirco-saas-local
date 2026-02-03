@@ -1,3 +1,4 @@
+"use client"; 
 
 import { useEffect, useMemo, useState , useCallback} from "react";
 import { CheckCircle , AlertCircle, XCircle} from "lucide-react";
@@ -229,7 +230,7 @@ const [bookings, setBookings] = useState<BookingCustomer[]>([]);
       setLoading(true);
       setError(null);
       const data = await BookingService.fetchBookingsByCustomer(user?.id);
-      console.log('Fetched bookings:', data);
+   
       setBookings(data);
     } catch (err) {
       console.error('Error fetching bookings:', err);
@@ -280,10 +281,10 @@ const handleCancel = (booking: BookingCustomer): void => {
 const getStatusConfig = (status: string): StatusConfig => {
     const configs: Record<string, StatusConfig> = {
         confirmed: {
-            color: 'bg-chart-2/20 text-chart-2 border-chart-2/30',
+            color: 'bg-[#008800]/20 text-[#008800] border-[#008800]/30',
             icon: CheckCircle,
             label: 'Confirmed',
-             badge: 'bg-chart-2'
+             badge: 'bg-[#008800]'
         },
         pending: {
             color: 'bg-chart-3/20 text-chart-3 border-chart-3/30',
@@ -341,7 +342,7 @@ const onConfirmDelete = async (booking: any) => {
   if (!booking) return;
 
   let deleted = null;
-  console.log("Deleting booking:", booking);
+
 
 
   const providerRole = booking.provider?.role;

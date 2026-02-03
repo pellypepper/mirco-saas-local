@@ -4,6 +4,7 @@ import  ServiceHeader from "@/component/ProviderService/component/serviceHeader"
 import ServiceMain from "@/component/ProviderService/component/serviceMain";
 import ServiceGrid from "@/component/ProviderService/component/serviceGrid";
 import Services from "@/hooks/useServices";
+import { useMainNavBar } from "@/hooks/MainNavContext";
 
 export default function ServicesPage() {
   const { 
@@ -27,10 +28,12 @@ export default function ServicesPage() {
     handleDeleteService
   } = Services();
 
+  const { isDarkMode } = useMainNavBar();
+
   const totalRevenue = services.reduce((sum, s) => sum + s.price, 0);
 
   return (
-    <div className="min-h-screen  p-4 md:p-8">
+    <div className={`"min-h-screen ${isDarkMode ? "bg-zinc-800" : "bg-white"} p-4 md:p-8"`}>
       <div className=" mx-auto space-y-6">
         
         {/* HERO HEADER */}
@@ -39,6 +42,7 @@ export default function ServicesPage() {
           totalRevenue={totalRevenue}
           selectedCurrency={selectedCurrency}
           serviceCurrency={serviceCurrency}
+         
 
         />
 
@@ -59,7 +63,7 @@ export default function ServicesPage() {
           cancelEdit={cancelEdit}
           selectedCurrency={selectedCurrency}
           currencies={currencies}
-
+ isDarkMode={isDarkMode}
         />
 
         {/* SERVICES GRID */}
@@ -68,6 +72,7 @@ export default function ServicesPage() {
          currencies={currencies}
           handleEditService={handleEditService}
           handleDeleteService={handleDeleteService}
+           isDarkMode={isDarkMode}
         />
       </div>
     </div>
