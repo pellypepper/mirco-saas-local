@@ -27,12 +27,12 @@ export default function ViewAvailabilityModal({
   const bgSecondary = isDarkMode ? "bg-zinc-900" : "bg-zinc-50";
   const bgCard = isDarkMode ? "bg-zinc-900" : "bg-white";
   const border = isDarkMode ? "border-zinc-700" : "border-zinc-200";
-  const cardHoverBorder = isDarkMode ? "hover:border-[#730071]" : "hover:border-chart-2";
+  const cardHoverBorder = isDarkMode ? "hover:border-chart-2" : "hover:border-chart-2";
   const textPrimary = isDarkMode ? "text-white" : "text-zinc-900";
   const textSecondary = isDarkMode ? "text-zinc-500" : "text-zinc-600";
   const slotBg = isDarkMode ? "bg-zinc-800" : "bg-zinc-100";
   const slotBorder = isDarkMode ? "border-zinc-700" : "border-zinc-200";
-  const slotHoverBorder = isDarkMode ? "hover:border-[#c2c094]" : "hover:border-chart-2";
+  const slotHoverBorder = isDarkMode ? "hover:border-chart-2" : "hover:border-chart-2";
   const emptyIconBg = isDarkMode ? "bg-zinc-900" : "bg-zinc-100";
   const emptyIconBorder = isDarkMode ? "border-zinc-700" : "border-zinc-200";
   const emptyIconColor = isDarkMode ? "text-zinc-600" : "text-zinc-400";
@@ -45,7 +45,7 @@ export default function ViewAvailabilityModal({
       <div className={`${bgPrimary} border-2 ${border} rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl animate-in zoom-in duration-500 transition-colors`}>
         
         {/* Header */}
-        <div className={`relative bg-gradient-to-br from-chart-2 to-chart-3 p-6 border-b-2 ${border}`}>
+        <div className={`relative bg-chart-2 p-6 border-b-2 ${border}`}>
           {/* Decorative blob */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
           
@@ -154,7 +154,7 @@ export default function ViewAvailabilityModal({
         <div className={`p-6 border-t-2 ${border} ${bgSecondary}`}>
           <Button
             onClick={onClose}
-            className="w-full bg-chart-2 text-white font-bold py-3 rounded-xl hover:shadow-lg hover:shadow-[#730071]/50 transition-all duration-300"
+            className="w-full bg-chart-2 text-white font-bold py-3 rounded-xl hover:shadow-lg hover:shadow-[#0077b6]/50 transition-all duration-300"
           >
             Close Preview
           </Button>

@@ -7,6 +7,8 @@ import { useMainNavBar } from "@/hooks/MainNavContext";
 
 export default function BottomPanels({ stats, recentActivity }: any) {
   const { isDarkMode } = useMainNavBar();
+
+
   return (
     <div className="grid md:grid-cols-2 gap-6 ">
       {/* Needs Attention Panel */}

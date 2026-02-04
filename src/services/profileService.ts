@@ -36,12 +36,16 @@ export const updateProfile = async (
 
   const updateFields: any = {
     full_name: cleanValue(formData.full_name),
-    bio: cleanValue(formData. bio),
+    bio: cleanValue(formData.bio),
     location: cleanValue(formData.location),
     phone_number: cleanValue(formData.phone_number),
     website: cleanValue(formData.website),
-    years_of_experience: toInteger(formData.years_of_experience), // Convert to integer
-    avatar_url: imageUrl || null,
+    years_of_experience: toInteger(formData.years_of_experience),
+   country: cleanValue(
+  formData.country 
+    ? formData.country.charAt(0).toUpperCase() + formData.country.slice(1).toLowerCase()
+    : ''
+),  avatar_url: imageUrl || null,
   };
 
   if (role === "provider") {

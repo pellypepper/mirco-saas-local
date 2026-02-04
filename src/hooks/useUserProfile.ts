@@ -12,6 +12,7 @@ const useUserProfile = (profile: any) => {
     website: profile?.website || "",
     years_of_experience: profile?.years_of_experience || "",
     location: profile?.location || "",
+    country: profile?.country || "",
   });
 
   const [imageUrl, setImageUrl] = useState(profile?.avatar_url || "");
@@ -29,6 +30,7 @@ const useUserProfile = (profile: any) => {
               { id: "phone_number", label: "Phone Number", type: "text" },
           { id: "bio", label: "Bio", type: "textarea" },
                       { id: "website", label: "Website", type: "text" },
+                        { id: "country", label: "Country", type: "text" },
           { id: "location", label: "Address", type: "text" },
                     { id: "years_of_experience", label: "Years of Experience", type: "text" },
         ]

@@ -108,7 +108,7 @@ const BookingModal = ({ provider, slot, onConfirm, onClose }: BookingModalProps)
                     <>
                       <div className={`font-bold ${isDarkMode ? "text-white" : "text-zinc-900"}`}>{selectedService. title}</div>
                       <div className={`text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-600"} mt-1`}>
-                        {selectedService.duration_minutes} min • <span className="text-chart-2 font-bold">${selectedService.price}</span>
+                        {selectedService.duration_minutes} min • <span className="text-chart-2 font-bold">{selectedService.price}</span>
                       </div>
                     </>
                   ) : (
@@ -138,7 +138,7 @@ const BookingModal = ({ provider, slot, onConfirm, onClose }: BookingModalProps)
                       >
                         <div className={`font-bold ${isDarkMode ? "text-white" : "text-zinc-900"} group-hover/item:text-chart-2 transition-colors duration-300`}>{service.title}</div>
                         <div className={`text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-600"} mt-1`}>
-                          {service.duration_minutes} minutes • <span className={`font-bold ${isDarkMode ? "text-white" : "text-zinc-900"}`}>${service.price}</span> {service.currency}
+                          {service.duration_minutes} minutes • <span className={`font-bold ${isDarkMode ? "text-white" : "text-zinc-900"}`}>{service.price}</span> {service.currency}
                         </div>
                       </button>
                     ))
@@ -205,7 +205,7 @@ const BookingModal = ({ provider, slot, onConfirm, onClose }: BookingModalProps)
                     <div className={`font-bold text-sm md:text-base ${isDarkMode ? "text-white/90" : "text-zinc-900"}`}>Session Fee</div>
                   </div>
                   <div className={`text-2xl md:text-4xl font-black ${isDarkMode ? "text-white" : "text-zinc-900"}`}>
-                    ${selectedService.price}
+                  {selectedService.currency}  {selectedService.price}
                   </div>
                 </div>
               </div>

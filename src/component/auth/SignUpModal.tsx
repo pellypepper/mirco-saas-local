@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { X } from "lucide-react"
 import { MeshGradient } from "@paper-design/shaders-react"
-import HeroForm from "./CustomerSignUpForm"
+import HeroForm from "./CustomerSignupForm"
 
 export default function HeroModal({
   isOpen,

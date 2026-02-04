@@ -4,9 +4,7 @@ import { Briefcase, TrendingUp, Sparkles} from "lucide-react";
 
 const ServiceHeader = ({
   services, 
-  totalRevenue, 
-  selectedCurrency, 
-  serviceCurrency,
+
  
 }: {
   services: any[], 
@@ -66,24 +64,6 @@ const ServiceHeader = ({
               </div>
             </div>
 
-            {/* Average Price */}
-            <div className="group relative">
-              <div className="relative bg-white/20 backdrop-blur-xl border-2 border-white/30 rounded-2xl px-6 py-4 shadow-xl min-w-[160px]">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="p-1.5 bg-white/20 rounded-lg">
-                    <TrendingUp className="w-4 h-4 text-white" />
-                  </div>
-                  <p className="text-white/90 text-xs font-bold uppercase tracking-wide">Avg. Price</p>
-                </div>
-                <div className="flex items-baseline gap-1">
-                  <p className="text-3xl md:text-4xl font-black text-white">
-                    {selectedCurrency.symbol}
-                    {services.length > 0 ? (totalRevenue / services.length).toFixed(2) : "0.00"}
-                  </p>
-                  <span className="text-xs text-white/70 font-bold">{serviceCurrency}</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -50,6 +50,7 @@ export const fetchProviderProfile = async () => {
         .select("*")
         .eq("role", "provider");
 
+
       if (!error) return data || [];
     };
 

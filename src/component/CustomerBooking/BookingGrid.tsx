@@ -140,7 +140,7 @@ export const CustomerBookingsGrid = ({
                 {/* Date & Time */}
                 <div className={`${isDarkMode ? "bg-zinc-900 border-zinc-700" : "bg-zinc-200 border-2 border-gray-300"} rounded-2xl p-4 hover:border-chart-2 transition-all duration-300`}>
                   <div className="flex items-start gap-3">
-                    <div className="p-2 bg-chart-4 rounded-lg">
+                    <div className="p-2 bg-chart-2 rounded-lg">
                       <Calendar className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -158,7 +158,7 @@ export const CustomerBookingsGrid = ({
                 {/* Duration */}
                 <div className={`${isDarkMode ? "bg-zinc-900 border-zinc-700" : "bg-zinc-200 border-2 border-gray-300"} rounded-2xl p-4 hover:border-chart-3 transition-all duration-300`}>
                   <div className="flex items-start gap-3">
-                    <div className="p-2 bg-chart-2 rounded-lg">
+                    <div className="p-2 bg-chart-1 rounded-lg">
                       <Clock className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -176,7 +176,7 @@ export const CustomerBookingsGrid = ({
                   className={`${isDarkMode ? "bg-zinc-900 border-zinc-700" : "bg-zinc-200 border-2 border-gray-300"} rounded-2xl p-4 hover:border-chart-2 transition-all duration-300 cursor-pointer group/card`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="p-2 bg-chart-3 rounded-lg">
+                    <div className="p-2 bg-chart-2 rounded-lg">
                       <User className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -191,7 +191,7 @@ export const CustomerBookingsGrid = ({
                 {/* Location */}
                 <div className={`${isDarkMode ? "bg-zinc-900 border-zinc-700" : "bg-zinc-200 border-2 border-gray-300"} rounded-2xl p-4 hover:border-chart-3 transition-all duration-300`}>
                   <div className="flex items-start gap-3">
-                    <div className="p-2 bg-chart-5 rounded-lg">
+                    <div className="p-2 bg-chart-4 rounded-lg">
                       <MapPin className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -231,7 +231,7 @@ export const CustomerBookingsGrid = ({
               <div className={`flex flex-wrap gap-3 pt-6 border-t-2 ${isDarkMode ? "border-zinc-700" : "border-zinc-300"}`}>
                 <button 
                   onClick={() => handleViewDetails(booking)} 
-                  className="group/btn relative p-3 bg-chart-4 text-white rounded-xl font-bold hover:shadow-chart-2 transition-all duration-300 overflow-hidden"
+                  className="group/btn relative p-3 bg-chart-2 text-white rounded-xl font-bold hover:shadow-chart-2 transition-all duration-300 overflow-hidden"
                 >
                   <span className="relative flex items-center gap-2">
                     <Eye size={18} />

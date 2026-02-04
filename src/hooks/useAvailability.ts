@@ -199,7 +199,7 @@ const loadAvailability = useCallback(async () => {
 
     try {
       await saveAvailability(unsaved);
-      setSuccessModal("New time slots saved successfully 🎉");
+      setSuccessModal("Availability saved successfully 🎉");
 
       // Mark new slots as saved
       setDaySlots((prev) => {

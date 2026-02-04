@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSignUp } from "./useAuth";
+import { Capitalize } from "@/lib/Capitalize";
 
 
 export default function useCustomerSignup() {
@@ -18,8 +19,8 @@ const handleSubmit = async (e: React.FormEvent) => {
   
   try {
 
-    
-    const data = await signUp(email, password, fullName);
+    const formattedFullName = Capitalize(fullName);
+    const data = await signUp(email, password, formattedFullName);
     if (!data) {
       throw new Error("Signup failed");
     }

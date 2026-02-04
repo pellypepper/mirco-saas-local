@@ -32,7 +32,7 @@ const ConfirmModal = ({ showConfirmModal, setShowConfirmModal, selectedBooking, 
               <div className="flex gap-3 justify-center mt-6">
                 <Button
                   onClick={() => handleConfirmBooking(selectedBooking.id)}
-                  className="flex-1 h-12 rounded-xl bg-gradient-to-r from-chart-2 to-chart-3 hover:from-chart-2/70 hover:to-chart-3/70"
+                  className="flex-1 h-12 rounded-xl bg-chart-2 hover:from-chart-2/70 hover:to-chart-3/70"
                 >
                   Confirm Booking
                 </Button>

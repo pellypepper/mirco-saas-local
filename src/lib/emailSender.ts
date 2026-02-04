@@ -31,7 +31,7 @@ export async function sendConfirmationEmail({
   email: string;
   country: string;
 }) {
-    console.log('Preparing to send confirmation email to', to);
+
 
 
   const subject = 'Booking Confirmation';
@@ -86,17 +86,9 @@ export async function sendProviderNotificationEmail({
   customerEmail: string;
   customerPhone: string;
 }) {
-  console.log('Preparing to send provider notification email to', to);
+ 
 
-  console.log('Provider email details:', {
-    bookingId,
-    amount,
-    formattedDate,
-    bookingTime,
-    serviceName,
-    customerEmail,
 
-  });
 
   const subject = 'New Booking Received';
   const html = `

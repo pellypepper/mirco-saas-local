@@ -45,7 +45,7 @@ const ShowFilter = ({
         <div className={`rounded-3xl overflow-hidden ${isDarkMode ? "bg-zinc-800 border-zinc-700 shadow-2xl" : "bg-white border-gray-300 shadow-lg"}`}>
           
           {/* Header with Geometric Design */}
-          <div className="relative bg-zinc-900 px-8 py-6 border-b-2 border-zinc-700">
+          <div className="relative bg-chart-2 px-8 py-6 ">
             {/* Background accent shapes */}
             <div className="absolute top-0 right-0 w-40 h-40 bg-chart-2 opacity-10 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-chart-3 opacity-10 rounded-full blur-3xl"></div>
@@ -55,8 +55,8 @@ const ShowFilter = ({
                 {/* Icon with animated border */}
                 <div className="relative">
                   <div className="absolute inset-0 bg-chart-2 rounded-2xl blur-md opacity-50 animate-pulse"></div>
-                  <div className="relative bg-chart-4 p-3 rounded-2xl">
-                    <Sliders className={`${isDarkMode ? "text-white" : "text-black"}`} size={24} />
+                  <div className="relative bg-chart-2 p-3 rounded-2xl">
+                    <Sliders className={`${isDarkMode ? "text-white" : "text-white"}`} size={24} />
                   </div>
                 </div>
 
@@ -76,7 +76,7 @@ const ShowFilter = ({
               {onClose && (
                 <button
                   onClick={onClose}
-                  className="text-zinc-400 hover:text-white hover:bg-zinc-700 p-2.5 rounded-xl transition-all duration-200 hover:rotate-90 border border-zinc-700 hover:border-chart-2"
+                  className="text-white hover:text-white hover:bg-zinc-700 p-2.5 rounded-xl transition-all duration-200 hover:rotate-90 border border-zinc-200 hover:border-chart-2"
                   aria-label="Close filters"
                 >
                   <X size={22} />
@@ -92,7 +92,7 @@ const ShowFilter = ({
               <div className="space-y-3">
                 <label className="flex items-center justify-between">
                   <span className={`flex items-center gap-3 text-sm font-bold ${isDarkMode ? "text-white" : "text-black"} uppercase tracking-wider`}>
-                    <div className="p-2 bg-chart-4 rounded-lg border border-chart-4/30">
+                    <div className="p-2 bg-chart-2 rounded-lg border border-chart-2/30">
                       <Briefcase size={16} className={`${isDarkMode ? "text-white" : "text-white"}`} />
                     </div>
                     Service Type
@@ -132,7 +132,7 @@ const ShowFilter = ({
               <div className="space-y-3">
                 <label className="flex items-center justify-between">
                   <span className={`flex items-center gap-3 text-sm font-bold ${isDarkMode ? "text-white" : "text-black"} uppercase tracking-wider`}>
-                    <div className="p-2 bg-chart-4 rounded-lg border border-chart-4/30">
+                    <div className="p-2 bg-chart-2 rounded-lg border border-chart-2/30">
                       <MapPin size={16} className={`${isDarkMode ? "text-white" : "text-white"}`} />
                     </div>
                     Location

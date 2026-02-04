@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useProviderSignUp } from "@/hooks/useAuth";
 import { fetchServiceTypes, upsertProviderProfile } from "@/services/providerService";
+import { Capitalize } from "@/lib/Capitalize";
 
 export function useProviderSignupForm(parentOnSubmit?: (data: any) => void) {
   const {
@@ -50,10 +51,13 @@ export function useProviderSignupForm(parentOnSubmit?: (data: any) => void) {
     };
 
     try {
+
+      const formattedName = Capitalize(payload.name);
+
       const result = await signUpProvider(
         payload.email,
         payload.password,
-        payload.name,
+        formattedName,
         payload.service_type,
         payload.address,
         payload.country,
@@ -63,7 +67,7 @@ export function useProviderSignupForm(parentOnSubmit?: (data: any) => void) {
       if (result?.user) {
         const { error: upsertError } = await upsertProviderProfile({
           id: result.user.id,
-          name: payload.name,
+          name: formattedName,
           service_type: payload.service_type,
           address: payload.address,
           country: payload.country,

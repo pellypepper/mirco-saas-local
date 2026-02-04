@@ -87,7 +87,7 @@ const CustomerBookings = ({ user }: { user: any }) => {
             <div className="flex items-center gap-3 mb-4">
               <div className="relative">
              
-                <div className="relative p-3 bg-chart-4 rounded-xl shadow-lg">
+                <div className="relative p-3 bg-chart-2 rounded-xl shadow-lg">
                   <Calendar className="text-white" size={28} />
                 </div>
               </div>
@@ -114,8 +114,8 @@ const CustomerBookings = ({ user }: { user: any }) => {
                 >
                   {filter === status && (
                     <>
-                      <div className="absolute inset-0 bg-chart-4 rounded-xl"></div>
-                      <div className="absolute inset-0 bg-chart-4 rounded-xl "></div>
+                      <div className="absolute inset-0 bg-chart-2 rounded-xl"></div>
+                      <div className="absolute inset-0 bg-chart-2 rounded-xl "></div>
                     </>
                   )}
                   <span className="relative flex items-center justify-center gap-2">
