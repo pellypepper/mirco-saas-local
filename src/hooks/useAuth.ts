@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../libs/supabaseClient";
 import { useRouter } from "next/navigation";
-import { getCurrentSession, getUserRole } from "@/services/authService";
+import { getCurrentSession, getUserRole, insertProfile } from "@/services/authService";
 import { sanitize, isValidEmail, isStrongPassword } from "@/lib/sanitizehelper";
 
 
@@ -60,21 +60,29 @@ export const useSignUp = () => {
         throw error;
       }
       
-      if (data?.user) {
-        setMessage("Signup successful! Please check your email to confirm.");
-        return data;
+    if (data?.user) {
+       const { error: profileError } = await insertProfile(
+        data.user.id,
+        "customer",
+        cleanName
+      );
+      
+      if (profileError) {
+        console.error('Profile creation error:', profileError);
       }
-
-      throw new Error("Signup failed - no user data returned");
-    } catch (err: any) {
-      setError(err.message || "Unexpected error occurred.");
-      throw err;
-    } finally {
-      setLoading(false);
     }
-  };
 
-  return { signUp, loading, error, message };
+    setMessage("Signup successful! Please check your email to confirm.");
+    return data;
+  } catch (err: any) {
+    setError(err.message || "Unexpected error occurred.");
+    throw err;
+  } finally {
+    setLoading(false);
+  }
+};
+
+return { signUp, loading, error, message };
 };
 
 
@@ -128,8 +136,26 @@ export const useProviderSignUp = () => {
       });
 
       if (error) setError(error.message);
-      else if (data?.user)
+      else if (data?.user){
+        
+        const { error: profileError } = await insertProfile(
+          data.user.id,
+          "provider",
+          sanitize(fullName, 100),
+          {
+            service_type: sanitize(serviceType, 100),
+            location: sanitize(location, 150),
+            country: sanitize(country, 100)
+          }
+        );
+
+      if (profileError) {
+        console.error('Profile creation error:', profileError);
+   
+      }
         setMessage("Provider signup successful! Please confirm your email.");
+      }
+
 
       return data;
     } catch {

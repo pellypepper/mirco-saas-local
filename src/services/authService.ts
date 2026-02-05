@@ -68,3 +68,26 @@ export async function createOAuthProfile(userId: string, email: string, fullName
 
   return { data, error };
 }
+
+
+export async function insertProfile(
+  userId: string, 
+  role: "customer" | "provider", 
+  fullName: string,
+  extraFields: Record<string, any> = {}
+) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .insert({
+      id: userId,
+      full_name: fullName,
+      role,
+      ...extraFields,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    })
+    .select()
+    .single();
+
+  return { data, error };
+}

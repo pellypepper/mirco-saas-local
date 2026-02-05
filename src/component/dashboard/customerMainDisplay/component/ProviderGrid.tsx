@@ -86,7 +86,7 @@ const ProviderGrid = ({
                   <div className={`border px-4 py-2 rounded-xl ${isDarkMode ? "border-chart-2/20" : "border-chart-2/20"}`}>
                     <div className="flex items-center gap-2">
                       <Award size={14} className={isDarkMode ? "text-chart-2" : "text-chart-2"} />
-                      <span className={`text-sm font-bold ${isDarkMode ? "text-chart-2" : "text-chart-2"}`}>{p.service_type}</span>
+                      <span className={`text-sm font-bold ${isDarkMode ? "text-chart-2" : "text-chart-2"}`}>{p.service_type || "Not Service available"}</span>
                     </div>
                   </div>
                 </div>
@@ -94,13 +94,13 @@ const ProviderGrid = ({
                 {/* Location */}
                 <div className={`flex items-center justify-center gap-2 text-sm mb-6 ${isDarkMode ? "text-white/80" : "text-zinc-400"}`}>
                   <MapPin size={14} className={isDarkMode ? "text-white" : "text-chart-2"} />
-                  <span className={`${isDarkMode ? "text-white/80" : "text-zinc-700"}`}>{p.country}</span>
+                  <span className={`${isDarkMode ? "text-white/80" : "text-zinc-700"}`}>{p.country || "Not location available"}</span>
                 </div>
 
                 {/* Bio */}
                 <div className={` rounded-xl p-4 mb-6 border ${isDarkMode ? "border-chart-2/20 bg-chart-3/20" : "border-chart-2/20 bg-chart-3/20" } `}>
                   <p className={`${isDarkMode ? "text-white/80" : "text-black"} text-sm line-clamp-3 leading-relaxed`}>
-                    {p.bio || "Experienced professional ready to provide exceptional service. "}
+                    {p.bio || "No bio available."}
                   </p>
                 </div>
 
