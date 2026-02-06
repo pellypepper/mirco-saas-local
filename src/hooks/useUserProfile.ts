@@ -18,9 +18,58 @@ const useUserProfile = (profile: any) => {
   const [imageUrl, setImageUrl] = useState(profile?.avatar_url || "");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [notifications, setNotifications] = useState("");
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const role = profile?.role?.toLowerCase();
+
+// Check for incomplete profile and set notifications
+ useEffect(() => {
+  if (!profile) return;
+
+  // Convert profile object to array of values
+  const profileValues = Object.values(profile);
+  
+  const unfilledFields = profileValues.filter((field) =>
+    field === null || field === undefined || field === ""
+  );
+
+  const unFilledFieldsLength = unfilledFields.length;
+
+  
+  if ( role === "customer" && unFilledFieldsLength > 0) {
+      if(  profile.full_name === null || profile.address === null || profile.phone_number === null || profile.bio === null) {
+         setNotifications(
+      `Please complete your profile for a better experience.`
+    ); 
+
+      }
+      else if(unFilledFieldsLength ==  6 && profile.avatar_url === null) {
+      setNotifications(
+        `Your profile picture is missing. Please upload a pics so you can be visible to providers.`
+      );
+     
+    } 
+  }else if ( role === "provider" && unFilledFieldsLength > 0) {
+    if(unFilledFieldsLength > 2 && profile.stripe_account_id === null) {
+       setNotifications(
+      `Your profile is incomplete. Please fill in the missing information.`
+    );
+    
+
+    } else if(unFilledFieldsLength ==  2 && profile.avatar_url === null) {
+      setNotifications(
+        `Your profile picture is missing. Please upload a pics to attract more customers.`
+      );
+         
+    } 
+    
+  } 
+  
+  else {
+    setNotifications("");
+  }
+}, [profile, role]);
 
   const providerForm =
     role === "provider"
@@ -47,6 +96,8 @@ const useUserProfile = (profile: any) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
+
+  
 
   const handleImageClick = () => fileInputRef.current?.click();
 
@@ -88,6 +139,7 @@ const useUserProfile = (profile: any) => {
   };
 
   return {
+    notifications,
     formData,
     providerForm,
     loading,

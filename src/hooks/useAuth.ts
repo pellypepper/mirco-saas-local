@@ -8,7 +8,8 @@ import { sanitize, isValidEmail, isStrongPassword } from "@/lib/sanitizehelper";
 
 
 
-// Hook for email/password signup
+
+
 export const useSignUp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,6 +23,7 @@ export const useSignUp = () => {
     const cleanEmail = sanitize(email).toLowerCase();
     const cleanName = sanitize(fullName, 100);
 
+    // Validation
     if (!isValidEmail(cleanEmail)) {
       const err = "Invalid email address.";
       setError(err);
@@ -44,47 +46,59 @@ export const useSignUp = () => {
     }
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email: cleanEmail,
         password,
         options: {
-          data:  {
+          emailRedirectTo: `${window.location.origin}/auth/callback`, // Redirect after email confirmation
+          data: {
             full_name: cleanName,
             role: "customer",
           },
         },
       });
 
-      if (error) {
-        setError(error.message);
-        throw error;
+      if (signUpError) {
+        setError(signUpError.message);
+        throw signUpError;
       }
-      
-    if (data?.user) {
-       const { error: profileError } = await insertProfile(
+
+      if (!data?.user) {
+        throw new Error("Signup failed - no user data returned");
+      }
+
+      // Create profile (will be used after email confirmation)
+      const { error: profileError } = await insertProfile(
         data.user.id,
         "customer",
         cleanName
       );
-      
+
       if (profileError) {
-        console.error('Profile creation error:', profileError);
+        console.error("Profile creation error:", profileError);
       }
+
+      // Check if email confirmation is required
+      if (data.user && !data.session) {
+        setMessage(
+          "Signup successful! Please check your email to confirm your account."
+        );
+      } else {
+        setMessage("Signup successful! You can now sign in.");
+      }
+
+      return data;
+    } catch (err: any) {
+      const errorMessage = err.message || "Unexpected error occurred.";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
     }
+  };
 
-    setMessage("Signup successful! Please check your email to confirm.");
-    return data;
-  } catch (err: any) {
-    setError(err.message || "Unexpected error occurred.");
-    throw err;
-  } finally {
-    setLoading(false);
-  }
+  return { signUp, loading, error, message };
 };
-
-return { signUp, loading, error, message };
-};
-
 
 
 
@@ -107,59 +121,88 @@ export const useProviderSignUp = () => {
     setMessage(null);
 
     const cleanEmail = sanitize(email).toLowerCase();
+    const cleanName = sanitize(fullName, 100);
+    const cleanServiceType = sanitize(serviceType, 100);
+    const cleanLocation = sanitize(location, 150);
+    const cleanCountry = sanitize(country, 100);
 
+    // Validation
     if (!isValidEmail(cleanEmail)) {
-      setError("Invalid email address.");
+      const err = "Invalid email address.";
+      setError(err);
       setLoading(false);
-      return;
+      throw new Error(err);
     }
 
     if (!isStrongPassword(password)) {
-      setError("Password must be at least 8 characters.");
+      const err = "Password must be at least 8 characters.";
+      setError(err);
       setLoading(false);
-      return;
+      throw new Error(err);
+    }
+
+    if (!cleanName || !cleanServiceType) {
+      const err = "All fields are required.";
+      setError(err);
+      setLoading(false);
+      throw new Error(err);
     }
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email: cleanEmail,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`, // Redirect after confirmation
           data: {
-            full_name: sanitize(fullName, 100),
+            full_name: cleanName,
             role: "provider",
-            service_type: sanitize(serviceType, 100),
-            location: sanitize(location, 150),
-            country: sanitize(country, 100),
+            service_type: cleanServiceType,
+            location: cleanLocation,
+            country: cleanCountry,
           },
         },
       });
 
-      if (error) setError(error.message);
-      else if (data?.user){
-        
-        const { error: profileError } = await insertProfile(
-          data.user.id,
-          "provider",
-          sanitize(fullName, 100),
-          {
-            service_type: sanitize(serviceType, 100),
-            location: sanitize(location, 150),
-            country: sanitize(country, 100)
-          }
-        );
+      if (signUpError) {
+        setError(signUpError.message);
+        throw signUpError;
+      }
+
+      if (!data?.user) {
+        throw new Error("Signup failed - no user data returned");
+      }
+
+      // Create profile with provider data
+      const { error: profileError } = await insertProfile(
+        data.user.id,
+        "provider",
+        cleanName,
+        {
+          service_type: cleanServiceType,
+          location: cleanLocation,
+          country: cleanCountry,
+        }
+      );
 
       if (profileError) {
-        console.error('Profile creation error:', profileError);
-   
-      }
-        setMessage("Provider signup successful! Please confirm your email.");
+        console.error("Profile creation error:", profileError);
       }
 
+      // Check if email confirmation is required
+      if (data.user && !data.session) {
+        setMessage(
+          "Provider signup successful! Please check your email to confirm your account."
+        );
+      } else {
+        setMessage("Provider signup successful! You can now sign in.");
+      }
 
       return data;
-    } catch {
-      setError("Unexpected error occurred.");
+    } catch (err: any) {
+      const errorMessage = err.message || "Unexpected error occurred.";
+      setError(errorMessage);
+      throw err;
     } finally {
       setLoading(false);
     }

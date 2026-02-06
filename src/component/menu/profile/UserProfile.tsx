@@ -133,7 +133,7 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
 
           {/* FORM FIELDS */}
           <div className="space-y-5">
-            {providerForm.map((field, index) => (
+            {providerForm.map((field) => (
               <div key={field.id} className="space-y-2">
                 <Label
                   htmlFor={field.id}

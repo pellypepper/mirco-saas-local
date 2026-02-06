@@ -91,3 +91,13 @@ export async function insertProfile(
 
   return { data, error };
 }
+
+
+export async function resendVerificationEmail(email: string) {
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+  });
+
+  return { error };
+}

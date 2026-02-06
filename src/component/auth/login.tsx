@@ -18,25 +18,24 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useMainNavBar } from "@/hooks/MainNavContext";
-import { X, Lock, Mail, Sparkles } from "lucide-react";
+import { X, Lock, Mail, Sparkles, AlertCircle, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MeshGradient } from "@paper-design/shaders-react";
 
 export default function LoginPage() {
-  const {
-    handleClose,
-    handleForgotPassword,
-    handleSignup
-  } = useMainNavBar();
+  const { handleClose, handleForgotPassword, handleSignup } = useMainNavBar();
 
   const {
     loading,
     errorMsg,
     successOpen,
     errorOpen,
+    showResendEmail,
+    resendLoading,
     handleEmailSignIn,
+    handleResendEmail,
     handleSuccessClose,
-    handleErrorClose
+    handleErrorClose,
   } = useLoginForm();
 
   return (
@@ -45,7 +44,7 @@ export default function LoginPage() {
         {/* Animated Background */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity:  1 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950"
         >
@@ -78,7 +77,7 @@ export default function LoginPage() {
           open={successOpen}
           onClose={handleSuccessClose}
           title="Login Successful!"
-          message="Welcome back!  Redirecting to your dashboard."
+          message="Welcome back! Redirecting to your dashboard."
           buttonText="Go to Dashboard"
         />
 
@@ -86,15 +85,15 @@ export default function LoginPage() {
           open={errorOpen}
           onClose={handleErrorClose}
           title="Login Failed"
-          message={errorMsg || "An error occurred while logging in. "}
+          message={errorMsg || "An error occurred while logging in."}
           buttonText="Close"
         />
 
         {/* Login Card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity:  1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale:  0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.3 }}
           className="relative w-full max-w-md z-10"
         >
@@ -109,8 +108,6 @@ export default function LoginPage() {
                 <X className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
               </button>
 
-           
-
               <CardTitle className="text-3xl text-white font-bold mb-2">
                 Welcome Back
               </CardTitle>
@@ -120,10 +117,50 @@ export default function LoginPage() {
             </CardHeader>
 
             <CardContent className="px-8 pb-6">
+              {/* Error Alert with Resend Button */}
+              <AnimatePresence>
+                {errorOpen && errorMsg && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="mb-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl backdrop-blur-sm"
+                  >
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-sm text-red-200">{errorMsg}</p>
+
+                        {/* Resend Email Button */}
+                        {showResendEmail && (
+                          <button
+                            onClick={handleResendEmail}
+                            disabled={resendLoading}
+                            className="mt-3 flex items-center gap-2 text-sm font-medium text-red-300 hover:text-red-100 underline disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                          >
+                            <RefreshCw
+                              className={`w-4 h-4 ${
+                                resendLoading ? "animate-spin" : ""
+                              }`}
+                            />
+                            {resendLoading
+                              ? "Sending..."
+                              : "Resend verification email"}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <form onSubmit={handleEmailSignIn} className="space-y-5">
                 {/* Email Field */}
                 <div className="space-y-2">
-                  <Label className="text-white font-medium flex items-center gap-2" htmlFor="email">
+                  <Label
+                    className="text-white font-medium flex items-center gap-2"
+                    htmlFor="email"
+                  >
                     <Mail className="w-4 h-4 text-chart-2" />
                     Email
                   </Label>
@@ -139,7 +176,10 @@ export default function LoginPage() {
 
                 {/* Password Field */}
                 <div className="space-y-2">
-                  <Label className="text-white font-medium flex items-center gap-2" htmlFor="password">
+                  <Label
+                    className="text-white font-medium flex items-center gap-2"
+                    htmlFor="password"
+                  >
                     <Lock className="w-4 h-4 text-chart-2" />
                     Password
                   </Label>
@@ -159,14 +199,16 @@ export default function LoginPage() {
                   className="w-full h-12 bg-chart-2 text-white hover:shadow-lg hover:shadow-chart-3/50 hover:scale-105 transition-all duration-300 rounded-xl font-bold text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={loading}
                 >
-                  {loading ?  <Loader message="Logging in..." /> : "Login"}
+                  {loading ? <Loader message="Logging in..." /> : "Login"}
                 </Button>
               </form>
 
               {/* Divider */}
               <div className="flex items-center gap-3 my-6">
                 <div className="flex-1 border-b border-white/20"></div>
-                <p className="text-sm text-zinc-400 font-medium">OR CONTINUE WITH</p>
+                <p className="text-sm text-zinc-400 font-medium">
+                  OR CONTINUE WITH
+                </p>
                 <div className="flex-1 border-b border-white/20"></div>
               </div>
 

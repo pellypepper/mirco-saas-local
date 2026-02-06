@@ -8,6 +8,8 @@ import Loader from "@/component/Spinner";
 import { ChangeEmailModal, ChangePasswordModal } from "@/component/menu/setting/UserSetting";
 import { useDashboardAuth } from "@/hooks/dashboard/useDashboardAuth";
 import { useDashboardLayout } from "@/hooks/useDashboardLayout";
+import useUserProfile from "@/hooks/useUserProfile";
+import Notification from "@/component/Notification";
 
 interface LayoutProps {
   children: ReactNode;
@@ -15,9 +17,9 @@ interface LayoutProps {
 
 export default function DashboardLayout({
   children
- 
 }: LayoutProps) {
   const [isClient, setIsClient] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   const {
     user,
@@ -38,12 +40,30 @@ export default function DashboardLayout({
     handleLogout
   } = useDashboardLayout();
 
-
+  const { notifications } = useUserProfile(profile);
 
   useDashboardAuth(user, profile, loading);
 
   // client-side rendering for modals
   useEffect(() => setIsClient(true), []);
+
+  // Notification dropdown animation every 1 minute
+ useEffect(() => {
+    if (!notifications) return;
+
+    const runNotificationCycle = () => {
+      setShowNotification(true);
+      
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 10000);
+    };
+
+    runNotificationCycle();
+    const interval = setInterval(runNotificationCycle, 65000);
+
+    return () => clearInterval(interval);
+  }, [notifications]);
 
   if (loading || !user || !profile) {
     return (
@@ -57,7 +77,7 @@ export default function DashboardLayout({
     <div>
       <UserProvider value={{ user, profile }}>
         <Navbar
-             user={user}
+          user={user}
           profile={profile}
           open={open}
           setOpen={setOpen}
@@ -69,6 +89,9 @@ export default function DashboardLayout({
         <main>{children}</main>
       </UserProvider>
 
+{notifications && (
+<Notification notifications={notifications} showNotification={showNotification} setShowNotification={setShowNotification} />
+)}
       {isClient && (
         <>
           {isMounted && <UserProfile profile={profile} onClose={() => setIsMounted(false)} />}

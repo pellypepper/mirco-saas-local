@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSignUp } from "./useAuth";
 import { Capitalize } from "@/lib/Capitalize";
+import { useRouter } from "next/navigation";
 
 
 export default function useCustomerSignup() {
@@ -13,6 +14,7 @@ export default function useCustomerSignup() {
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { signUp, loading } = useSignUp();
+  const router = useRouter();
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -21,6 +23,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     const formattedFullName = Capitalize(fullName);
     const data = await signUp(email, password, formattedFullName);
+        router.push(`/auth/check-email?email=${encodeURIComponent(email)}`);
     if (!data) {
       throw new Error("Signup failed");
     }
