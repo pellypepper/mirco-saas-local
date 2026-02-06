@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../libs/supabaseClient";
 import { useRouter } from "next/navigation";
-import { getCurrentSession, getUserRole, insertProfile } from "@/services/authService";
+import { getCurrentSession, getUserRole } from "@/services/authService";
 import { sanitize, isValidEmail, isStrongPassword } from "@/lib/sanitizehelper";
 
 
 
 
-
+// Hook for signing up users
 export const useSignUp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,16 +67,7 @@ export const useSignUp = () => {
         throw new Error("Signup failed - no user data returned");
       }
 
-      // Create profile (will be used after email confirmation)
-      const { error: profileError } = await insertProfile(
-        data.user.id,
-        "customer",
-        cleanName
-      );
-
-      if (profileError) {
-        console.error("Profile creation error:", profileError);
-      }
+    
 
       // Check if email confirmation is required
       if (data.user && !data.session) {
@@ -102,7 +93,7 @@ export const useSignUp = () => {
 
 
 
-
+// Hook for signing up providers
 export const useProviderSignUp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -173,21 +164,7 @@ export const useProviderSignUp = () => {
         throw new Error("Signup failed - no user data returned");
       }
 
-      // Create profile with provider data
-      const { error: profileError } = await insertProfile(
-        data.user.id,
-        "provider",
-        cleanName,
-        {
-          service_type: cleanServiceType,
-          location: cleanLocation,
-          country: cleanCountry,
-        }
-      );
-
-      if (profileError) {
-        console.error("Profile creation error:", profileError);
-      }
+     
 
       // Check if email confirmation is required
       if (data.user && !data.session) {
