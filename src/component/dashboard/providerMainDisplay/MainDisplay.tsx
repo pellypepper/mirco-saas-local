@@ -13,7 +13,6 @@ import Loader from "@/component/Spinner";
 import BottomPanels from "./BottomPanel";
 import useProvideDashBoard from "@/hooks/useProvideDashBoard";
 import { useMainNavBar } from "@/hooks/MainNavContext";
-import { Capitalize } from "@/lib/Capitalize";
 
 export default function ProviderDashboard({profile}: {profile: any}) {
 
@@ -26,8 +25,6 @@ export default function ProviderDashboard({profile}: {profile: any}) {
     loading,
   } = useProvideDashBoard();
   const { isDarkMode } = useMainNavBar();
-
-  const formattedName = profile?.full_name ? Capitalize(profile.full_name) : profile.full_name;
 
   if (loading) {
     return (
@@ -60,7 +57,7 @@ export default function ProviderDashboard({profile}: {profile: any}) {
                 </div>
 
                 <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tight drop-shadow-lg">
-                  Welcome Back, {formattedName }!
+                  Welcome Back, {profile.full_name}!
                 </h1>
                 <p className="text-white/90 text-base md:text-lg font-medium mb-1">Today's Analytics at a Glance</p>
                 <div className="flex items-center gap-2 text-white/70 text-sm">
