@@ -37,17 +37,35 @@ export async function GET(request: Request) {
         .maybeSingle();
 
       // If profile doesn't exist, create it from user metadata
-      if (!existingProfile) {
-        const fullName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
-        const role = user.user_metadata?.role || null;
+if (!existingProfile) {
+  const meta = user.user_metadata || {};
 
-        if (role) {
-          await insertProfile(user.id, role, fullName);
-        } else {
-          // Create profile without role - user will select role later
-          await insertProfile(user.id, "customer", fullName); // Default to customer
+  const fullName =
+    meta.full_name ||
+    user.email?.split("@")[0] ||
+    "User";
+
+  const role: "customer" | "provider" =
+    meta.role === "provider" ? "provider" : "customer";
+
+  // Build provider fields only if role is provider
+  const providerData =
+    role === "provider"
+      ? {
+          service_type: meta.service_type || null,
+          location: meta.location || null,
+          country: meta.country || null,
         }
-      }
+      : undefined;
+
+  await insertProfile(
+    user.id,
+    role,
+    fullName,
+    providerData
+  );
+}
+
 
       // Get updated profile
       const { data: profile } = await supabase

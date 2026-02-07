@@ -1,4 +1,5 @@
 import { supabase } from "@/libs/supabaseClient";
+import { supabaseAdmin } from "@/libs/supabaseAdmin";
 
 export const upsertUserProfile = async (
   userId: string,
@@ -76,7 +77,7 @@ export async function insertProfile(
   fullName: string,
   extraFields: Record<string, any> = {}
 ) {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('profiles')
     .insert({
       id: userId,
@@ -88,7 +89,11 @@ export async function insertProfile(
     })
     .select()
     .single();
-
+    
+  if (error) {
+      console.error("Profile insertion error:", error);
+      return { data: null, error };
+    }
   return { data, error };
 }
 
