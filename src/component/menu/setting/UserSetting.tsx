@@ -14,9 +14,9 @@ import {
 import { useMainNavBar } from "@/hooks/MainNavContext";
 
 
-/* ========================================================= */
+
 /* ===================== CHANGE EMAIL ====================== */
-/* ========================================================= */
+
 
 export const ChangeEmailModal = ({ onClose }: { onClose: () => void }) => {
   const [email, setEmail] = useState("");
@@ -28,7 +28,7 @@ export const ChangeEmailModal = ({ onClose }: { onClose: () => void }) => {
   const surfaceSoft = isDarkMode ? "bg-zinc-900" : "bg-zinc-100";
   const border = isDarkMode ? "border-zinc-700" : "border-zinc-200";
   const textPrimary = isDarkMode ? "text-white" : "text-zinc-900";
-  const textMuted = "text-zinc-500";
+
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">

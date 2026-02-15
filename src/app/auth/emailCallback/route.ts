@@ -1,4 +1,4 @@
-// app/auth/callback/route.ts
+
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { insertProfile } from "@/services/authService";
@@ -23,12 +23,13 @@ export async function GET(request: Request) {
       );
     }
 
-    // Get the authenticated user
+    // Authenticated user
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (user) {
+
       // Check if profile exists
       const { data: existingProfile } = await supabase
         .from("profiles")
@@ -36,9 +37,9 @@ export async function GET(request: Request) {
         .eq("id", user.id)
         .maybeSingle();
 
-      // If profile doesn't exist, create it from user metadata
-if (!existingProfile) {
-  const meta = user.user_metadata || {};
+      // If exist, create user metadata
+    if (!existingProfile) {
+    const meta = user.user_metadata || {};
 
   const fullName =
     meta.full_name ||
@@ -48,7 +49,7 @@ if (!existingProfile) {
   const role: "customer" | "provider" =
     meta.role === "provider" ? "provider" : "customer";
 
-  // Build provider fields only if role is provider
+  // Build provider fields only for provider
   const providerData =
     role === "provider"
       ? {
@@ -67,7 +68,7 @@ if (!existingProfile) {
 }
 
 
-      // Get updated profile
+      //updated profile
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")

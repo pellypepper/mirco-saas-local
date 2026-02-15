@@ -1,12 +1,35 @@
 import { supabase } from "@/libs/supabaseClient";
 
-// Exchanges the token for a Supabase session
-export async function exchangeTokenForSession(token: string) {
-  return await supabase.auth.exchangeCodeForSession(token);
+// Verify reset token
+export async function verifyResetToken() {
+ 
+  
+  //get session
+  const { data: { session }, error } = await supabase.auth.getSession();
+  
+  if (error) {
+   
+    throw new Error("Unable to verify reset session: " + error.message);
+  }
+  
+  if (!session) {
+    throw new Error("No active reset session found. Please click the reset link from your email again.");
+  }
+
+  
+  return session;
 }
 
-// Actually invokes password reset in your auth system
-export async function resetPassword(newPassword: string, resetPasswordFn: (pw: string) => Promise<any>) {
+// Reset password with Supabase 
+export async function resetPassword(newPassword: string) {
+  const { data, error } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
 
-  return await resetPasswordFn(newPassword);
+  if (error) {
+
+    throw error;
+  }
+
+  return data;
 }

@@ -210,7 +210,7 @@ export const useForgotPassword = ({setIsForgotPassword, setIsLogin}: {setIsForgo
     throw new Error("Invalid email address.");
   }
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: redirectTo || `${window.location.origin}/reset-password`,
+        redirectTo: redirectTo || `${window.location.origin}/auth/reset-password`,
       });
 
       if (error) setError(error.message);
@@ -334,10 +334,16 @@ export const useChangeEmail = () => {
         return;
       }
 
-      //Get current user's email
+      // Get current user's email
       const {
         data: { session },
       } = await supabase.auth.getSession();
+      
+      if (!session) {
+        setError("No active session. Please log in again.");
+        return;
+      }
+
       const currentEmail = session?.user?.email;
 
       if (newEmail === currentEmail) {
@@ -364,8 +370,13 @@ export const useChangeEmail = () => {
         return;
       }
 
-      // Update email
-      const { error: updateError } = await supabase.auth.updateUser({ email: newEmail });
+      // Update email with proper redirect URL
+      const { error: updateError } = await supabase.auth.updateUser(
+        { email: newEmail },
+        {
+          emailRedirectTo: `${window.location.origin}/auth/confirm`,
+        }
+      );
 
       if (updateError) {
         setError(updateError.message);
@@ -373,7 +384,7 @@ export const useChangeEmail = () => {
       }
 
       setMessage(
-        "A confirmation email has been sent to your new address. Please verify to complete the change."
+        "Confirmation emails have been sent to both your current and new email addresses. You must confirm the change in BOTH emails for the update to take effect."
       );
     } catch (err: any) {
       setError(err.message || "Unexpected error occurred.");

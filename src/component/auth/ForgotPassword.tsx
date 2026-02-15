@@ -78,7 +78,7 @@ export default function ForgotPassword() {
           <Card className="border-none shadow-2xl bg-white rounded-3xl overflow-hidden">
             {/* Loader overlay */}
             {loading && (
-              <div className="absolute inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#009689]/90 to-[#eb7323]/90 backdrop-blur-sm rounded-3xl">
+              <div className="absolute inset-0 z-50 flex items-center justify-center  backdrop-blur-sm rounded-3xl">
                 <div className="text-center space-y-4">
                   <Loader message="Sending reset link..." />
                   <p className="text-white font-medium">This will only take a moment...</p>
@@ -129,7 +129,7 @@ export default function ForgotPassword() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-12  bg-chart-2 text-white hover:shadow-lg hover:shadow-[#009689]/50 hover:scale-105 transition-all duration-300 rounded-xl font-bold text-base disabled:opacity-50 disabled: cursor-not-allowed"
+                  className="w-full h-12  bg-chart-2 text-white hover:shadow-lg hover:shadow-chart-2/50 hover:scale-105 transition-all duration-300 rounded-xl font-bold text-base disabled:opacity-50 disabled: cursor-not-allowed"
                 >
                   {loading ? "Sending..." : "Send Reset Link"}
                 </Button>
