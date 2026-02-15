@@ -76,7 +76,7 @@ export default function ProviderSignupForm({
           setIsLogin(true);
         }}
         title="Provider Created!"
-        message="Your provider profile has been successfully set up."
+        message={message || "Your provider profile has been successfully set up."}
         buttonText="Click to Sign in"
       />
 
@@ -84,7 +84,7 @@ export default function ProviderSignupForm({
         open={errorOpen}
         onClose={() => setErrorOpen(false)}
         title="Signup Failed"
-        message={errorMessage}
+        message={errorMessage || "An error occurred during signup. Please try again."}
         buttonText="Close"
       />
 

@@ -119,7 +119,7 @@ export default function LoginPage() {
             <CardContent className="px-8 pb-6">
               {/* Error Alert with Resend Button */}
               <AnimatePresence>
-                {errorOpen && errorMsg && (
+                {errorMsg && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}

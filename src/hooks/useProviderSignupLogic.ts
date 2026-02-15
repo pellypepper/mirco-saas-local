@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useProviderSignUp } from "@/hooks/useAuth";
-import { fetchServiceTypes, upsertProviderProfile } from "@/services/providerService";
+import { fetchServiceTypes } from "@/services/providerService";
 import { Capitalize } from "@/lib/Capitalize";
 
 export function useProviderSignupForm(parentOnSubmit?: (data: any) => void) {
@@ -64,24 +64,12 @@ export function useProviderSignupForm(parentOnSubmit?: (data: any) => void) {
   
       );
 
-      if (result?.user) {
-        const { error: upsertError } = await upsertProviderProfile({
-          id: result.user.id,
-          name: formattedName,
-          service_type: payload.service_type,
-          address: payload.address,
-          country: payload.country,
-        
-        });
-
-        if (upsertError) {
-          setErrorMessage(upsertError.message);
-          setErrorOpen(true);
-        } else {
-          setSuccessOpen(true);
-        }
-      }
-
+      if (!result || !result.user) {
+      setErrorMessage("Signup failed");
+      setErrorOpen(true);
+      return;
+    }
+      setSuccessOpen(true);
       if (parentOnSubmit) await parentOnSubmit(payload);
       reset();
     } catch (err: any) {

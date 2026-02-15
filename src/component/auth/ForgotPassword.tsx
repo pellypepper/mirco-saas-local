@@ -89,7 +89,7 @@ export default function ForgotPassword() {
        
             <CardHeader className="relative text-center pt-8 pb-6 space-y-4">
               {/* Icon */}
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-chart-3 rounded-2xl mb-2 mx-auto shadow-lg">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-chart-2 rounded-2xl mb-2 mx-auto shadow-lg">
                 <KeyRound className="w-8 h-8 text-white" />
               </div>
 
@@ -109,7 +109,7 @@ export default function ForgotPassword() {
                     htmlFor="email"
                     className="text-zinc-950 font-medium flex items-center gap-2"
                   >
-                    <Mail className="w-4 h-4 text-chart-3" />
+                    <Mail className="w-4 h-4 text-chart-4" />
                     Email Address
                   </Label>
                   <Input

@@ -58,12 +58,12 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
           onClose()
        
         }}
-        message="Account created successfully! You can now log in."
+        message="Account created successfully! Please check your email to verify your account before logging in."
       />
 
       <ErrorModal
         open={errorOpen}
-        message={errorMessage}
+        message={errorMessage || "An error occurred during signup. Please try again."}
         onClose={() => setErrorOpen(false)}
       
       />

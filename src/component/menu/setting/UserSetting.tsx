@@ -63,7 +63,7 @@ export const ChangeEmailModal = ({ onClose }: { onClose: () => void }) => {
             <label
               className={`text-sm font-bold uppercase tracking-wider flex gap-2 ${textPrimary}`}
             >
-              <span className="w-1 h-4 bg-chart-2 rounded-full" />
+              <span className="w-1 h-4 bg-chart-4 rounded-full" />
               New Email Address
             </label>
 
