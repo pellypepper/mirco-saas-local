@@ -1,9 +1,8 @@
 "use client"; 
 
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { supabase } from "../libs/supabaseClient";
-import { useRouter } from "next/navigation";
-import { getCurrentSession, getUserRole} from "@/services/authService";
+
 import { sanitize, isValidEmail, isStrongPassword } from "@/lib/sanitizehelper";
 
 
@@ -281,42 +280,42 @@ export const useResetPassword = () => {
 };
 
 
-export function useAuthCallback() {
-  const router = useRouter();
+// export function useAuthCallback() {
+//   const router = useRouter();
 
-  useEffect(() => {
-    const processSession = async () => {
-      const session = await getCurrentSession();
-      const user = session?.user;
+//   useEffect(() => {
+//     const processSession = async () => {
+//       const session = await getCurrentSession();
+//       const user = session?.user;
 
-      if (!user) {
-        // No session, redirect to login
-        router.replace("/login");
-        return;
-      }
+//       if (!user) {
+//         // No session, redirect to login
+//         router.replace("/login");
+//         return;
+//       }
 
-      const { profile, error } = await getUserRole(user.id);
+//       const { profile, error } = await getUserRole(user.id);
 
-      if (error && error.code !== 'PGRST116') {
-        // Error other than "no rows returned"
-        console.error("Error fetching profile:", error);
-        router.replace("/login?message=Error fetching profile. Please try again.");
-        return;
-      }
+//       if (error && error.code !== 'PGRST116') {
+//         // Error other than "no rows returned"
+//         console.error("Error fetching profile:", error);
+//         router.replace("/login?message=Error fetching profile. Please try again.");
+//         return;
+//       }
 
-      if (!profile || !profile.role) {
-        // No profile exists or no role set - redirect to role selection
-        router.replace("/select-role");
-        return;
-      }
+//       if (!profile || !profile.role) {
+//         // No profile exists or no role set - redirect to role selection
+//         router.replace("/select-role");
+//         return;
+//       }
 
-      // User has a role, go to dashboard
-      router.replace("/dashboard");
-    };
+//       // User has a role, go to dashboard
+//       router.replace("/dashboard");
+//     };
 
-    processSession();
-  }, [router]);
-}
+//     processSession();
+//   }, [router]);
+// }
 
 export const useChangeEmail = () => {
   const [loading, setLoading] = useState(false);

@@ -8,13 +8,15 @@ export default function useOAuthLogin() {
   const handleOAuth = async (provider: Provider) => {
     setLoadingProvider(provider);
     try {
+  
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+
           queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
+            access_type: "offline",
+            prompt: "consent",
           },
         },
       });
@@ -23,8 +25,8 @@ export default function useOAuthLogin() {
         console.error("OAuth error:", error);
         setLoadingProvider(null);
       }
-    } catch (error) {
-      console.error("OAuth error:", error);
+    } catch (err) {
+      console.error("OAuth error:", err);
       setLoadingProvider(null);
     }
   };

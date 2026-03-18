@@ -73,7 +73,7 @@ export async function createOAuthProfile(userId: string, email: string, fullName
 
 export async function insertProfile(
   userId: string, 
-  role: "customer" | "provider", 
+  role: "customer" | "provider" | null, 
   fullName: string,
   extraFields: Record<string, any> = {}
 ) {
@@ -88,7 +88,7 @@ export async function insertProfile(
       updated_at: new Date().toISOString()
     })
     .select()
-    .single();
+   .maybeSingle();
     
   if (error) {
       console.error("Profile insertion error:", error);
