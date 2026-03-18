@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation"; // ✅ add this
+import { useEffect } from "react";       
 import { useResetPasswordForm } from "@/hooks/useResetPasswordForm";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,12 +18,14 @@ import { KeyRound, Lock, ShieldCheck } from "lucide-react";
 
 export default function ResetPasswordPage() {
   const { setIsLogin } = useMainNavBar();
+    const searchParams = useSearchParams(); 
   const {
     newPassword,
     setNewPassword,
     confirmPassword,
     setConfirmPassword,
     loading,
+setErrorMessage,
     successOpen,
     setSuccessOpen,
     errorOpen,
@@ -30,6 +34,14 @@ export default function ResetPasswordPage() {
     handleSubmit,
     tokenVerified,
   } = useResetPasswordForm();
+
+    useEffect(() => {
+    const error = searchParams.get("error");
+    if (error) {
+      setErrorMessage(decodeURIComponent(error));
+      setErrorOpen(true);
+    }
+  }, [searchParams, setErrorMessage, setErrorOpen]);
 
  
 

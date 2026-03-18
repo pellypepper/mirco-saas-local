@@ -6,8 +6,10 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
 
+ 
+
   if (code) {
-    const cookieStore = await cookies(); // ✅ awaited
+    const cookieStore = await cookies();
 
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,8 +26,28 @@ export async function GET(request: Request) {
       }
     );
 
-    await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+
+
+    if (error) {
+ 
+      return NextResponse.redirect(
+        new URL(`/reset-password?error=${encodeURIComponent(error.message)}`, requestUrl.origin)
+      );
+    }
+
+   
+    return NextResponse.redirect(
+  new URL(
+    `/reset-password?access_token=${data.session?.access_token}&refresh_token=${data.session?.refresh_token}&type=recovery`,
+    requestUrl.origin
+  )
+);
   }
 
-  return NextResponse.redirect(new URL("/reset-password", requestUrl.origin));
+
+  return NextResponse.redirect(
+    new URL("/reset-password?error=missing_code", requestUrl.origin)
+  );
 }

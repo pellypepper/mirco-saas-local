@@ -4,6 +4,7 @@ import { useState} from "react";
 import { supabase } from "../libs/supabaseClient";
 
 import { sanitize, isValidEmail, isStrongPassword } from "@/lib/sanitizehelper";
+import { set } from "react-hook-form";
 
 
 
@@ -276,7 +277,7 @@ export const useResetPassword = () => {
     }
   };
 
-  return { resetPassword, loading, message, error };
+  return { resetPassword, loading, message, error , setMessage, setError  };
 };
 
 

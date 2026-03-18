@@ -1,9 +1,10 @@
-"use client"; 
+"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { verifyResetToken, resetPassword } from "@/services/resetPasswordService";
+import { resetPassword } from "@/services/resetPasswordService";
 import { useMainNavBar } from "./MainNavContext";
+import { supabase } from "@/libs/supabaseClient";
 
 export function useResetPasswordForm() {
   const router = useRouter();
@@ -16,45 +17,76 @@ export function useResetPasswordForm() {
   const [tokenVerified, setTokenVerified] = useState(false);
   const { setIsLogin } = useMainNavBar();
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  // Ref to prevent the fallback timeout from firing after token is verified
+  const verifiedRef = useRef(false);
 
-    const hash = window.location.hash;
-    const search = window.location.search;
-    
-   
-    
-    if (!hash && !search) {
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const accessToken = params.get("access_token");
+  const refreshToken = params.get("refresh_token");
+  const type = params.get("type");
+
+  // ✅ If tokens are in URL, set session manually then clean URL
+  if (accessToken && refreshToken && type === "recovery") {
+    supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    }).then(({ data, error }) => {
+      console.log("[RESET FORM] setSession event:", !!data.session, "error:", error?.message);
+      if (data.session) {
+        verifiedRef.current = true;
+        setTokenVerified(true);
+        setLoading(false);
+        // ✅ Clean tokens from URL bar
+        window.history.replaceState({}, "", "/reset-password");
+      } else {
+        setErrorMessage("Invalid or expired token. Please request a new password reset link.");
+        setErrorOpen(true);
+        setLoading(false);
+      }
+    });
+    return;
+  }
+
+  // ✅ Fallback: listen via onAuthStateChange (for direct visits)
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    console.log("[RESET FORM] auth event:", event, "| session:", !!session);
+    if ((event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") && session) {
+      verifiedRef.current = true;
+      setTokenVerified(true);
+      setLoading(false);
+    }
+    if (event === "SIGNED_OUT") {
+      setTokenVerified(false);
+      setLoading(false);
+    }
+  });
+
+  const timeout = setTimeout(() => {
+    if (!verifiedRef.current) {
       setErrorMessage("Invalid or expired token. Please request a new password reset link.");
       setErrorOpen(true);
       setLoading(false);
-      return;
     }
+  }, 4000);
 
-    // Verify and establish session from the reset token
-    verifyResetToken()
-      .then((session) => {
-       
-        setTokenVerified(true);
-        setLoading(false);
-      })
-      .catch(err => {
-     
-        setErrorMessage(err.message || "Invalid or expired reset link.");
-        setErrorOpen(true);
-        setLoading(false);
-      });
-  }, []);
+  return () => {
+    subscription.unsubscribe();
+    clearTimeout(timeout);
+  };
+}, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!tokenVerified) {
-      setErrorMessage("Please wait for token verification or use a valid reset link.");
+      setErrorMessage(
+        "Please wait for token verification or use a valid reset link."
+      );
       setErrorOpen(true);
       return;
     }
-    
+
     if (newPassword !== confirmPassword) {
       setErrorMessage("Passwords do not match!");
       setErrorOpen(true);
@@ -71,17 +103,16 @@ export function useResetPasswordForm() {
     try {
       const result = await resetPassword(newPassword);
       if (!result) {
-        throw "Failed to reset password. Please try again.";
+        throw new Error("Failed to reset password. Please try again.");
       }
-      
+
       setSuccessOpen(true);
       setTimeout(() => {
-       
         router.replace("/");
-         setIsLogin(true);
+        setIsLogin(true);
       }, 3000);
     } catch (err: any) {
-      console.error("Password reset error:", err);
+      console.error("[RESET FORM] Password reset error:", err);
       setErrorMessage(err?.message || "Something went wrong.");
       setErrorOpen(true);
     } finally {
@@ -99,6 +130,7 @@ export function useResetPasswordForm() {
     setSuccessOpen,
     errorOpen,
     setErrorOpen,
+    setErrorMessage,
     errorMessage,
     handleSubmit,
     tokenVerified,
