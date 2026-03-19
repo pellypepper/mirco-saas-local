@@ -50,7 +50,7 @@ export const useSignUp = () => {
         email: cleanEmail,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`, // Redirect after email confirmation
+          emailRedirectTo: `${window.location.origin}/api/callback`, // Redirect after email confirmation
           data: {
             full_name: cleanName,
             role: "customer",
@@ -144,7 +144,7 @@ export const useProviderSignUp = () => {
         email: cleanEmail,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`, // Redirect after confirmation
+          emailRedirectTo: `${window.location.origin}/api/callback`, // Redirect after confirmation
           data: {
             full_name: cleanName,
             role: "provider",
@@ -226,7 +226,7 @@ export const useForgotPassword = ({setIsForgotPassword, setIsLogin}: {setIsForgo
       }
      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: redirectTo || `${window.location.origin}/auth/reset-password`,
+        redirectTo: redirectTo || `${window.location.origin}/api/reset-password`,
       });
 
       if (error) setError(error.message);
@@ -297,42 +297,6 @@ export const useResetPassword = () => {
 };
 
 
-// export function useAuthCallback() {
-//   const router = useRouter();
-
-//   useEffect(() => {
-//     const processSession = async () => {
-//       const session = await getCurrentSession();
-//       const user = session?.user;
-
-//       if (!user) {
-//         // No session, redirect to login
-//         router.replace("/login");
-//         return;
-//       }
-
-//       const { profile, error } = await getUserRole(user.id);
-
-//       if (error && error.code !== 'PGRST116') {
-//         // Error other than "no rows returned"
-//         console.error("Error fetching profile:", error);
-//         router.replace("/login?message=Error fetching profile. Please try again.");
-//         return;
-//       }
-
-//       if (!profile || !profile.role) {
-//         // No profile exists or no role set - redirect to role selection
-//         router.replace("/select-role");
-//         return;
-//       }
-
-//       // User has a role, go to dashboard
-//       router.replace("/dashboard");
-//     };
-
-//     processSession();
-//   }, [router]);
-// }
 
 export const useChangeEmail = () => {
   const [loading, setLoading] = useState(false);
@@ -371,7 +335,7 @@ export const useChangeEmail = () => {
       const res = await fetch("/api/check-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: newEmail }),
+        body: JSON.stringify({ email: newEmail }), 
       });
 
       const data = await res.json();
@@ -386,11 +350,11 @@ export const useChangeEmail = () => {
         return;
       }
 
-      // Update email with proper redirect URL
+      // Api call for email change
     const apicall = await fetch("/api/change-email", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ newEmail }),
+  body: JSON.stringify({ newEmail}),
 });
 
 const emailresponse = await apicall.json();
@@ -401,7 +365,7 @@ if (!apicall.ok) {
 }
 
       setMessage(
-        "Confirmation emails have been sent to both your current and new email addresses. You must confirm the change in BOTH emails for the update to take effect."
+        "Confirmation email have been sent to your new email address. You must confirm the change in your new email for the update to take effect."
       );
     } catch (err: any) {
       setError(err.message || "Unexpected error occurred.");

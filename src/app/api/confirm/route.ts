@@ -6,9 +6,9 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const type = requestUrl.searchParams.get("type");
-  const token_hash = requestUrl.searchParams.get("token_hash");
 
   const cookieStore = await cookies();
+
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,26 +25,14 @@ export async function GET(request: Request) {
     }
   );
 
-  // ✅ email_change uses token_hash + verifyOtp, not exchangeCodeForSession
-  if (type === "email_change" && token_hash) {
-    const { error } = await supabase.auth.verifyOtp({
-      type: "email_change",
-      token_hash,
-    });
-
-    if (error) {
-      console.error("[CONFIRM] email_change verifyOtp failed:", error);
-      return NextResponse.redirect(
-        new URL(`/profile?error=${encodeURIComponent(error.message)}`, requestUrl.origin)
-      );
-    }
-
+  // Email change confirmed
+  if (type === "email_change") {
     return NextResponse.redirect(
       new URL("/profile?message=Email changed successfully", requestUrl.origin)
     );
   }
 
-  // ✅ All other flows (signup, recovery) use exchangeCodeForSession
+  //  session exchange
   if (!code) {
     return NextResponse.redirect(new URL("/login", requestUrl.origin));
   }
@@ -52,7 +40,6 @@ export async function GET(request: Request) {
   const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
-    console.error("[CONFIRM] exchangeCodeForSession failed:", error);
     return NextResponse.redirect(
       new URL(`/login?error=${encodeURIComponent(error.message)}`, requestUrl.origin)
     );
