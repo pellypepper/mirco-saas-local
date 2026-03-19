@@ -208,7 +208,23 @@ export const useForgotPassword = ({setIsForgotPassword, setIsLogin}: {setIsForgo
     try {
         if (!isValidEmail(email)) {
     throw new Error("Invalid email address.");
-  }
+        }
+
+        //check if email exists 
+     const res = await fetch("/api/check-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const { exists } = await res.json();
+      
+       
+      if (!exists) {
+         setError("Email does not exist.");
+      return { error: "Email does not exist." }; 
+      }
+     
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: redirectTo || `${window.location.origin}/auth/reset-password`,
       });
@@ -232,7 +248,7 @@ export const useForgotPassword = ({setIsForgotPassword, setIsLogin}: {setIsForgo
       const result = await sendResetEmail(email);
 
       if (result?.error) {
-        setErrorMessage(result.error.message || "Failed to send reset link.");
+        setErrorMessage(result.error);
         setErrorOpen(true);
       } else {
         setSuccessOpen(true);
@@ -371,17 +387,18 @@ export const useChangeEmail = () => {
       }
 
       // Update email with proper redirect URL
-      const { error: updateError } = await supabase.auth.updateUser(
-        { email: newEmail },
-        {
-          emailRedirectTo: `${window.location.origin}/auth/confirm`,
-        }
-      );
+    const apicall = await fetch("/api/change-email", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ newEmail }),
+});
 
-      if (updateError) {
-        setError(updateError.message);
-        return;
-      }
+const emailresponse = await apicall.json();
+
+if (!apicall.ok) {
+  setError(emailresponse?.error || "Failed to update email.");
+  return;
+}
 
       setMessage(
         "Confirmation emails have been sent to both your current and new email addresses. You must confirm the change in BOTH emails for the update to take effect."

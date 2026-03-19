@@ -295,7 +295,7 @@ export default function ProviderSignupForm({
               <div className="pt-4 space-y-3">
                 <Button
                   type="submit"
-                  className="w-full h-12 bg-chart-2 text-white hover:shadow-xl hover:shadow-[#eb7323]/50 hover:scale-105 transition-all duration-300 rounded-xl font-bold text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="w-full h-12 bg-chart-2 text-white hover:shadow-xl hover:shadow-chart-2/50 hover:scale-105 transition-all duration-300 rounded-xl font-bold text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   disabled={isSubmitting || loading}
                 >
                   {(loading || isSubmitting) ? (

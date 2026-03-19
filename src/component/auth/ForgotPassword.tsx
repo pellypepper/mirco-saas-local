@@ -170,7 +170,7 @@ export default function ForgotPassword() {
           >
             <p className="text-sm text-white/90">
               Need help? {" "}
-              <a href="#" className="text-chart-2 font-semibold hover:underline">
+              <a href="#" className="text-chart-4 font-semibold hover:underline">
                 Contact Support
               </a>
             </p>

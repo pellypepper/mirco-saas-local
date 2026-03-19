@@ -26,18 +26,18 @@ useEffect(() => {
   const refreshToken = params.get("refresh_token");
   const type = params.get("type");
 
-  // ✅ If tokens are in URL, set session manually then clean URL
+  // set session manually if token exist
   if (accessToken && refreshToken && type === "recovery") {
     supabase.auth.setSession({
       access_token: accessToken,
       refresh_token: refreshToken,
     }).then(({ data, error }) => {
-      console.log("[RESET FORM] setSession event:", !!data.session, "error:", error?.message);
-      if (data.session) {
+         if (data.session) {
         verifiedRef.current = true;
         setTokenVerified(true);
         setLoading(false);
-        // ✅ Clean tokens from URL bar
+
+        //  tokens from URL bar
         window.history.replaceState({}, "", "/reset-password");
       } else {
         setErrorMessage("Invalid or expired token. Please request a new password reset link.");
@@ -48,9 +48,9 @@ useEffect(() => {
     return;
   }
 
-  // ✅ Fallback: listen via onAuthStateChange (for direct visits)
+  // Fallback for onAuthStateChange 
   const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-    console.log("[RESET FORM] auth event:", event, "| session:", !!session);
+    
     if ((event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") && session) {
       verifiedRef.current = true;
       setTokenVerified(true);
@@ -112,7 +112,7 @@ useEffect(() => {
         setIsLogin(true);
       }, 3000);
     } catch (err: any) {
-      console.error("[RESET FORM] Password reset error:", err);
+
       setErrorMessage(err?.message || "Something went wrong.");
       setErrorOpen(true);
     } finally {

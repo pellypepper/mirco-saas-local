@@ -1,5 +1,5 @@
 "use client"; 
-
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useProviderSignUp } from "@/hooks/useAuth";
@@ -33,6 +33,7 @@ export function useProviderSignupForm(parentOnSubmit?: (data: any) => void) {
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const selectedServiceType = watch("service_type");
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -72,6 +73,7 @@ export function useProviderSignupForm(parentOnSubmit?: (data: any) => void) {
       setSuccessOpen(true);
       if (parentOnSubmit) await parentOnSubmit(payload);
       reset();
+        router.push(`/auth/check-email?email=${encodeURIComponent( payload.email)}`);
     } catch (err: any) {
       console.error("Signup failed:", err);
       setErrorMessage(err?.message || "Signup failed");

@@ -29,7 +29,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
     setSuccessOpen(true);
   } catch (err: any) {
-    console.error("Signup error:", err);
+  
     setErrorMessage(err.message || "Signup failed");
     setErrorOpen(true);
   }
