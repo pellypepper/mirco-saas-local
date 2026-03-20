@@ -143,7 +143,7 @@ const loadAvailability = useCallback(async () => {
     }));
 
     setNewSlot((prev) => ({ ...prev, [date]: { start: "", end: "" } }));
-    setSuccessModal("Time slot added successfully ✅");
+    setSuccessModal("Time slot added successfully ✅. Remember to save your changes.");
 
     return true;
   };

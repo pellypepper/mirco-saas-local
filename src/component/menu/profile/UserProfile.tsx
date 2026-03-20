@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import Loader from "../../Spinner";
 import useUserProfile from "@/hooks/useUserProfile";
 import { useMainNavBar } from "@/hooks/MainNavContext";
+import SuccessModal from "@/component/SuccessModal";
+import ErrorModal from "@/component/ErrorModal";
 
 interface ProviderProfileProps {
   profile: any;
@@ -29,6 +31,14 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
     handleImageClick,
     handleImageUpload,
     handleSubmit,
+    showSuccessModal,
+    showErrorModal,
+    setShowSuccessModal,
+    setShowErrorModal,
+
+      successMessage,
+        errorMessage,
+
   } = useUserProfile(profile);
 
   /* THEME TOKENS */
@@ -38,6 +48,8 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
 
   const textPrimary = isDarkMode ? "text-white" : "text-zinc-900";
   const textMuted = "text-zinc-500";
+
+  
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-md z-50 px-4 animate-in fade-in duration-300">
@@ -210,6 +222,22 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
           )}
         </form>
       </div>
+
+      {showSuccessModal && (
+  <SuccessModal
+  open={showSuccessModal}
+   message={successMessage}
+    onClose={() => setShowSuccessModal(false)}
+  />
+)}
+
+{showErrorModal && (
+  <ErrorModal
+  open={showErrorModal}
+    message={errorMessage}
+    onClose={() => setShowErrorModal(false)}
+  />
+)}
 
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {

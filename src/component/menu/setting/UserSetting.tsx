@@ -135,7 +135,7 @@ export const ChangePasswordModal = ({ onClose }: { onClose: () => void }) => {
   const surface = isDarkMode ? "bg-zinc-800" : "bg-white";
   const border = isDarkMode ? "border-zinc-700" : "border-zinc-200";
 
-  const { changePassword, loading, error, message } = useChangePassword();
+  const { changePassword, loading, error, message, } = useChangePassword();
 
   const passwordsMatch =
     newPassword.length > 0 &&

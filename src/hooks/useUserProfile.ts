@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { uploadAvatar, updateProfile, getProviderWithEmail } from "@/services/profileService";
+import { uploadAvatar, updateProfile,  } from "@/services/profileService";
+import { getProviderWithEmail } from "@/services/profileService.server";
 
 const useUserProfile = (profile: any) => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,10 @@ const useUserProfile = (profile: any) => {
   const [imageUrl, setImageUrl] = useState(profile?.avatar_url || "");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+const [showErrorModal, setShowErrorModal] = useState(false);
   const [notifications, setNotifications] = useState("");
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -110,12 +115,16 @@ const useUserProfile = (profile: any) => {
       setError("");
       setMessage("");
 
-      const url = await uploadAvatar(profile.id, file);
+      const url = await uploadAvatar( file);
       setImageUrl(url);
-      setMessage("Image uploaded successfully");
+       setSuccessMessage("Image uploaded successfully. click save to update your profile");
+    setShowSuccessModal(true);
     } catch (err) {
       console.error(err);
       setError("Image upload failed");
+      setErrorMessage(" Image upload failed. Please try again.");
+      setShowErrorModal(true);
+
     } finally {
       setLoading(false);
     }
@@ -129,10 +138,12 @@ const useUserProfile = (profile: any) => {
 
     try {
       await updateProfile(profile.id, role, formData, imageUrl);
-      setMessage("Profile updated successfully");
+   setSuccessMessage("Profile updated successfully");
+    setShowSuccessModal(true);
     } catch (err) {
       console.error(err);
-      setError("Failed to update profile");
+      setErrorMessage("Profile update failed");
+    setShowErrorModal(true);
     } finally {
       setLoading(false);
     }
@@ -151,6 +162,13 @@ const useUserProfile = (profile: any) => {
     handleImageClick,
     handleImageUpload,
     handleSubmit,
+      showSuccessModal,
+  showErrorModal,
+ 
+      successMessage,
+        errorMessage,
+  setShowSuccessModal,
+  setShowErrorModal,
   };
 };
 

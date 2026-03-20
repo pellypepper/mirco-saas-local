@@ -63,7 +63,7 @@ const useProvideDashBoard = () => {
     {
       icon: Settings,
       label: "Update Services",
-      link: "/dashboard/Providers/services",
+      link: "/dashboard/Providers/service",
       color: colorStyles["chart-2"],
     },
   ]);
