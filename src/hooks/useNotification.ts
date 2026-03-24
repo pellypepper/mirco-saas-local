@@ -1,7 +1,10 @@
-"use client"; 
+'use client';
 
 import { useState, useEffect } from 'react';
-import { notificationService, type Notification as NotificationType } from '@/services/notificationService';
+import {
+  notificationService,
+  type Notification as NotificationType,
+} from '@/services/notificationService';
 
 export function useNotifications() {
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
@@ -11,13 +14,13 @@ export function useNotifications() {
     // Load notifications from localStorage
     const stored = localStorage.getItem('admin_notifications');
     if (stored) {
-      const parsed = JSON. parse(stored);
+      const parsed = JSON.parse(stored);
       setNotifications(parsed);
       setUnreadCount(parsed.filter((n: NotificationType) => !n.read).length);
     }
 
     // Subscribe to real-time notifications
-    const unsubscribe = notificationService. subscribeToNotifications((notification) => {
+    const unsubscribe = notificationService.subscribeToNotifications((notification) => {
       setNotifications((prev) => {
         const updated = [notification, ...prev].slice(0, 50); // Keep last 50
         localStorage.setItem('admin_notifications', JSON.stringify(updated));
@@ -56,9 +59,7 @@ export function useNotifications() {
 
   const markAsRead = (id: string) => {
     setNotifications((prev) => {
-      const updated = prev.map((n) =>
-        n.id === id ? { ...n, read: true } : n
-      );
+      const updated = prev.map((n) => (n.id === id ? { ...n, read: true } : n));
       localStorage.setItem('admin_notifications', JSON.stringify(updated));
       setUnreadCount(updated.filter((n) => !n.read).length);
       return updated;

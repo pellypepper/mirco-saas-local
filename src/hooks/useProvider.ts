@@ -1,64 +1,50 @@
-"use client"; 
+'use client';
 
-import { useState, useEffect } from "react";
-import { fetchProviderProfile, fetchProviderById } from "@/services/providerService";
-import { set } from "react-hook-form";
+import { useState, useEffect } from 'react';
+import { fetchProviderProfile, fetchProviderById } from '@/services/providerService';
+import { set } from 'react-hook-form';
 
-
-
-export const useProvider  = (providerId: string) => {
-
+export const useProvider = (providerId: string) => {
   const [providerData, setProviderData] = useState<any | null>(null);
-    const [providerLoading, setProviderLoading] = useState(true);
+  const [providerLoading, setProviderLoading] = useState(true);
 
-
-
-
-   useEffect(() => {
-        if (!providerId) return;
-
+  useEffect(() => {
+    if (!providerId) return;
 
     const getProvider = async () => {
-         setProviderLoading(true);
-        try {
+      setProviderLoading(true);
+      try {
         const p = await fetchProviderById(providerId);
         setProviderData(p);
       } catch (err) {
-        console.error("Failed to fetch provider", err);
-      }finally {
+        console.error('Failed to fetch provider', err);
+      } finally {
         setProviderLoading(false);
       }
     };
-    getProvider( );
+    getProvider();
   }, [providerId]);
 
-
-    return{
-   
-        providerData,
-        providerLoading,
-    }
-
-}
-
+  return {
+    providerData,
+    providerLoading,
+  };
+};
 
 export const FetchProvider = () => {
-    const [providers, setProviders] = useState<any[]>([]);
-    const [loading , setLoading] = useState(true);
+  const [providers, setProviders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchProviders = async () => {
-          setLoading(true);
-            const fetchedProviders = await fetchProviderProfile();
-            setProviders(fetchedProviders ?? []);
-            setLoading(false);
-        };
+  useEffect(() => {
+    const fetchProviders = async () => {
+      setLoading(true);
+      const fetchedProviders = await fetchProviderProfile();
+      setProviders(fetchedProviders ?? []);
+      setLoading(false);
+    };
 
-        fetchProviders();
-    }, []);
+    fetchProviders();
+  }, []);
 
-    return { providers, loading };
-}
-
-
-
+  return { providers, loading };
+};

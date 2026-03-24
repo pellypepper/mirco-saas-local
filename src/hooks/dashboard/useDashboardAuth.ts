@@ -1,18 +1,17 @@
+'use client';
 
-"use client";
-
-import { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 
 const roleAccessMap = {
-  customer: ["/dashboard/Customer", "/dashboard/Customer/booking"],
+  customer: ['/dashboard/Customer', '/dashboard/Customer/booking'],
   provider: [
-    "/dashboard/Providers",
-    "/dashboard/Providers/booking",
-    "/dashboard/Providers/availability",
-    "/dashboard/Providers/service",
+    '/dashboard/Providers',
+    '/dashboard/Providers/booking',
+    '/dashboard/Providers/availability',
+    '/dashboard/Providers/service',
   ],
-  admin: ["/dashboard/Admin", "/dashboard/Admin/revenue", "/dashboard/Admin/booking"],
+  admin: ['/dashboard/Admin', '/dashboard/Admin/revenue', '/dashboard/Admin/booking'],
 };
 
 export const useDashboardAuth = (user: any, profile: any, loading: boolean) => {
@@ -22,7 +21,7 @@ export const useDashboardAuth = (user: any, profile: any, loading: boolean) => {
   // Redirect if not logged in
   useEffect(() => {
     if (!loading && (!user || !profile)) {
-      router.replace("/");
+      router.replace('/');
     }
   }, [user, profile, loading, router]);
 
@@ -34,7 +33,9 @@ export const useDashboardAuth = (user: any, profile: any, loading: boolean) => {
     const isAllowed = allowedRoutes.some((route) => pathname.startsWith(route));
 
     if (!isAllowed) {
-      router.replace(`/dashboard/${profile.role === "customer" ? "Customer" : profile.role === "provider" ? "Providers" : "Admin"}`);
+      router.replace(
+        `/dashboard/${profile.role === 'customer' ? 'Customer' : profile.role === 'provider' ? 'Providers' : 'Admin'}`,
+      );
     }
   }, [pathname, profile, router]);
 

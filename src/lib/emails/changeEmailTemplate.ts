@@ -1,4 +1,8 @@
-export const changeEmailTemplate = (confirmationUrl: string, currentEmail: string, newEmail: string) => `
+export const changeEmailTemplate = (
+  confirmationUrl: string,
+  currentEmail: string,
+  newEmail: string,
+) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>

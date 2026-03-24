@@ -1,17 +1,11 @@
-"use client"
+'use client';
 
-import { motion, AnimatePresence } from "framer-motion"
-import { X } from "lucide-react"
-import { MeshGradient } from "@paper-design/shaders-react"
-import HeroForm from "./CustomerSignupForm"
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
+import { MeshGradient } from '@paper-design/shaders-react';
+import HeroForm from './CustomerSignupForm';
 
-export default function HeroModal({
-  isOpen,
-  onClose,
-}:  {
-  isOpen: boolean
-  onClose: () => void
-}) {
+export default function HeroModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -29,7 +23,7 @@ export default function HeroModal({
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale:  1, y: 0 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3 }}
               className="relative w-full h-full max-h-[95vh] bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 overflow-hidden rounded-3xl shadow-2xl"
@@ -37,10 +31,10 @@ export default function HeroModal({
               {/* ✅ BACKGROUND ONLY */}
               <div className="absolute inset-0 pointer-events-none opacity-40">
                 <MeshGradient
-       colors={["#219ebc", "#219ebc", "#219ebc", "#219ebc"]}
+                  colors={['#219ebc', '#219ebc', '#219ebc', '#219ebc']}
                   distortion={0.8}
                   speed={0.6}
-                  style={{ width: "100%", height: "100%" }}
+                  style={{ width: '100%', height: '100%' }}
                 />
               </div>
 
@@ -66,5 +60,5 @@ export default function HeroModal({
         </>
       )}
     </AnimatePresence>
-  )
+  );
 }

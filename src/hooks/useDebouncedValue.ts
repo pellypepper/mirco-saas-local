@@ -1,6 +1,6 @@
-"use client"; 
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export default function useDebouncedValue<T>(value: T, delay = 400) {
   const [debounced, setDebounced] = useState<T>(value);

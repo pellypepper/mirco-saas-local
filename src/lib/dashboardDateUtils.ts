@@ -1,5 +1,4 @@
-export const normalizeDate = (dateStr: string) =>
-  new Date(dateStr).toISOString().split("T")[0];
+export const normalizeDate = (dateStr: string) => new Date(dateStr).toISOString().split('T')[0];
 
 export const getWeekRange = (offsetWeeks = 0) => {
   const today = new Date();
@@ -9,8 +8,8 @@ export const getWeekRange = (offsetWeeks = 0) => {
     Date.UTC(
       today.getUTCFullYear(),
       today.getUTCMonth(),
-      today.getUTCDate() - day - offsetWeeks * 7
-    )
+      today.getUTCDate() - day - offsetWeeks * 7,
+    ),
   );
 
   const end = new Date(
@@ -20,8 +19,8 @@ export const getWeekRange = (offsetWeeks = 0) => {
       today.getUTCDate() - day - offsetWeeks * 7 + 6,
       23,
       59,
-      59
-    )
+      59,
+    ),
   );
 
   return { start, end };
@@ -30,8 +29,5 @@ export const getWeekRange = (offsetWeeks = 0) => {
 export const getMonthStr = (offsetMonths = 0) => {
   const d = new Date();
   d.setUTCMonth(d.getUTCMonth() - offsetMonths);
-  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(
-    2,
-    "0"
-  )}`;
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
 };

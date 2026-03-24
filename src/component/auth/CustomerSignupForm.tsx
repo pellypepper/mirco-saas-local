@@ -1,20 +1,30 @@
-"use client"
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { BarChart3, Globe2, Shield, Zap} from "lucide-react"
-import { motion } from "framer-motion"
-import Loader from "../Spinner"
-import SuccessModal from "../SuccessModal"
-import ErrorModal from "../ErrorModal"
-import useCustomerSignup from "@/hooks/useCustomerSignup"
-import { useMainNavBar } from "@/hooks/MainNavContext"
+'use client';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { BarChart3, Globe2, Shield, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
+import Loader from '../Spinner';
+import SuccessModal from '../SuccessModal';
+import ErrorModal from '../ErrorModal';
+import useCustomerSignup from '@/hooks/useCustomerSignup';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
-function Feature({ icon, title, text, delay }: { icon: React.ReactNode; title: string; text: string; delay: number }) {
+function Feature({
+  icon,
+  title,
+  text,
+  delay,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+  delay: number;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x:  0 }}
+      animate={{ opacity: 1, x: 0 }}
       transition={{ delay, duration: 0.5 }}
       className="flex gap-4 group"
     >
@@ -22,15 +32,17 @@ function Feature({ icon, title, text, delay }: { icon: React.ReactNode; title: s
         {icon}
       </div>
       <div>
-        <h3 className="font-semibold text-white mb-1 group-hover:text-[#009689] transition-colors">{title}</h3>
+        <h3 className="font-semibold text-white mb-1 group-hover:text-[#009689] transition-colors">
+          {title}
+        </h3>
         <p className="text-sm text-zinc-400 leading-relaxed">{text}</p>
       </div>
     </motion.div>
-  )
+  );
 }
 
 export default function HeroForm({ onClose }: { onClose: () => void }) {
-  const { toggleLogin} = useMainNavBar()
+  const { toggleLogin } = useMainNavBar();
 
   const {
     fullName,
@@ -46,7 +58,7 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
     setPassword,
     setSuccessOpen,
     setErrorOpen,
-  } = useCustomerSignup()
+  } = useCustomerSignup();
 
   return (
     <>
@@ -54,18 +66,16 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
       <SuccessModal
         open={successOpen}
         onClose={() => {
-          setSuccessOpen(false)
-          onClose()
-       
+          setSuccessOpen(false);
+          onClose();
         }}
         message="Account created successfully! Please check your email to verify your account before logging in."
       />
 
       <ErrorModal
         open={errorOpen}
-        message={errorMessage || "An error occurred during signup. Please try again."}
+        message={errorMessage || 'An error occurred during signup. Please try again.'}
         onClose={() => setErrorOpen(false)}
-      
       />
 
       {/* Content */}
@@ -74,19 +84,15 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
         <div className="hidden lg:flex flex-1 flex-col justify-center p-12 gap-8 text-white">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y:  0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
           >
-         
-
             <h2 className="text-4xl lg:text-5xl font-bold leading-tight mb-4">
-              Ready to Book with{" "}
-              <span className="text-chart-2">
-                Trusted Professionals? 
-              </span>
+              Ready to Book with <span className="text-chart-2">Trusted Professionals?</span>
             </h2>
             <p className="text-zinc-400 text-lg max-w-md leading-relaxed">
-              Join thousands of users managing their bookings effortlessly. Fast, secure, and reliable. 
+              Join thousands of users managing their bookings effortlessly. Fast, secure, and
+              reliable.
             </p>
           </motion.div>
 
@@ -117,8 +123,6 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
               delay={0.6}
             />
           </div>
-
-       
         </div>
 
         {/* RIGHT - Form Section */}
@@ -138,21 +142,16 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
               <form onSubmit={handleSubmit} className="relative space-y-6">
                 {/* Header */}
                 <div className="text-center">
-                  <h3 className="text-xl lg:text-3xl font-bold text-white mb-2">
-                    Create Account
-                  </h3>
+                  <h3 className="text-xl lg:text-3xl font-bold text-white mb-2">Create Account</h3>
                   <p className="text-sm text-zinc-400">
-                    Sign up to get started. It only takes a minute! 
+                    Sign up to get started. It only takes a minute!
                   </p>
                 </div>
 
                 {/* Full Name */}
                 <div className="space-y-2">
-                  <Label  className="text-white font-medium">
-                    Full Name
-                  </Label>
+                  <Label className="text-white font-medium">Full Name</Label>
                   <Input
-                  
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Jane Doe"
@@ -162,11 +161,8 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
 
                 {/* Email */}
                 <div className="space-y-2">
-                  <Label  className="text-white font-medium">
-                    Email
-                  </Label>
+                  <Label className="text-white font-medium">Email</Label>
                   <Input
-                  
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -177,14 +173,11 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
 
                 {/* Password */}
                 <div className="space-y-2">
-                  <Label  className="text-white font-medium">
-                    Password
-                  </Label>
+                  <Label className="text-white font-medium">Password</Label>
                   <Input
-                
                     type="password"
                     value={password}
-                    onChange={(e) => setPassword(e.target. value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     className="bg-white/10 border-white/20 text-white placeholder:text-zinc-500 focus:border-chart-3 focus:ring-chart-3/50 rounded-xl h-12"
                   />
@@ -196,12 +189,12 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
                   type="submit"
                   className="w-full bg-chart-2 text-white hover:shadow-xl hover:shadow-chart-2/50 hover:scale-105 transition-all duration-300 rounded-xl h-12 font-bold text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? <Loader /> : "Create Account"}
+                  {loading ? <Loader /> : 'Create Account'}
                 </Button>
 
                 {/* Login Link */}
                 <p className="text-center text-sm text-zinc-400">
-                  Already have an account?{" "}
+                  Already have an account?{' '}
                   <span
                     onClick={toggleLogin}
                     className="text-white font-bold cursor-pointer hover:text-chart-2 hover:underline transition-colors"
@@ -212,11 +205,11 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
 
                 {/* Terms */}
                 <p className="text-xs text-zinc-500 text-center pt-4 border-t border-white/10">
-                  By signing up, you agree to our{" "}
+                  By signing up, you agree to our{' '}
                   <a href="#" className="text-white hover:underline">
                     Terms of Service
-                  </a>{" "}
-                  and{" "}
+                  </a>{' '}
+                  and{' '}
                   <a href="#" className="text-white hover:underline">
                     Privacy Policy
                   </a>
@@ -224,11 +217,9 @@ export default function HeroForm({ onClose }: { onClose: () => void }) {
                 </p>
               </form>
             </div>
-
-      
           </motion.div>
         </div>
       </div>
     </>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 export function useCheckout() {
   const [loading, setLoading] = useState(false);
@@ -8,8 +8,8 @@ export function useCheckout() {
   const createCheckout = async (payload: any) => {
     setLoading(true);
 
-    const res = await fetch("/api/checkout", {
-      method: "POST",
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
       body: JSON.stringify(payload),
     });
 

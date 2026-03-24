@@ -1,41 +1,35 @@
-"use client";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useMainNavBar } from "@/hooks/MainNavContext";
-import {useRouter} from "next/navigation";
-
-
+'use client';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useMainNavBar } from '@/hooks/MainNavContext';
+import { useRouter } from 'next/navigation';
 
 const ChangeEmailSuccess = () => {
-
-         const searchParams = useSearchParams();
-  const message = searchParams.get("message");
-  const error = searchParams.get("error");
+  const searchParams = useSearchParams();
+  const message = searchParams.get('message');
+  const error = searchParams.get('error');
   const [visible, setVisible] = useState(false);
-  const {isDarkMode} = useMainNavBar();
-    const router = useRouter();
+  const { isDarkMode } = useMainNavBar();
+  const router = useRouter();
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 80);
     return () => clearTimeout(t);
   }, []);
 
-
-      return (
-    <div className={`   min-h-screen flex items-center justify-center relative overflow-hidden ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
+  return (
+    <div
+      className={`   min-h-screen flex items-center justify-center relative overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}
+    >
       <div
-        className={`w-full max-w-md  border ${isDarkMode ? "border-gray-600" : "border-gray-200"} rounded-2xl p-10 shadow-md transition-all duration-500 ${
-          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        className={`w-full max-w-md  border ${isDarkMode ? 'border-gray-600' : 'border-gray-200'} rounded-2xl p-10 shadow-md transition-all duration-500 ${
+          visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
       >
         {/* Icon */}
         <div
           className={`w-14 h-14 rounded-lg flex items-center justify-center mb-7 ${
-            message
-              ? "bg-chart-2/10"
-              : error
-              ? "bg-red-100"
-              : "bg-gray-100"
+            message ? 'bg-chart-2/10' : error ? 'bg-red-100' : 'bg-gray-100'
           }`}
         >
           {message ? (
@@ -79,16 +73,22 @@ const ChangeEmailSuccess = () => {
         </div>
 
         {/* Heading */}
-        <p className={`"text-xs uppercase font-medium ${isDarkMode ? "text-gray-100" : "text-gray-500"} mb-1"`}>Account Settings</p>
-        <h1 className={`    text-2xl font-bold mb-2 ${isDarkMode ? "text-gray-300" : "text-gray-900"}`}>
-          {message ? "Email updated" : error ? "Update failed" : "Your Profile"}
+        <p
+          className={`"text-xs uppercase font-medium ${isDarkMode ? 'text-gray-100' : 'text-gray-500'} mb-1"`}
+        >
+          Account Settings
+        </p>
+        <h1
+          className={`    text-2xl font-bold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}
+        >
+          {message ? 'Email updated' : error ? 'Update failed' : 'Your Profile'}
         </h1>
         <p className="text-sm text-gray-500 mb-5">
           {message
-            ? "Your email address has been changed successfully. Use it to sign in going forward."
+            ? 'Your email address has been changed successfully. Use it to sign in going forward.'
             : error
-            ? "Something went wrong while updating your email. Please try again."
-            : "Manage your account information below."}
+              ? 'Something went wrong while updating your email. Please try again.'
+              : 'Manage your account information below.'}
         </p>
 
         {/* Banner */}
@@ -138,32 +138,43 @@ const ChangeEmailSuccess = () => {
           </div>
           <div className="flex justify-between items-center border-t border-gray-200 pt-2">
             <span className="text-xs uppercase font-medium text-gray-500">Last updated</span>
-            <span className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-800"} font-normal`}>
-              {new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+            <span
+              className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-800'} font-normal`}
+            >
+              {new Date().toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              })}
             </span>
           </div>
           <div className="flex justify-between items-center border-t border-gray-200 pt-2">
             <span className="text-xs uppercase font-medium text-gray-500">Change</span>
-            <span className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-800"} font-normal`}>Email address</span>
+            <span
+              className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-800'} font-normal`}
+            >
+              Email address
+            </span>
           </div>
         </div>
 
         {/* CTA */}
         <button
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push('/dashboard')}
           className="w-full mt-6 px-4 py-3 rounded-lg bg-chart-2 text-white text-sm font-medium hover:bg-chart-2/80transition"
         >
           Back to account
         </button>
 
         <p className="text-xs text-gray-500 text-center mt-3">
-          Didn't make this change? <a className="text-chart-4 font-medium hover:underline" href="/support">Contact support →</a>
+          Didn't make this change?{' '}
+          <a className="text-chart-4 font-medium hover:underline" href="/support">
+            Contact support →
+          </a>
         </p>
       </div>
     </div>
-      )
-    }
-    
-    
-export default ChangeEmailSuccess
-    
+  );
+};
+
+export default ChangeEmailSuccess;

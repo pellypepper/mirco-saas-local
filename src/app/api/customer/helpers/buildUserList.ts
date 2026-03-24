@@ -1,5 +1,5 @@
-import { buildBookingsMap, buildProviderMap, buildServiceMap } from "./buildMaps";
-import { calculateBookingStats, getRecentBookings } from "./aggregrateBooking";
+import { buildBookingsMap, buildProviderMap, buildServiceMap } from './buildMaps';
+import { calculateBookingStats, getRecentBookings } from './aggregrateBooking';
 
 interface BuildUsersListParams {
   profiles: any[];
@@ -15,7 +15,7 @@ export function buildUsersList({
   bookings,
   providers,
   services,
-}:  BuildUsersListParams) {
+}: BuildUsersListParams) {
   // Build maps for quick lookup
   const bookingsMap = buildBookingsMap(bookings);
   const providerMap = buildProviderMap(providers);
@@ -23,17 +23,17 @@ export function buildUsersList({
 
   // Build users list
   const users = profiles.map((profile) => {
-    const userBookings = bookingsMap[profile.id] ??  [];
-    
+    const userBookings = bookingsMap[profile.id] ?? [];
+
     // Calculate booking statistics
     const bookingStats = calculateBookingStats(userBookings);
-    
+
     // Get recent bookings with full details
     const recentBookings = getRecentBookings(userBookings, providerMap, serviceMap);
 
     return {
       ...profile,
-      email: emailMap[profile.id] ?? "",
+      email: emailMap[profile.id] ?? '',
       joined: new Date(profile.created_at).toISOString(),
       ...bookingStats,
       recentBookings,

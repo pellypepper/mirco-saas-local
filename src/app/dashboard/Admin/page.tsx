@@ -1,17 +1,13 @@
-"use client";
+'use client';
 
-
-import AdminDashboard from "@/component/dashboard/admin/AdminMainDisplay";
-
-
-
+import AdminDashboard from '@/component/dashboard/admin/AdminMainDisplay';
 
 const Admin = () => {
   return (
     <div>
       <AdminDashboard />
     </div>
-  )
-}
+  );
+};
 
-export default Admin
+export default Admin;

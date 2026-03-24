@@ -1,40 +1,36 @@
-"use client"; 
+'use client';
 
-import { useState } from "react";
-import { useSignUp } from "./useAuth";
-import { Capitalize } from "@/lib/Capitalize";
-import { useRouter } from "next/navigation";
-
+import { useState } from 'react';
+import { useSignUp } from './useAuth';
+import { Capitalize } from '@/lib/Capitalize';
+import { useRouter } from 'next/navigation';
 
 export default function useCustomerSignup() {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const { signUp, loading } = useSignUp();
   const router = useRouter();
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  
-  try {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    const formattedFullName = Capitalize(fullName);
-    const data = await signUp(email, password, formattedFullName);
-        router.push(`/auth/check-email?email=${encodeURIComponent(email)}`);
-    if (!data) {
-      throw new Error("Signup failed");
+    try {
+      const formattedFullName = Capitalize(fullName);
+      const data = await signUp(email, password, formattedFullName);
+      router.push(`/auth/check-email?email=${encodeURIComponent(email)}`);
+      if (!data) {
+        throw new Error('Signup failed');
+      }
+      setSuccessOpen(true);
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Signup failed');
+      setErrorOpen(true);
     }
-    setSuccessOpen(true);
-  } catch (err: any) {
-  
-    setErrorMessage(err.message || "Signup failed");
-    setErrorOpen(true);
-  }
-};
-
+  };
 
   return {
     fullName,
@@ -50,6 +46,5 @@ const handleSubmit = async (e: React.FormEvent) => {
     setSuccessOpen,
     setErrorOpen,
     handleSubmit,
-
   };
 }

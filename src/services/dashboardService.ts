@@ -1,4 +1,4 @@
-import { supabase } from "@/libs/supabaseClient";
+import { supabase } from '@/libs/supabaseClient';
 
 // Fetch authenticated user's object from Supabase
 export async function fetchAuthUser() {
@@ -11,11 +11,7 @@ export async function fetchAuthUser() {
 
 // Fetch the user's profile row from Supabase
 export async function fetchUserProfile(userId: string) {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", userId)
-    .single();
+  const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
   return { data, error };
 }
 

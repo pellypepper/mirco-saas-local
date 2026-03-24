@@ -1,26 +1,24 @@
-import { supabase } from "@/libs/supabaseClient";
-import { supabaseAdmin } from "@/libs/supabaseAdmin";
+import { supabase } from '@/libs/supabaseClient';
+import { supabaseAdmin } from '@/libs/supabaseAdmin';
 
 export const upsertUserProfile = async (
   userId: string,
-  role: "customer" | "provider",
+  role: 'customer' | 'provider',
   fullName: string,
-  extraFields: Record<string, any> = {}
+  extraFields: Record<string, any> = {},
 ) => {
-  const { error } = await supabase
-    .from("profiles")
-    .upsert(
-      { 
-        id: userId, 
-        role, 
-        full_name: fullName, 
-        ...extraFields,
-        updated_at: new Date().toISOString()
-      },
-      {
-        onConflict: 'id'
-      }
-    );
+  const { error } = await supabase.from('profiles').upsert(
+    {
+      id: userId,
+      role,
+      full_name: fullName,
+      ...extraFields,
+      updated_at: new Date().toISOString(),
+    },
+    {
+      onConflict: 'id',
+    },
+  );
   if (error) throw error;
 };
 
@@ -34,9 +32,9 @@ export async function getCurrentSession() {
 // Fetches the user profile/role from Supabase
 export async function getUserRole(userId: string) {
   const { data: profile, error } = await supabase
-    .from("profiles")
-    .select("role, full_name, id")
-    .eq("id", userId)
+    .from('profiles')
+    .select('role, full_name, id')
+    .eq('id', userId)
     .maybeSingle(); // Use maybeSingle() instead of single() to avoid error when no row exists
 
   return { profile, error };
@@ -45,9 +43,9 @@ export async function getUserRole(userId: string) {
 // Check if user has a profile
 export async function hasUserProfile(userId: string) {
   const { data, error } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("id", userId)
+    .from('profiles')
+    .select('id')
+    .eq('id', userId)
     .maybeSingle();
 
   return { exists: !!data, error };
@@ -56,26 +54,25 @@ export async function hasUserProfile(userId: string) {
 // Create initial profile for OAuth users
 export async function createOAuthProfile(userId: string, email: string, fullName?: string) {
   const { data, error } = await supabase
-    .from("profiles")
+    .from('profiles')
     .insert({
       id: userId,
       full_name: fullName || email.split('@')[0],
       role: null, // Role will be set later
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     })
     .select()
-     .maybeSingle();
+    .maybeSingle();
 
   return { data, error };
 }
 
-
 export async function insertProfile(
-  userId: string, 
-  role: "customer" | "provider" | null, 
+  userId: string,
+  role: 'customer' | 'provider' | null,
   fullName: string,
-  extraFields: Record<string, any> = {}
+  extraFields: Record<string, any> = {},
 ) {
   const { data, error } = await supabaseAdmin
     .from('profiles')
@@ -85,22 +82,21 @@ export async function insertProfile(
       role,
       ...extraFields,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     })
     .select()
-   .maybeSingle();
-    
+    .maybeSingle();
+
   if (error) {
-      console.error("Profile insertion error:", error);
-      return { data: null, error };
-    }
+    console.error('Profile insertion error:', error);
+    return { data: null, error };
+  }
   return { data, error };
 }
 
-
 export async function resendVerificationEmail(email: string) {
   const { error } = await supabase.auth.resend({
-    type: "signup",
+    type: 'signup',
     email,
   });
 

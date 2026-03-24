@@ -1,18 +1,13 @@
-"use client";
+'use client';
 
-import { useMainNavBar } from "@/hooks/MainNavContext";
-import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useMainNavBar } from '@/hooks/MainNavContext';
+import { Menu, X } from 'lucide-react';
+import { useState } from 'react';
 
 const MainNav = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  const {
-    toggleLogin,
- handleSignup,
-    handleProviderSignup,
-    setIsExpanded
-  } = useMainNavBar();
+
+  const { toggleLogin, handleSignup, handleProviderSignup, setIsExpanded } = useMainNavBar();
 
   return (
     <nav className="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-xl border-b border-white/10">
@@ -20,12 +15,10 @@ const MainNav = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3 cursor-pointer group">
-            
             <div>
               <h1 className="text-xl font-bold text-white">
                 Service<span className="text-chart-2">Hub</span>
               </h1>
-        
             </div>
           </div>
 
@@ -39,7 +32,7 @@ const MainNav = () => {
             </button>
 
             <button
-              onClick={() =>  handleSignup()}
+              onClick={() => handleSignup()}
               className="px-5 py-2.5 text-sm font-medium cursor-pointer text-white rounded-xl hover:bg-white/10 transition-all"
             >
               Sign up

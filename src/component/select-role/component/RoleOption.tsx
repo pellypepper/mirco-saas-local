@@ -1,9 +1,6 @@
-"use client";
-
-
+'use client';
 
 interface RoleOptionProps {
-
   text: string;
 }
 

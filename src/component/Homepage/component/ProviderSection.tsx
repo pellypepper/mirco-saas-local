@@ -1,44 +1,39 @@
-"use client";
-import { ArrowRight, TrendingUp, DollarSign, Users, Clock } from "lucide-react";
-import { useMainNavBar } from "@/hooks/MainNavContext";
-
+'use client';
+import { ArrowRight, TrendingUp, DollarSign, Users, Clock } from 'lucide-react';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
 const ProviderSection = () => {
   const { handleProviderSignup } = useMainNavBar();
-  
+
   const benefits = [
     {
       icon: TrendingUp,
-      title: "Grow Your Business",
-      description: "Reach thousands of potential customers"
+      title: 'Grow Your Business',
+      description: 'Reach thousands of potential customers',
     },
     {
       icon: DollarSign,
-      title: "Increase Revenue",
-      description: "Get more bookings and higher earnings"
+      title: 'Increase Revenue',
+      description: 'Get more bookings and higher earnings',
     },
     {
       icon: Users,
-      title: "Build Your Brand",
-      description: "Showcase your expertise and reviews"
+      title: 'Build Your Brand',
+      description: 'Showcase your expertise and reviews',
     },
     {
       icon: Clock,
-      title: "Flexible Schedule",
-      description: "Work on your own terms and availability"
-    }
+      title: 'Flexible Schedule',
+      description: 'Work on your own terms and availability',
+    },
   ];
 
   return (
     <section className="relative bg-chart-2/70  text-white py-20 overflow-hidden">
-
-      
- 
       <div className="relative container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">
-          
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               Are You a Service Provider?
             </h2>

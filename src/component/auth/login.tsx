@@ -1,11 +1,11 @@
 'use client';
 
-import { useLoginForm } from "@/hooks/useLoginForm";
-import AuthButtons from "./AuthButtons";
-import Link from "next/link";
-import Loader from "../Spinner";
-import SuccessModal from "../SuccessModal";
-import ErrorModal from "../ErrorModal";
+import { useLoginForm } from '@/hooks/useLoginForm';
+import AuthButtons from './AuthButtons';
+import Link from 'next/link';
+import Loader from '../Spinner';
+import SuccessModal from '../SuccessModal';
+import ErrorModal from '../ErrorModal';
 import {
   Card,
   CardHeader,
@@ -13,14 +13,14 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useMainNavBar } from "@/hooks/MainNavContext";
-import { X, Lock, Mail, Sparkles, AlertCircle, RefreshCw } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { MeshGradient } from "@paper-design/shaders-react";
+} from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useMainNavBar } from '@/hooks/MainNavContext';
+import { X, Lock, Mail, Sparkles, AlertCircle, RefreshCw } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MeshGradient } from '@paper-design/shaders-react';
 
 export default function LoginPage() {
   const { handleClose, handleForgotPassword, handleSignup } = useMainNavBar();
@@ -51,10 +51,10 @@ export default function LoginPage() {
           {/* Mesh Gradient Background */}
           <div className="absolute inset-0 pointer-events-none opacity-40">
             <MeshGradient
-              colors={["#219ebc", "#219ebc", "#219ebc", "#219ebc"]}
+              colors={['#219ebc', '#219ebc', '#219ebc', '#219ebc']}
               distortion={0.8}
               speed={0.6}
-              style={{ width: "100%", height: "100%" }}
+              style={{ width: '100%', height: '100%' }}
             />
           </div>
 
@@ -85,7 +85,7 @@ export default function LoginPage() {
           open={errorOpen}
           onClose={handleErrorClose}
           title="Login Failed"
-          message={errorMsg || "An error occurred while logging in."}
+          message={errorMsg || 'An error occurred while logging in.'}
           buttonText="Close"
         />
 
@@ -108,9 +108,7 @@ export default function LoginPage() {
                 <X className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
               </button>
 
-              <CardTitle className="text-3xl text-white font-bold mb-2">
-                Welcome Back
-              </CardTitle>
+              <CardTitle className="text-3xl text-white font-bold mb-2">Welcome Back</CardTitle>
               <CardDescription className="text-zinc-300">
                 Log in to access your dashboard and manage bookings
               </CardDescription>
@@ -139,13 +137,9 @@ export default function LoginPage() {
                             className="mt-3 flex items-center gap-2 text-sm font-medium text-red-300 hover:text-red-100 underline disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                           >
                             <RefreshCw
-                              className={`w-4 h-4 ${
-                                resendLoading ? "animate-spin" : ""
-                              }`}
+                              className={`w-4 h-4 ${resendLoading ? 'animate-spin' : ''}`}
                             />
-                            {resendLoading
-                              ? "Sending..."
-                              : "Resend verification email"}
+                            {resendLoading ? 'Sending...' : 'Resend verification email'}
                           </button>
                         )}
                       </div>
@@ -157,10 +151,7 @@ export default function LoginPage() {
               <form onSubmit={handleEmailSignIn} className="space-y-5">
                 {/* Email Field */}
                 <div className="space-y-2">
-                  <Label
-                    className="text-white font-medium flex items-center gap-2"
-                    htmlFor="email"
-                  >
+                  <Label className="text-white font-medium flex items-center gap-2" htmlFor="email">
                     <Mail className="w-4 h-4 text-chart-2" />
                     Email
                   </Label>
@@ -199,16 +190,14 @@ export default function LoginPage() {
                   className="w-full h-12 bg-chart-2 text-white hover:shadow-lg hover:shadow-chart-3/50 hover:scale-105 transition-all duration-300 rounded-xl font-bold text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={loading}
                 >
-                  {loading ? <Loader message="Logging in..." /> : "Login"}
+                  {loading ? <Loader message="Logging in..." /> : 'Login'}
                 </Button>
               </form>
 
               {/* Divider */}
               <div className="flex items-center gap-3 my-6">
                 <div className="flex-1 border-b border-white/20"></div>
-                <p className="text-sm text-zinc-400 font-medium">
-                  OR CONTINUE WITH
-                </p>
+                <p className="text-sm text-zinc-400 font-medium">OR CONTINUE WITH</p>
                 <div className="flex-1 border-b border-white/20"></div>
               </div>
 
@@ -230,7 +219,7 @@ export default function LoginPage() {
 
               {/* Sign Up Link */}
               <div className="text-center text-sm text-zinc-300">
-                Don't have an account?{" "}
+                Don't have an account?{' '}
                 <Link
                   href="#"
                   onClick={handleSignup}

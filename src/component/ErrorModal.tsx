@@ -1,9 +1,9 @@
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { XCircle } from "lucide-react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { XCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 
 interface ErrorModalProps {
   open: boolean;
@@ -12,17 +12,17 @@ interface ErrorModalProps {
   message?: string;
   buttonText?: string; // For close button
   onConfirm?: () => void; // Optional confirm action (for unsaved changes)
-  confirmText?: string;   // Text for confirm button
+  confirmText?: string; // Text for confirm button
 }
 
 export default function ErrorModal({
   open,
   onClose,
-  title = "Something went wrong",
-  message = "An error occurred. Please try again.",
-  buttonText = "Close",
+  title = 'Something went wrong',
+  message = 'An error occurred. Please try again.',
+  buttonText = 'Close',
   onConfirm,
-  confirmText = "Confirm"
+  confirmText = 'Confirm',
 }: ErrorModalProps) {
   return (
     <Dialog open={open} onOpenChange={onClose}>

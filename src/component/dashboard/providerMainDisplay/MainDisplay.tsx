@@ -1,65 +1,59 @@
-"use client";
-import {
-   Clock,
-Sparkles, 
-Zap,   
-} from "lucide-react";
+'use client';
+import { Clock, Sparkles, Zap } from 'lucide-react';
 
-import MetricsGrid from "./Metric";
-import "react-circular-progressbar/dist/styles.css";
-import MainPanels from "./MainPanel";
-import AnalyticsInsights from "./AnalyticsInsights";
-import Loader from "@/component/Spinner";
-import BottomPanels from "./BottomPanel";
-import useProvideDashBoard from "@/hooks/useProvideDashBoard";
-import { useMainNavBar } from "@/hooks/MainNavContext";
+import MetricsGrid from './Metric';
+import 'react-circular-progressbar/dist/styles.css';
+import MainPanels from './MainPanel';
+import AnalyticsInsights from './AnalyticsInsights';
+import Loader from '@/component/Spinner';
+import BottomPanels from './BottomPanel';
+import useProvideDashBoard from '@/hooks/useProvideDashBoard';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
-export default function ProviderDashboard({profile}: {profile: any}) {
-
-  const {
-    stats,
-    upcomingBookings,
-    recentActivity,
-    quickActions,
-    tips,
-    loading,
-  } = useProvideDashBoard();
+export default function ProviderDashboard({ profile }: { profile: any }) {
+  const { stats, upcomingBookings, recentActivity, quickActions, tips, loading } =
+    useProvideDashBoard();
   const { isDarkMode } = useMainNavBar();
 
   if (loading) {
-    return (
-      <Loader  message="Loading dashboard..."/>
-   
-    );
+    return <Loader message="Loading dashboard..." />;
   }
 
   return (
     <div className="min-h-screen   p-4 md:p-8">
       <div className=" mx-auto">
-
-      <div className="mb-8">
-          <div className={`relative ${isDarkMode ? "bg-gradient-to-br from-chart-2 to-chart-3  " : "bg-gradient-to-br from-chart-2 to-chart-3"} rounded-3xl shadow-2xl px-8 md:px-10 py-8 md:py-11 text-white overflow-hidden `}>
+        <div className="mb-8">
+          <div
+            className={`relative ${isDarkMode ? 'bg-gradient-to-br from-chart-2 to-chart-3  ' : 'bg-gradient-to-br from-chart-2 to-chart-3'} rounded-3xl shadow-2xl px-8 md:px-10 py-8 md:py-11 text-white overflow-hidden `}
+          >
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full -ml-24 -mb-24"></div>
-            
+
             {/* Geometric pattern */}
-            <div className="absolute inset-0 opacity-10" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}></div>
+            <div
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            ></div>
 
             <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex-1">
                 {/* Welcome Badge */}
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full mb-4 border border-white/30">
                   <Sparkles size={16} className="text-white" />
-                  <span className="text-white text-xs font-bold uppercase tracking-wider">Dashboard</span>
+                  <span className="text-white text-xs font-bold uppercase tracking-wider">
+                    Dashboard
+                  </span>
                 </div>
 
                 <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tight drop-shadow-lg">
                   Welcome Back, {profile.full_name}!
                 </h1>
-                <p className="text-white/90 text-base md:text-lg font-medium mb-1">Today's Analytics at a Glance</p>
+                <p className="text-white/90 text-base md:text-lg font-medium mb-1">
+                  Today's Analytics at a Glance
+                </p>
                 <div className="flex items-center gap-2 text-white/70 text-sm">
                   <Clock size={14} />
                   <span>{new Date().toDateString()}</span>
@@ -96,7 +90,6 @@ export default function ProviderDashboard({profile}: {profile: any}) {
           </div>
         </div>
 
-
         {/* METRICS GRID */}
         <MetricsGrid stats={stats} />
 
@@ -108,19 +101,7 @@ export default function ProviderDashboard({profile}: {profile: any}) {
 
         {/* ALERTS + ACTIVITY */}
         <BottomPanels stats={stats} recentActivity={recentActivity} />
-
       </div>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-

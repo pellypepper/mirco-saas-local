@@ -1,14 +1,13 @@
 'use client';
 
-
-import Register from "./auth/signUp";
-import LoginPage from "./auth/login";
-import ForgotPassword from "./auth/ForgotPassword";
-import ProviderSignup from "./auth/ProviderSignup";
-import useMainNavBar from "../hooks/useMainNavBar";
+import Register from './auth/signUp';
+import LoginPage from './auth/login';
+import ForgotPassword from './auth/ForgotPassword';
+import ProviderSignup from './auth/ProviderSignup';
+import useMainNavBar from '../hooks/useMainNavBar';
 
 const Navbar = () => {
-       const {
+  const {
     isOpen,
     setIsOpen,
     isProviderSignup,
@@ -19,9 +18,10 @@ const Navbar = () => {
     handleToggle,
     handleClose,
     handleProviderSignup,
-    
+
     isLogin,
-    setIsLogin,} = useMainNavBar();
+    setIsLogin,
+  } = useMainNavBar();
 
   return (
     <div className="bg-primary-white rounded-xl w-full p-3 px-5 flex justify-between">
@@ -56,24 +56,19 @@ const Navbar = () => {
       <ProviderSignup
         open={isProviderSignup}
         setIsLogin={setIsLogin}
-         setIsProviderSignup={setIsProviderSignup}
+        setIsProviderSignup={setIsProviderSignup}
         onOpenChange={setIsProviderSignup}
         onSubmit={(data) => {
-          console.log("Provider form submitted:", data);
-        
+          console.log('Provider form submitted:', data);
         }}
       />
 
       {/* Signup Modals */}
       {isOpen && (
-        <Register
-          handleClose={handleClose}
-          setIsOpen={setIsOpen}
-          setIsLogin={setIsLogin}
-        />
+        <Register handleClose={handleClose} setIsOpen={setIsOpen} setIsLogin={setIsLogin} />
       )}
 
-          {/* Login Modals */}
+      {/* Login Modals */}
       {isLogin && (
         <LoginPage
           handleClose={handleClose}
@@ -83,12 +78,9 @@ const Navbar = () => {
         />
       )}
 
-          {/* Forgot password Modals */}
+      {/* Forgot password Modals */}
       {isForgotPassword && (
-        <ForgotPassword
-          setIsLogin={setIsLogin}
-          setIsForgotPassword={setIsForgotPassword}
-        />
+        <ForgotPassword setIsLogin={setIsLogin} setIsForgotPassword={setIsForgotPassword} />
       )}
     </div>
   );

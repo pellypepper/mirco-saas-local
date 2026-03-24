@@ -1,12 +1,10 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
 class customerEmailService {
-    
   static async getCustomerEmail(payment_intent: string) {
-   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2022-11-15",
-});
-
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2022-11-15',
+    });
 
     const sessions = await stripe.checkout.sessions.list({
       payment_intent,

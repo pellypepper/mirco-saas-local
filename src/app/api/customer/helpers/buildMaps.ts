@@ -7,7 +7,7 @@ interface Provider {
 interface Service {
   id: string;
   title: string;
-  price:  number;
+  price: number;
   description: string;
 }
 
@@ -34,7 +34,7 @@ export function buildBookingsMap(bookings: Booking[]): Record<string, Booking[]>
   return bookingsMap;
 }
 
-export function buildProviderMap(providers:  Provider[]): Record<string, Provider> {
+export function buildProviderMap(providers: Provider[]): Record<string, Provider> {
   const providerMap: Record<string, Provider> = {};
 
   providers.forEach((p) => {

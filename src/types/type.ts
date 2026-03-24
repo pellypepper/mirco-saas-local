@@ -15,7 +15,6 @@ export interface AvailabilityRecord {
   is_booked?: boolean;
 }
 
-
 export interface Service {
   id: string;
   provider_id: string;
@@ -66,7 +65,6 @@ export interface BookingProvider {
     country?: string;
   };
 }
-
 
 export interface BookingCustomer {
   id: string | number;

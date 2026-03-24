@@ -1,48 +1,48 @@
-"use client"
+'use client';
 
-import Navbar from "../navigation/HomepageNavbar";
-import Hero from "./component/Hero";
-import Services from "./component/Services";
-import About from "./component/About";
-import Features from "./component/Features";
-import Testimonial from "./component/Testimonial";
-import ProviderSection from "./component/ProviderSection";
-import Footer from "./component/Footer";
-import HeroBackground from "../Design/Herobackground";
-import { useMainNavBar } from "@/hooks/MainNavContext";
+import Navbar from '../navigation/HomepageNavbar';
+import Hero from './component/Hero';
+import Services from './component/Services';
+import About from './component/About';
+import Features from './component/Features';
+import Testimonial from './component/Testimonial';
+import ProviderSection from './component/ProviderSection';
+import Footer from './component/Footer';
+import HeroBackground from '../Design/Herobackground';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
 const MainDisplay = () => {
   const { isDarkMode } = useMainNavBar();
-    
+
   return (
     <div>
-        <Navbar />
-     <div className={`${isDarkMode ? "bg-zinc-950" : "bg-white"} relative overflow-hidden`}>
-      <HeroBackground />
-      
-      {/* Hero Section */}
-    <Hero />
+      <Navbar />
+      <div className={`${isDarkMode ? 'bg-zinc-950' : 'bg-white'} relative overflow-hidden`}>
+        <HeroBackground />
 
-      {/* Popular Services */}
-    <Services />
+        {/* Hero Section */}
+        <Hero />
 
-      {/* How It Works */}
-   <About />
+        {/* Popular Services */}
+        <Services />
 
-      {/* Features */}
-  <Features />  
+        {/* How It Works */}
+        <About />
 
-      {/* Testimonials */}
-     <Testimonial />
+        {/* Features */}
+        <Features />
 
-      {/* CTA Section for Providers */}
-<ProviderSection />
+        {/* Testimonials */}
+        <Testimonial />
 
-      {/* Footer */}
-    <Footer />
-     </div>
+        {/* CTA Section for Providers */}
+        <ProviderSection />
+
+        {/* Footer */}
+        <Footer />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default MainDisplay
+export default MainDisplay;

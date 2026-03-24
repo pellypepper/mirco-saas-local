@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Clock, Sparkles, Zap } from "lucide-react";
-import { useMainNavBar } from "@/hooks/MainNavContext";
+import { Clock, Sparkles, Zap } from 'lucide-react';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
 const AvailabilityGrid = ({
   getTimePeriod,
@@ -18,12 +18,12 @@ const AvailabilityGrid = ({
 }) => {
   const { isDarkMode } = useMainNavBar();
 
-  const surface = isDarkMode ? "bg-zinc-900" : "bg-white";
-  const surfaceSoft = isDarkMode ? "bg-zinc-700" : "bg-zinc-200";
-  const border = isDarkMode ? "border-zinc-700" : "border-zinc-200";
+  const surface = isDarkMode ? 'bg-zinc-900' : 'bg-white';
+  const surfaceSoft = isDarkMode ? 'bg-zinc-700' : 'bg-zinc-200';
+  const border = isDarkMode ? 'border-zinc-700' : 'border-zinc-200';
 
-  const textPrimary = isDarkMode ? "text-white" : "text-zinc-900";
-  const textSecondary = isDarkMode ? "text-zinc-400" : "text-zinc-600";
+  const textPrimary = isDarkMode ? 'text-white' : 'text-zinc-900';
+  const textSecondary = isDarkMode ? 'text-zinc-400' : 'text-zinc-600';
 
   return (
     <div className="space-y-6">
@@ -37,9 +37,12 @@ const AvailabilityGrid = ({
         const groupedByPeriod = groupSlotsByPeriod(slots);
 
         return (
-          <div key={date} className={`rounded-2xl border-2 shadow-xl overflow-hidden ${surface} ${border}`}>
+          <div
+            key={date}
+            className={`rounded-2xl border-2 shadow-xl overflow-hidden ${surface} ${border}`}
+          >
             {/* DATE HEADER */}
-            <div className={`p-5 border-b-2 ${isToday ? "bg-chart-2" : surfaceSoft} ${border}`}>
+            <div className={`p-5 border-b-2 ${isToday ? 'bg-chart-2' : surfaceSoft} ${border}`}>
               <div className="flex items-center justify-between">
                 <div>
                   {isToday && (
@@ -48,22 +51,26 @@ const AvailabilityGrid = ({
                       <span className="text-xs font-bold text-white">Today</span>
                     </div>
                   )}
-                  <div className={`text-lg md:text-2xl font-black  ${isToday && isDarkMode ? "text-white" : isToday ? "text-white" : textPrimary}`}>
-                    {dateObj.toLocaleDateString("en-US", { weekday: "long" })}
+                  <div
+                    className={`text-lg md:text-2xl font-black  ${isToday && isDarkMode ? 'text-white' : isToday ? 'text-white' : textPrimary}`}
+                  >
+                    {dateObj.toLocaleDateString('en-US', { weekday: 'long' })}
                     {isToday && <Zap size={18} className="inline ml-2 chart-4" />}
                   </div>
-                  <div className={`text-sm md:text-base ${isToday ? "text-white/90" : textSecondary}`}>
-                    {dateObj.toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
+                  <div
+                    className={`text-sm md:text-base ${isToday ? 'text-white/90' : textSecondary}`}
+                  >
+                    {dateObj.toLocaleDateString('en-US', {
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric',
                     })}
                   </div>
                 </div>
 
                 <div className={`px-4 py-2 rounded-xl border-2 ${surfaceSoft} ${border}`}>
                   <span className={`font-bold ${textPrimary}`}>
-                    {slots.length} {slots.length === 1 ? "slot" : "slots"}
+                    {slots.length} {slots.length === 1 ? 'slot' : 'slots'}
                   </span>
                 </div>
               </div>
@@ -85,10 +92,14 @@ const AvailabilityGrid = ({
                 return (
                   <div key={period} className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <div className={`w-1.5 h-8 rounded-full bg-gradient-to-b ${periodInfo.color}`} />
+                      <div
+                        className={`w-1.5 h-8 rounded-full bg-gradient-to-b ${periodInfo.color}`}
+                      />
                       <h4 className={`font-black uppercase ${textPrimary}`}>{period}</h4>
                       <div className="flex-1 h-px bg-zinc-300/30" />
-                      <span className={`text-xs font-bold px-3 py-1 rounded-full ${surfaceSoft} ${border}`}>
+                      <span
+                        className={`text-xs font-bold px-3 py-1 rounded-full ${surfaceSoft} ${border}`}
+                      >
                         {periodSlots.length} slots
                       </span>
                     </div>
@@ -104,8 +115,8 @@ const AvailabilityGrid = ({
                             <Clock size={18} className="text-zinc-400" />
                             <span className={`font-black text-sm ${textPrimary}`}>
                               {new Date(`${slot.date}T${slot.start_time}`).toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
+                                hour: '2-digit',
+                                minute: '2-digit',
                               })}
                             </span>
                           </div>

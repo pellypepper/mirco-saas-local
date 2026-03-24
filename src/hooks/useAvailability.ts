@@ -1,16 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import {
   fetchAvailability,
   saveAvailability,
   getProviderAvailability,
   deleteSlot,
-} from "@/services/availabilityService";
+} from '@/services/availabilityService';
 
-import { TimeSlot , AvailabilityRecord} from "@/types/type";
-import useUnsavedChangesWarning from "./useUnsavedChangeWarning";
-
+import { TimeSlot, AvailabilityRecord } from '@/types/type';
+import useUnsavedChangesWarning from './useUnsavedChangeWarning';
 
 export default function useAvailability(providerId: string) {
   const today = new Date();
@@ -24,81 +23,74 @@ export default function useAvailability(providerId: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [errorModal, setErrorModal] = useState<string | null>(null);
-   const [availability, setAvailability] = useState<AvailabilityRecord[]>([]);
+  const [availability, setAvailability] = useState<AvailabilityRecord[]>([]);
   const [successModal, setSuccessModal] = useState<string | null>(null);
-  const [newSlot, setNewSlot] = useState<
-    Record<string, { start: string; end: string }>
-  >({});
+  const [newSlot, setNewSlot] = useState<Record<string, { start: string; end: string }>>({});
 
   // Format to AM/PM label
   const formatTime = (time: string) => {
-    const [h, m] = time.split(":").map(Number);
-    const suffix = h >= 12 ? "PM" : "AM";
+    const [h, m] = time.split(':').map(Number);
+    const suffix = h >= 12 ? 'PM' : 'AM';
     const hour = h % 12 || 12;
-    return `${hour}:${m.toString().padStart(2, "0")} ${suffix}`;
+    return `${hour}:${m.toString().padStart(2, '0')} ${suffix}`;
   };
 
   // ---------------------------------------
   // LOAD AVAILABILITY FROM BACKEND
   // ---------------------------------------
 
-const loadAvailability = useCallback(async () => {
-  try {
-    setLoading(true);
+  const loadAvailability = useCallback(async () => {
+    try {
+      setLoading(true);
 
-    const data = await fetchAvailability(providerId);
+      const data = await fetchAvailability(providerId);
 
-    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-    const grouped: Record<string, TimeSlot[]> = {};
+      const grouped: Record<string, TimeSlot[]> = {};
 
-    data
-      .filter((item) => item.date >= today) // ⬅️ Only today or future
-      .forEach((item) => {
-        if (!grouped[item.date]) grouped[item.date] = [];
+      data
+        .filter((item) => item.date >= today) // ⬅️ Only today or future
+        .forEach((item) => {
+          if (!grouped[item.date]) grouped[item.date] = [];
 
-        grouped[item.date].push({
-          id: item.id || `${item.date}-${item.start_time}`,
-          start: item.start_time,
-          end: item.end_time,
-          label: `${formatTime(item.start_time)} - ${formatTime(item.end_time)}`,
-          isSaved: true,
+          grouped[item.date].push({
+            id: item.id || `${item.date}-${item.start_time}`,
+            start: item.start_time,
+            end: item.end_time,
+            label: `${formatTime(item.start_time)} - ${formatTime(item.end_time)}`,
+            isSaved: true,
+          });
         });
-      });
 
-    setDaySlots(grouped);
-    setError(null);
-  } catch (err: any) {
-    console.error(err);
-    setError(err.message || "Failed to load availability");
-  } finally {
-    setLoading(false);
-  }
-}, [providerId]);
-
+      setDaySlots(grouped);
+      setError(null);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Failed to load availability');
+    } finally {
+      setLoading(false);
+    }
+  }, [providerId]);
 
   // ---------------------------------------
   // VALIDATION
   // ---------------------------------------
 
-  const validateTimeSlot = (
-    start: string,
-    end: string,
-    date: string
-  ): string | null => {
-    if (!start || !end) return "Please select both start and end times";
+  const validateTimeSlot = (start: string, end: string, date: string): string | null => {
+    if (!start || !end) return 'Please select both start and end times';
 
-    const [sh, sm] = start.split(":").map(Number);
-    const [eh, em] = end.split(":").map(Number);
+    const [sh, sm] = start.split(':').map(Number);
+    const [eh, em] = end.split(':').map(Number);
     const startMin = sh * 60 + sm;
     const endMin = eh * 60 + em;
 
-    if (endMin <= startMin) return "End time must be after start time";
+    if (endMin <= startMin) return 'End time must be after start time';
 
     // Check overlap
     for (const slot of daySlots[date] || []) {
-      const [slotStartH, slotStartM] = slot.start.split(":").map(Number);
-      const [slotEndH, slotEndM] = slot.end.split(":").map(Number);
+      const [slotStartH, slotStartM] = slot.start.split(':').map(Number);
+      const [slotEndH, slotEndM] = slot.end.split(':').map(Number);
       const slotStart = slotStartH * 60 + slotStartM;
       const slotEnd = slotEndH * 60 + slotEndM;
 
@@ -107,7 +99,7 @@ const loadAvailability = useCallback(async () => {
         (endMin > slotStart && endMin <= slotEnd) ||
         (startMin <= slotStart && endMin >= slotEnd);
 
-      if (overlap) return "Time slot overlaps with an existing slot";
+      if (overlap) return 'Time slot overlaps with an existing slot';
     }
 
     return null;
@@ -121,7 +113,7 @@ const loadAvailability = useCallback(async () => {
     const slotData = newSlot[date];
 
     if (!slotData?.start || !slotData?.end) {
-      setErrorModal("Please select both start and end times");
+      setErrorModal('Please select both start and end times');
       return false;
     }
 
@@ -136,14 +128,13 @@ const loadAvailability = useCallback(async () => {
 
     setDaySlots((prev) => ({
       ...prev,
-      [date]: [
-        ...(prev[date] || []),
-        { id, ...slotData, label, isSaved: false },
-      ].sort((a, b) => a.start.localeCompare(b.start)),
+      [date]: [...(prev[date] || []), { id, ...slotData, label, isSaved: false }].sort((a, b) =>
+        a.start.localeCompare(b.start),
+      ),
     }));
 
-    setNewSlot((prev) => ({ ...prev, [date]: { start: "", end: "" } }));
-    setSuccessModal("Time slot added successfully ✅. Remember to save your changes.");
+    setNewSlot((prev) => ({ ...prev, [date]: { start: '', end: '' } }));
+    setSuccessModal('Time slot added successfully . Remember to save your changes.');
 
     return true;
   };
@@ -166,11 +157,11 @@ const loadAvailability = useCallback(async () => {
         await deleteSlot(id);
       }
 
-      setSuccessModal("Time slot removed successfully ✅");
+      setSuccessModal('Time slot removed successfully ');
       return true;
     } catch (err) {
-      console.error("Error deleting slot:", err);
-      setErrorModal("Failed to delete slot");
+      console.error('Error deleting slot:', err);
+      setErrorModal('Failed to delete slot');
       return false;
     }
   };
@@ -189,17 +180,17 @@ const loadAvailability = useCallback(async () => {
           start_time: slot.start,
           end_time: slot.end,
           is_booked: false,
-        }))
+        })),
     );
 
     if (unsaved.length === 0) {
-      setErrorModal("No new time slots to save — everything is already saved.");
+      setErrorModal('No new time slots to save — everything is already saved.');
       return;
     }
 
     try {
       await saveAvailability(unsaved);
-      setSuccessModal("Availability saved successfully 🎉");
+      setSuccessModal('Availability saved successfully 🎉');
 
       // Mark new slots as saved
       setDaySlots((prev) => {
@@ -214,33 +205,32 @@ const loadAvailability = useCallback(async () => {
       });
     } catch (err) {
       console.error(err);
-      setErrorModal("Failed to save new availability");
+      setErrorModal('Failed to save new availability');
     }
   };
 
-const getTotalSlots = () => {
-  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+  const getTotalSlots = () => {
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-  return Object.entries(daySlots)
-    .filter(([date]) => date >= today) // only today or future
-    .reduce((total, [, slots]) => total + slots.length, 0);
-};
-
+    return Object.entries(daySlots)
+      .filter(([date]) => date >= today) // only today or future
+      .reduce((total, [, slots]) => total + slots.length, 0);
+  };
 
   useEffect(() => {
     if (providerId) loadAvailability();
   }, [providerId, loadAvailability]);
 
-  useEffect( () => {
+  useEffect(() => {
     if (!providerId) return;
 
     const fetch = async () => {
-       setLoading(true);
+      setLoading(true);
       try {
         const slots = await getProviderAvailability(providerId);
         setAvailability(slots);
       } catch (err) {
-        console.error("Failed to fetch availability", err);
+        console.error('Failed to fetch availability', err);
       } finally {
         setLoading(false);
       }
@@ -248,7 +238,6 @@ const getTotalSlots = () => {
 
     fetch();
   }, [providerId]);
-
 
   return {
     today,
@@ -271,30 +260,30 @@ const getTotalSlots = () => {
   };
 }
 
-
-export function useAvailabilityTab  (today: Date, addCustomSlot: (date: string) => boolean, removeSlot:  (date: string, id: string) => Promise<boolean>, handleSave:  ()=>void, errorModal: string | null) {
-
-
- const [view, setView] = useState<"week" | "month" | "year">("week");
+export function useAvailabilityTab(
+  today: Date,
+  addCustomSlot: (date: string) => boolean,
+  removeSlot: (date: string, id: string) => Promise<boolean>,
+  handleSave: () => void,
+  errorModal: string | null,
+) {
+  const [view, setView] = useState<'week' | 'month' | 'year'>('week');
   const [timeOffset, setTimeOffset] = useState(0);
   const [loader, setLoader] = useState(false);
   const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
 
   // 🔹 Track unsaved changes
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-const { unsavedMessage, confirmNavigation, cancelNavigation } = useUnsavedChangesWarning(hasUnsavedChanges);
+  const { unsavedMessage, confirmNavigation, cancelNavigation } =
+    useUnsavedChangesWarning(hasUnsavedChanges);
 
-const errorMessage = unsavedMessage || errorModal
+  const errorMessage = unsavedMessage || errorModal;
 
-
- 
   //  Wrap slot actions to mark unsaved changes
   const handleAddSlot = (date: string) => {
-   
     const changed = addCustomSlot(date);
- 
-    if (changed) setHasUnsavedChanges(true);
 
+    if (changed) setHasUnsavedChanges(true);
   };
 
   const handleRemoveSlot = async (date: string, id: string) => {
@@ -302,21 +291,19 @@ const errorMessage = unsavedMessage || errorModal
     if (changed) setHasUnsavedChanges(true);
   };
 
-
   // SAVE handling
   const handleLoading = async () => {
     setLoader(true);
     await handleSave();
     setLoader(false);
-    setHasUnsavedChanges(false); 
+    setHasUnsavedChanges(false);
   };
 
-
   // CALENDAR date calculations
-const datesToShow = useMemo(() => {
+  const datesToShow = useMemo(() => {
     const startDate = new Date(today);
 
-    if (view === "week") {
+    if (view === 'week') {
       startDate.setDate(today.getDate() + timeOffset * 7);
       return Array.from({ length: 7 }, (_, i) => {
         const d = new Date(startDate);
@@ -325,14 +312,10 @@ const datesToShow = useMemo(() => {
       });
     }
 
-    if (view === "month") {
+    if (view === 'month') {
       startDate.setMonth(today.getMonth() + timeOffset);
       startDate.setDate(1);
-      const daysInMonth = new Date(
-        startDate.getFullYear(),
-        startDate.getMonth() + 1,
-        0
-      ).getDate();
+      const daysInMonth = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0).getDate();
       return Array.from({ length: daysInMonth }, (_, i) => {
         const d = new Date(startDate);
         d.setDate(i + 1);
@@ -340,7 +323,7 @@ const datesToShow = useMemo(() => {
       });
     }
 
-    if (view === "year") {
+    if (view === 'year') {
       startDate.setFullYear(today.getFullYear() + timeOffset);
       startDate.setMonth(0);
       startDate.setDate(1);
@@ -358,36 +341,31 @@ const datesToShow = useMemo(() => {
     return [];
   }, [today, timeOffset, view]);
 
-
-
   const dateLabel = useMemo(() => {
-    if (view === "week") {
+    if (view === 'week') {
       const start = datesToShow[0];
       const end = datesToShow[6];
-      return `${start.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      })} - ${end.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
+      return `${start.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      })} - ${end.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
       })}`;
     }
-    if (view === "month") {
-      const month = datesToShow[0]?.toLocaleDateString("en-US", {
-        month: "long",
+    if (view === 'month') {
+      const month = datesToShow[0]?.toLocaleDateString('en-US', {
+        month: 'long',
       });
       const year = datesToShow[0]?.getFullYear();
       return `${month} ${year}`;
     }
-    if (view === "year") return datesToShow[0]?.getFullYear().toString();
+    if (view === 'year') return datesToShow[0]?.getFullYear().toString();
 
-    return "";
+    return '';
   }, [datesToShow, view]);
 
-
-
   return {
-
     view,
     setView,
     timeOffset,
@@ -405,13 +383,11 @@ const datesToShow = useMemo(() => {
     cancelNavigation,
     unsavedMessage,
     errorModal,
-  
-  }
+  };
 }
 
-
-export function useAvailabilityCalendar (groupedSlots: Record<string, TimeSlot[]>) {
-  const [viewMode, setViewMode] = useState<"week" | "month">("week");
+export function useAvailabilityCalendar(groupedSlots: Record<string, TimeSlot[]>) {
+  const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [weekOffset, setWeekOffset] = useState(0);
 
   /**(YYYY-MM-DD) for the next 7 days */
@@ -422,19 +398,19 @@ export function useAvailabilityCalendar (groupedSlots: Record<string, TimeSlot[]
     return Array.from({ length: 7 }).map((_, i) => {
       const d = new Date(start);
       d.setDate(start.getDate() + i);
-      return d.toISOString().split("T")[0];
+      return d.toISOString().split('T')[0];
     });
   };
 
-  // For week view 
+  // For week view
   const weekDates = get7DayRange();
 
-  // Month view 
-  const sortedDates = Object.keys(groupedSlots).sort((a, b) =>
-    new Date(a).getTime() - new Date(b).getTime()
+  // Month view
+  const sortedDates = Object.keys(groupedSlots).sort(
+    (a, b) => new Date(a).getTime() - new Date(b).getTime(),
   );
 
-  const displayDates = viewMode === "week" ? weekDates : sortedDates;
+  const displayDates = viewMode === 'week' ? weekDates : sortedDates;
 
   /** next/prev */
   const hasPrevWeek = weekOffset > 0;
@@ -442,25 +418,23 @@ export function useAvailabilityCalendar (groupedSlots: Record<string, TimeSlot[]
 
   /** Time period color system */
   const getTimePeriod = (timeString: string) => {
-    const hour = parseInt(timeString.split(":")[0]);
-    if (hour < 12) return { label: "Morning", color: "from-amber-400 to-orange-500" };
-    if (hour < 17) return { label: "Afternoon", color: "from-blue-400 to-indigo-500" };
-    return { label: "Evening", color: "from-purple-400 to-pink-500" };
+    const hour = parseInt(timeString.split(':')[0]);
+    if (hour < 12) return { label: 'Morning', color: 'from-amber-400 to-orange-500' };
+    if (hour < 17) return { label: 'Afternoon', color: 'from-blue-400 to-indigo-500' };
+    return { label: 'Evening', color: 'from-purple-400 to-pink-500' };
   };
 
   /** Group by morning/afternoon/evening */
   const groupSlotsByPeriod = (slots: any[]) => {
     const grouped: Record<string, any[]> = { Morning: [], Afternoon: [], Evening: [] };
-    slots.forEach(slot => {
+    slots.forEach((slot) => {
       const period = getTimePeriod(slot.start_time);
       grouped[period.label].push(slot);
     });
     return grouped;
   };
 
-
-  return{
-    
+  return {
     viewMode,
     setViewMode,
     weekOffset,
@@ -472,26 +446,23 @@ export function useAvailabilityCalendar (groupedSlots: Record<string, TimeSlot[]
     getTimePeriod,
     groupSlotsByPeriod,
     sortedDates,
-
-    
-  }
+  };
 }
 
-
-export function useAvailabilityFooter (availability: AvailabilityRecord[], sortedDates: string[]) {
- // Today (midnight for clean comparison)
+export function useAvailabilityFooter(availability: AvailabilityRecord[], sortedDates: string[]) {
+  // Today (midnight for clean comparison)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   // Filter future/present slots only
-  const upcomingAvailability = availability.filter(slot => {
+  const upcomingAvailability = availability.filter((slot) => {
     const d = new Date(slot.date);
     d.setHours(0, 0, 0, 0);
     return d >= today;
   });
 
   // Filter dates that are today or later
-  const upcomingDates = sortedDates.filter(dateStr => {
+  const upcomingDates = sortedDates.filter((dateStr) => {
     const d = new Date(dateStr);
     d.setHours(0, 0, 0, 0);
     return d >= today;
@@ -504,6 +475,6 @@ export function useAvailabilityFooter (availability: AvailabilityRecord[], sorte
   return {
     totalSlots,
     availableDays,
-    avg
-  }
+    avg,
+  };
 }

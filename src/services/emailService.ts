@@ -1,15 +1,27 @@
-import { sendConfirmationEmail, sendProviderNotificationEmail } from "@/lib/emailSender";
+import { sendConfirmationEmail, sendProviderNotificationEmail } from '@/lib/emailSender';
 
 class EmailService {
-  static async sendCustomerEmail({ to, paymentId, metadata, provider, service }: { to: string; paymentId: string; metadata: any; provider: any; service: any }) {
+  static async sendCustomerEmail({
+    to,
+    paymentId,
+    metadata,
+    provider,
+    service,
+  }: {
+    to: string;
+    paymentId: string;
+    metadata: any;
+    provider: any;
+    service: any;
+  }) {
     if (!to) return;
 
     await sendConfirmationEmail({
       to,
       bookingId: paymentId,
       amount: metadata.amount,
-      formattedDate: new Date().toLocaleDateString("en-GB"),
-      bookingTime: new Date().toLocaleTimeString("en-GB"),
+      formattedDate: new Date().toLocaleDateString('en-GB'),
+      bookingTime: new Date().toLocaleTimeString('en-GB'),
       serviceName: service.title,
       serviceDescription: service.description,
       providerName: provider.full_name,
@@ -28,15 +40,22 @@ class EmailService {
     customer,
     service,
     customer_email,
-  }: { to: string; paymentId: string; metadata: any; customer: any; service: any; customer_email: string }) {
+  }: {
+    to: string;
+    paymentId: string;
+    metadata: any;
+    customer: any;
+    service: any;
+    customer_email: string;
+  }) {
     if (!to) return;
 
     await sendProviderNotificationEmail({
       to,
       bookingId: paymentId,
       amount: metadata.provider_amount.toString(),
-      formattedDate: new Date().toLocaleDateString("en-GB"),
-      bookingTime: new Date().toLocaleTimeString("en-GB"),
+      formattedDate: new Date().toLocaleDateString('en-GB'),
+      bookingTime: new Date().toLocaleTimeString('en-GB'),
       serviceName: service.title,
       serviceDescription: service.description,
       customerName: customer.full_name,

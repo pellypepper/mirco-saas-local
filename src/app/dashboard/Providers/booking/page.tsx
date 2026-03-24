@@ -1,14 +1,11 @@
-"use client";
-import BookingsPage from "@/component/ProviderBooking/providerBooking";
-import { useUser } from "@/hooks/UserContext";
+'use client';
+import BookingsPage from '@/component/ProviderBooking/providerBooking';
+import { useUser } from '@/hooks/UserContext';
 
 const ProviderBooking = () => {
+  const { user } = useUser();
 
-const { user } = useUser();
+  return <BookingsPage user={user} />;
+};
 
-  return (
-    <BookingsPage user={user} />
-  )
-}
-
-export default ProviderBooking
+export default ProviderBooking;

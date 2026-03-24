@@ -1,8 +1,8 @@
-"use client"; 
+'use client';
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { fetchAuthUser, fetchUserProfile, logoutUser } from "@/services/dashboardService";
+import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { fetchAuthUser, fetchUserProfile, logoutUser } from '@/services/dashboardService';
 
 export function useDashboardLayout() {
   const [user, setUser] = useState<any>(null);
@@ -20,24 +20,23 @@ export function useDashboardLayout() {
     setIsMounted(!isMounted);
   };
 
+  const toggleEmail = () => {
+    setOpen(false);
+    setEmailOpen(!emailOpen);
+  };
 
-  const toggleEmail = ()=>{
-      setOpen(false);
-      setEmailOpen(!emailOpen);
-  }
-
-   const togglePassword = ()=>{
-      setOpen(false);
-      setPasswordOpen(!passwordOpen);
-  }
+  const togglePassword = () => {
+    setOpen(false);
+    setPasswordOpen(!passwordOpen);
+  };
 
   const handleLogout = useCallback(async () => {
     setLogoutLoading(true);
     try {
       await logoutUser();
-      router.replace("/");
+      router.replace('/');
     } catch (err) {
-      console.error("Logout failed:", err);
+      console.error('Logout failed:', err);
     } finally {
       setLogoutLoading(false);
     }
@@ -76,6 +75,6 @@ export function useDashboardLayout() {
     togglePassword,
     passwordOpen,
     setPasswordOpen,
-    handleLogout
+    handleLogout,
   };
 }

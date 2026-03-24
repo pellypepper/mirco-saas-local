@@ -1,41 +1,33 @@
-
-
 interface Profile {
   id: string;
 }
 
+const useStripe = ({ profile }: { profile: Profile }) => {
+  const createStripeLink = async () => {
+    try {
+      const res = await fetch('/api/stripe/create-account', {
+        method: 'POST',
+        body: JSON.stringify({ userId: profile?.id }),
+      });
 
-const useStripe = ({profile}:{profile: Profile}) => {
+      if (!res.ok) {
+        const text = await res.text();
+        console.error('Server error:', text);
+        alert('Stripe error — check server logs.');
+        return;
+      }
 
-const createStripeLink = async () => {
-  
-  try {
-    const res = await fetch("/api/stripe/create-account", {
-      method: "POST",
-      body: JSON.stringify({ userId: profile?.id }),
-    });
+      const data = await res.json();
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error("Server error:", text);
-      alert("Stripe error — check server logs.");
-      return;
+      if (data.url) window.location.href = data.url;
+    } catch (err) {
+      console.error('Client error:', err);
     }
-
-    const data = await res.json();
-
-    if (data.url) window.location.href = data.url;
-  } catch (err) {
-    console.error("Client error:", err);
-  }
-};
-
-
-
+  };
 
   return {
-  createStripeLink
-}
-}
+    createStripeLink,
+  };
+};
 
-export default useStripe
+export default useStripe;

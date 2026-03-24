@@ -1,14 +1,10 @@
-"use client"; 
+'use client';
 
-import { useState} from "react";
-import { supabase } from "../libs/supabaseClient";
+import { useState } from 'react';
+import { supabase } from '../libs/supabaseClient';
 
-import { sanitize, isValidEmail, isStrongPassword } from "@/lib/sanitizehelper";
-import { set } from "react-hook-form";
-
-
-
-
+import { sanitize, isValidEmail, isStrongPassword } from '@/lib/sanitizehelper';
+import { set } from 'react-hook-form';
 
 export const useSignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -25,21 +21,21 @@ export const useSignUp = () => {
 
     // Validation
     if (!isValidEmail(cleanEmail)) {
-      const err = "Invalid email address.";
+      const err = 'Invalid email address.';
       setError(err);
       setLoading(false);
       throw new Error(err);
     }
 
     if (!isStrongPassword(password)) {
-      const err = "Password must be at least 8 characters.";
+      const err = 'Password must be at least 8 characters.';
       setError(err);
       setLoading(false);
       throw new Error(err);
     }
 
     if (!cleanName) {
-      const err = "Full name is required.";
+      const err = 'Full name is required.';
       setError(err);
       setLoading(false);
       throw new Error(err);
@@ -53,7 +49,7 @@ export const useSignUp = () => {
           emailRedirectTo: `${window.location.origin}/api/callback`, // Redirect after email confirmation
           data: {
             full_name: cleanName,
-            role: "customer",
+            role: 'customer',
           },
         },
       });
@@ -64,23 +60,19 @@ export const useSignUp = () => {
       }
 
       if (!data?.user) {
-        throw new Error("Signup failed - no user data returned");
+        throw new Error('Signup failed - no user data returned');
       }
-
-    
 
       // Check if email confirmation is required
       if (data.user && !data.session) {
-        setMessage(
-          "Signup successful! Please check your email to confirm your account."
-        );
+        setMessage('Signup successful! Please check your email to confirm your account.');
       } else {
-        setMessage("Signup successful! You can now sign in.");
+        setMessage('Signup successful! You can now sign in.');
       }
 
       return data;
     } catch (err: any) {
-      const errorMessage = err.message || "Unexpected error occurred.";
+      const errorMessage = err.message || 'Unexpected error occurred.';
       setError(errorMessage);
       throw err;
     } finally {
@@ -90,9 +82,6 @@ export const useSignUp = () => {
 
   return { signUp, loading, error, message };
 };
-
-
-
 
 export const useProviderSignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -105,7 +94,7 @@ export const useProviderSignUp = () => {
     fullName: string,
     serviceType: string,
     location: string,
-    country: string
+    country: string,
   ) => {
     setLoading(true);
     setError(null);
@@ -119,21 +108,21 @@ export const useProviderSignUp = () => {
 
     // Validation
     if (!isValidEmail(cleanEmail)) {
-      const err = "Invalid email address.";
+      const err = 'Invalid email address.';
       setError(err);
       setLoading(false);
       throw new Error(err);
     }
 
     if (!isStrongPassword(password)) {
-      const err = "Password must be at least 8 characters.";
+      const err = 'Password must be at least 8 characters.';
       setError(err);
       setLoading(false);
       throw new Error(err);
     }
 
     if (!cleanName || !cleanServiceType) {
-      const err = "All fields are required.";
+      const err = 'All fields are required.';
       setError(err);
       setLoading(false);
       throw new Error(err);
@@ -147,7 +136,7 @@ export const useProviderSignUp = () => {
           emailRedirectTo: `${window.location.origin}/api/callback`, // Redirect after confirmation
           data: {
             full_name: cleanName,
-            role: "provider",
+            role: 'provider',
             service_type: cleanServiceType,
             location: cleanLocation,
             country: cleanCountry,
@@ -161,22 +150,19 @@ export const useProviderSignUp = () => {
       }
 
       if (!data?.user) {
-        throw new Error("Signup failed - no user data returned");
+        throw new Error('Signup failed - no user data returned');
       }
 
-      
       // Check if email confirmation is required
       if (data.user && !data.session) {
-        setMessage(
-          "Provider signup successful! Please check your email to confirm your account."
-        );
+        setMessage('Provider signup successful! Please check your email to confirm your account.');
       } else {
-        setMessage("Provider signup successful! You can now sign in.");
+        setMessage('Provider signup successful! You can now sign in.');
       }
 
       return data;
     } catch (err: any) {
-      const errorMessage = err.message || "Unexpected error occurred.";
+      const errorMessage = err.message || 'Unexpected error occurred.';
       setError(errorMessage);
       throw err;
     } finally {
@@ -187,18 +173,22 @@ export const useProviderSignUp = () => {
   return { signUpProvider, loading, error, message };
 };
 
-
-
 // sending password reset email
-export const useForgotPassword = ({setIsForgotPassword, setIsLogin}: {setIsForgotPassword: (value: boolean) => void; setIsLogin: (value: boolean) => void;}) => {
+export const useForgotPassword = ({
+  setIsForgotPassword,
+  setIsLogin,
+}: {
+  setIsForgotPassword: (value: boolean) => void;
+  setIsLogin: (value: boolean) => void;
+}) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
-    const [email, setEmail] = useState("");
+
+  const [email, setEmail] = useState('');
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
 
   const sendResetEmail = async (email: string, redirectTo?: string) => {
     setLoading(true);
@@ -206,38 +196,36 @@ export const useForgotPassword = ({setIsForgotPassword, setIsLogin}: {setIsForgo
     setError(null);
 
     try {
-        if (!isValidEmail(email)) {
-    throw new Error("Invalid email address.");
-        }
+      if (!isValidEmail(email)) {
+        throw new Error('Invalid email address.');
+      }
 
-        //check if email exists 
-     const res = await fetch("/api/check-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      //check if email exists
+      const res = await fetch('/api/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
       const { exists } = await res.json();
-      
-       
+
       if (!exists) {
-         setError("Email does not exist.");
-      return { error: "Email does not exist." }; 
+        setError('Email does not exist.');
+        return { error: 'Email does not exist.' };
       }
-     
+
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: redirectTo || `${window.location.origin}/api/reset-password`,
       });
 
       if (error) setError(error.message);
-      else setMessage("Check your email for the password reset link!");
+      else setMessage('Check your email for the password reset link!');
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+      setError(err.message || 'An unexpected error occurred.');
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -254,20 +242,33 @@ export const useForgotPassword = ({setIsForgotPassword, setIsLogin}: {setIsForgo
         setSuccessOpen(true);
       }
     } catch (err: any) {
-      setErrorMessage(err?.message || "Something went wrong.");
+      setErrorMessage(err?.message || 'Something went wrong.');
       setErrorOpen(true);
     } finally {
       setLoading(false);
     }
   };
 
-  
   const handleBackToLogin = () => {
     setIsForgotPassword(false);
     setIsLogin(true);
   };
 
-  return {handleBackToLogin, sendResetEmail, loading, message, error, handleSubmit, email, setEmail, successOpen, setSuccessOpen, errorOpen, setErrorOpen, errorMessage };
+  return {
+    handleBackToLogin,
+    sendResetEmail,
+    loading,
+    message,
+    error,
+    handleSubmit,
+    email,
+    setEmail,
+    successOpen,
+    setSuccessOpen,
+    errorOpen,
+    setErrorOpen,
+    errorMessage,
+  };
 };
 
 // Hook for resetting password
@@ -285,18 +286,16 @@ export const useResetPassword = () => {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
 
       if (error) setError(error.message);
-      else setMessage("Password successfully updated!");
+      else setMessage('Password successfully updated!');
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+      setError(err.message || 'An unexpected error occurred.');
     } finally {
       setLoading(false);
     }
   };
 
-  return { resetPassword, loading, message, error , setMessage, setError  };
+  return { resetPassword, loading, message, error, setMessage, setError };
 };
-
-
 
 export const useChangeEmail = () => {
   const [loading, setLoading] = useState(false);
@@ -310,7 +309,7 @@ export const useChangeEmail = () => {
 
     try {
       if (!newEmail || !/\S+@\S+\.\S+/.test(newEmail)) {
-        setError("Invalid email address.");
+        setError('Invalid email address.');
         return;
       }
 
@@ -318,57 +317,57 @@ export const useChangeEmail = () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      
+
       if (!session) {
-        setError("No active session. Please log in again.");
+        setError('No active session. Please log in again.');
         return;
       }
 
       const currentEmail = session?.user?.email;
 
       if (newEmail === currentEmail) {
-        setError("You are already using this email.");
+        setError('You are already using this email.');
         return;
       }
 
       // Check if new email exists
-      const res = await fetch("/api/check-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: newEmail }), 
+      const res = await fetch('/api/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newEmail }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data?.error || "Failed checking email.");
+        setError(data?.error || 'Failed checking email.');
         return;
       }
 
       if (data.exists) {
-        setError("Email already exists. Please use another one.");
+        setError('Email already exists. Please use another one.');
         return;
       }
 
       // Api call for email change
-    const apicall = await fetch("/api/change-email", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ newEmail}),
-});
+      const apicall = await fetch('/api/change-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newEmail }),
+      });
 
-const emailresponse = await apicall.json();
+      const emailresponse = await apicall.json();
 
-if (!apicall.ok) {
-  setError(emailresponse?.error || "Failed to update email.");
-  return;
-}
+      if (!apicall.ok) {
+        setError(emailresponse?.error || 'Failed to update email.');
+        return;
+      }
 
       setMessage(
-        "Confirmation email have been sent to your new email address. You must confirm the change in your new email for the update to take effect."
+        'Confirmation email have been sent to your new email address. You must confirm the change in your new email for the update to take effect.',
       );
     } catch (err: any) {
-      setError(err.message || "Unexpected error occurred.");
+      setError(err.message || 'Unexpected error occurred.');
     } finally {
       setLoading(false);
     }
@@ -377,17 +376,15 @@ if (!apicall.ok) {
   return { changeEmail, loading, error, message };
 };
 
-
 export const useChangePassword = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  
 
   const changePassword = async (
     currentPassword: string,
     newPassword: string,
-    confirmPassword: string
+    confirmPassword: string,
   ) => {
     setLoading(true);
     setError(null);
@@ -395,16 +392,16 @@ export const useChangePassword = () => {
 
     try {
       if (!currentPassword) {
-        setError("Current password required.");
+        setError('Current password required.');
         return;
       }
       if (newPassword.length < 8) {
-        setError("New password must be at least 8 characters.");
+        setError('New password must be at least 8 characters.');
         return;
       }
 
       if (newPassword !== confirmPassword) {
-        setError("New password and confirmation do not match.");
+        setError('New password and confirmation do not match.');
         return;
       }
 
@@ -415,7 +412,7 @@ export const useChangePassword = () => {
 
       const email = session?.user?.email;
       if (!email) {
-        setError("User not logged in.");
+        setError('User not logged in.');
         return;
       }
 
@@ -426,7 +423,7 @@ export const useChangePassword = () => {
       });
 
       if (signInError) {
-        setError("Incorrect current password.");
+        setError('Incorrect current password.');
         return;
       }
 
@@ -440,9 +437,9 @@ export const useChangePassword = () => {
         return;
       }
 
-      setMessage("Password successfully updated.");
+      setMessage('Password successfully updated.');
     } catch (err: any) {
-      setError(err.message || "Unexpected error occurred.");
+      setError(err.message || 'Unexpected error occurred.');
     } finally {
       setLoading(false);
     }

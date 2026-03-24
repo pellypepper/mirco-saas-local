@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY); 
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendConfirmationEmail({
   to,
@@ -15,7 +15,7 @@ export async function sendConfirmationEmail({
   location,
   phone_number,
   email,
-  country
+  country,
 }: {
   to: string;
   bookingId: string;
@@ -31,9 +31,6 @@ export async function sendConfirmationEmail({
   email: string;
   country: string;
 }) {
-
-
-
   const subject = 'Booking Confirmation';
   const html = `
     <h2>Your Booking is Confirmed!</h2>
@@ -54,10 +51,10 @@ export async function sendConfirmationEmail({
   `;
 
   return await resend.emails.send({
-  from: 'booking@ppeliance.co.uk', // Your sender address
+    from: 'booking@ppeliance.co.uk', // Your sender address
     to,
     subject,
-    html
+    html,
   });
 }
 
@@ -86,10 +83,6 @@ export async function sendProviderNotificationEmail({
   customerEmail: string;
   customerPhone: string;
 }) {
- 
-
-
-
   const subject = 'New Booking Received';
   const html = `
     <h2>You Have a New Booking!</h2>
@@ -114,6 +107,6 @@ export async function sendProviderNotificationEmail({
     from: 'booking@ppeliance.co.uk',
     to,
     subject,
-    html
+    html,
   });
 }

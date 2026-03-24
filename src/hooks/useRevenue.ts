@@ -1,12 +1,12 @@
-"use client"; 
+'use client';
 
-import { useState, useMemo, useEffect } from "react";
-import { toCSV, toXLSX, toPDF } from "@/lib/exportUtils";
-import useDebouncedValue from "@/hooks/useDebouncedValue";
+import { useState, useMemo, useEffect } from 'react';
+import { toCSV, toXLSX, toPDF } from '@/lib/exportUtils';
+import useDebouncedValue from '@/hooks/useDebouncedValue';
 
 interface UseRevenueProps {
   providers: any[];
-  bookings?:  any[];
+  bookings?: any[];
 }
 
 type FilterState = {
@@ -14,7 +14,7 @@ type FilterState = {
   endDate?: string | null;
   service?: string;
   minRevenue?: number | null;
-  maxRevenue?:  number | null;
+  maxRevenue?: number | null;
 };
 
 const useRevenue = ({ providers = [], bookings = [] }: UseRevenueProps) => {
@@ -22,11 +22,11 @@ const useRevenue = ({ providers = [], bookings = [] }: UseRevenueProps) => {
   const [filterState, setFilterState] = useState<FilterState>({
     startDate: null,
     endDate: null,
-    service: "All",
-    minRevenue:  null,
-    maxRevenue:  null,
+    service: 'All',
+    minRevenue: null,
+    maxRevenue: null,
   });
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
 
   // debounced search
   const debouncedQuery = useDebouncedValue(query, 350);
@@ -36,7 +36,7 @@ const useRevenue = ({ providers = [], bookings = [] }: UseRevenueProps) => {
   // ----------------------------
   const rows = useMemo(() => {
     if (bookings.length > 0) return bookings;
-    return providers. map((p) => ({ ...p }));
+    return providers.map((p) => ({ ...p }));
   }, [providers, bookings]);
 
   // ----------------------------
@@ -61,11 +61,13 @@ const useRevenue = ({ providers = [], bookings = [] }: UseRevenueProps) => {
       const q = debouncedQuery.toLowerCase();
       r = r.filter(
         (x) =>
-          (x.full_name || "").toLowerCase().includes(q) ||
-          (x.email || "").toLowerCase().includes(q) ||
-          (x.service_type || "").toLowerCase().includes(q) ||
-          (x.location || "").toLowerCase().includes(q) ||
-          String(x.id || "").toLowerCase().includes(q)
+          (x.full_name || '').toLowerCase().includes(q) ||
+          (x.email || '').toLowerCase().includes(q) ||
+          (x.service_type || '').toLowerCase().includes(q) ||
+          (x.location || '').toLowerCase().includes(q) ||
+          String(x.id || '')
+            .toLowerCase()
+            .includes(q),
       );
     }
 
@@ -76,7 +78,7 @@ const useRevenue = ({ providers = [], bookings = [] }: UseRevenueProps) => {
         if (!itemDate) return false;
         const date = new Date(itemDate);
         date.setHours(0, 0, 0, 0);
-        const filterDate = new Date(filterState. startDate! );
+        const filterDate = new Date(filterState.startDate!);
         filterDate.setHours(0, 0, 0, 0);
         return date >= filterDate;
       });
@@ -95,7 +97,7 @@ const useRevenue = ({ providers = [], bookings = [] }: UseRevenueProps) => {
     }
 
     // 3. Service filter
-    if (filterState.service && filterState.service !== "All") {
+    if (filterState.service && filterState.service !== 'All') {
       r = r.filter((x) => x.service_type === filterState.service);
     }
 
@@ -103,14 +105,14 @@ const useRevenue = ({ providers = [], bookings = [] }: UseRevenueProps) => {
     if (filterState.minRevenue !== null && filterState.minRevenue !== undefined) {
       r = r.filter((x) => {
         const revenue = Number(x.revenue || 0);
-        return revenue >= filterState.minRevenue! ;
+        return revenue >= filterState.minRevenue!;
       });
     }
 
     if (filterState.maxRevenue !== null && filterState.maxRevenue !== undefined) {
       r = r.filter((x) => {
         const revenue = Number(x.revenue || 0);
-        return revenue <= filterState. maxRevenue!;
+        return revenue <= filterState.maxRevenue!;
       });
     }
 
@@ -131,25 +133,24 @@ const useRevenue = ({ providers = [], bookings = [] }: UseRevenueProps) => {
   };
 
   const handleFilterReset = () => {
-    const resetState:  FilterState = {
+    const resetState: FilterState = {
       startDate: null,
-      endDate:  null,
-      service: "All",
+      endDate: null,
+      service: 'All',
       minRevenue: null,
       maxRevenue: null,
     };
     setFilterState(resetState);
-    setQuery("");
+    setQuery('');
   };
 
   // ----------------------------
   // Export
   // ----------------------------
-  const handleExportAll = (type: "csv" | "xlsx" | "pdf") => async () => {
-    if (type === "csv") toCSV(filtered, "revenue-export. csv");
-    if (type === "xlsx") await toXLSX(filtered, "revenue-export.xlsx");
-    if (type === "pdf")
-      await toPDF(filtered, "revenue-export.pdf", "Revenue Dashboard Export");
+  const handleExportAll = (type: 'csv' | 'xlsx' | 'pdf') => async () => {
+    if (type === 'csv') toCSV(filtered, 'revenue-export. csv');
+    if (type === 'xlsx') await toXLSX(filtered, 'revenue-export.xlsx');
+    if (type === 'pdf') await toPDF(filtered, 'revenue-export.pdf', 'Revenue Dashboard Export');
   };
 
   return {
@@ -177,10 +178,10 @@ export const useProviders = () => {
     const load = async () => {
       setLoading(true);
 
-      const res = await fetch("/api/providers");
+      const res = await fetch('/api/providers');
       const json = await res.json();
 
-      setProviders(json. providers || []);
+      setProviders(json.providers || []);
       setLoading(false);
     };
 

@@ -1,38 +1,33 @@
-"use client"; 
+'use client';
 
-import { useEffect, useMemo, useState , useCallback} from "react";
-import { CheckCircle , AlertCircle, XCircle} from "lucide-react";
+import { useEffect, useMemo, useState, useCallback } from 'react';
+import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 
-import BookingService from "@/services/bookingService";
-import  {AvailabilityRecord, BookingCustomer, BookingProvider} from "@/types/type";
-import useExtraService from "./extraServices";
-
+import BookingService from '@/services/bookingService';
+import { AvailabilityRecord, BookingCustomer, BookingProvider } from '@/types/type';
+import useExtraService from './extraServices';
 
 interface FormatTimeOptions {
-    hour: '2-digit';
-    minute: '2-digit';
+  hour: '2-digit';
+  minute: '2-digit';
 }
 
 interface FormatDateOptions {
-    weekday: 'short';
-    year: 'numeric';
-    month: 'short';
-    day: 'numeric';
+  weekday: 'short';
+  year: 'numeric';
+  month: 'short';
+  day: 'numeric';
 }
 
 interface StatusConfig {
-    color: string;
-    icon: React.ComponentType<{ className?: string }>;
-    label: string;
-    badge: string;
+  color: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  badge: string;
 }
 
-
-
-export const useProviderBooking = ({user}: {user: {id: string}}) => {
-
-
-     const [search, setSearch] = useState("");
+export const useProviderBooking = ({ user }: { user: { id: string } }) => {
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
 
   // REAL BOOKINGS FROM DATABASE
@@ -43,14 +38,14 @@ export const useProviderBooking = ({user}: {user: {id: string}}) => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const [noteInput, setNoteInput] = useState("");
-      const [openDelete, setOpenDelete] = useState(false);
-        const [successMessage, setSuccessMessage] = useState("");
+  const [noteInput, setNoteInput] = useState('');
+  const [openDelete, setOpenDelete] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Fetch bookings from backend
   const fetchBookings = async () => {
     const data = await BookingService.fetchBookingsByProvider(user.id);
-    
+
     setBookings(data);
   };
 
@@ -63,9 +58,10 @@ export const useProviderBooking = ({user}: {user: {id: string}}) => {
   const filteredBookings = useMemo(() => {
     if (!search) return bookings;
 
-    return bookings.filter((b) =>
-      b.customer.full_name.toLowerCase().includes(search.toLowerCase()) ||
-      b.services.title.toLowerCase().includes(search.toLowerCase())
+    return bookings.filter(
+      (b) =>
+        b.customer.full_name.toLowerCase().includes(search.toLowerCase()) ||
+        b.services.title.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, bookings]);
 
@@ -73,114 +69,101 @@ export const useProviderBooking = ({user}: {user: {id: string}}) => {
   const bookingStats = useMemo(
     () => ({
       total: bookings.length,
-      confirmed: bookings.filter((b) => b.status === "confirmed").length,
-      pending: bookings.filter((b) => b.status === "pending").length,
-      cancelled: bookings.filter((b) => b.status === "cancelled").length,
+      confirmed: bookings.filter((b) => b.status === 'confirmed').length,
+      pending: bookings.filter((b) => b.status === 'pending').length,
+      cancelled: bookings.filter((b) => b.status === 'cancelled').length,
     }),
-    [bookings]
+    [bookings],
   );
 
   // Format date & time
   const formatDate = (dateString: string) =>
-    new Date(dateString).toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
+    new Date(dateString).toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
     });
 
   const formatTime = (dateString: string) =>
-    new Date(dateString).toLocaleTimeString("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit",
+    new Date(dateString).toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
     });
 
   // Show details modal
   const handleViewDetails = (booking: BookingProvider) => {
     setSelectedBooking(booking);
-    setNoteInput("");
+    setNoteInput('');
     setShowDetailsModal(true);
   };
 
   // Confirm booking
- const handleConfirmBooking = async (id: string) => {
-  const updated = await BookingService.updateBookingStatus(id, "confirmed");
+  const handleConfirmBooking = async (id: string) => {
+    const updated = await BookingService.updateBookingStatus(id, 'confirmed');
 
-  if (!updated) return;
+    if (!updated) return;
 
-  // Update UI after DB update
-  setBookings(prev =>
-    prev.map(b => (b.id === id ? { ...b, status: "confirmed" } : b))
-  );
+    // Update UI after DB update
+    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status: 'confirmed' } : b)));
 
-  setShowConfirmModal(false);
-  setShowDetailsModal(false);
+    setShowConfirmModal(false);
+    setShowDetailsModal(false);
 
-      setSuccessMessage("Booking confirmed successfully!");
-};
-
+    setSuccessMessage('Booking confirmed successfully!');
+  };
 
   // Cancel booking
   const handleCancelBooking = async (id: string) => {
+    const updated = await BookingService.updateBookingStatus(id, 'cancelled');
 
-  const updated = await BookingService.updateBookingStatus(id, "cancelled");
+    const markAvailable = await BookingService.makeSlotAvailable(
+      selectedBooking?.provider_id || '',
+      selectedBooking?.availability.id || '',
+    );
 
-  const markAvailable = await BookingService.makeSlotAvailable(
-    selectedBooking?.provider_id || "",
-    selectedBooking?.availability.id || ""
+    if (!updated) return;
+    if (!markAvailable) return;
 
-  );
+    // Update UI after DB update
+    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b)));
 
+    setShowCancelModal(false);
+    setShowDetailsModal(false);
 
-  if (!updated) return;
-  if (!markAvailable ) return;
-
-
-// Update UI after DB update
-  setBookings(prev =>
-    prev.map(b => (b.id === id ? { ...b, status: "cancelled" } : b))
-  );
-
-
-  setShowCancelModal(false);
-  setShowDetailsModal(false);
-
-
-      setSuccessMessage("Booking cancelled successfully!");
-};
+    setSuccessMessage('Booking cancelled successfully!');
+  };
 
   const cancelDeleteModal = () => {
     setOpenDelete(false);
-  }
+  };
 
-const onConfirmDelete = async (booking: any) => {
-  if (!booking) return;
+  const onConfirmDelete = async (booking: any) => {
+    if (!booking) return;
 
-  let deleted = null;
+    let deleted = null;
 
+    const providerRole = booking.provider?.role;
+    const customerRole = booking.customer?.role;
 
+    if (customerRole === 'customer') {
+      deleted = await BookingService.deleteBookingForProvider(booking.id);
+    } else if (providerRole === 'provider') {
+      deleted = await BookingService.deleteBookingForCustomer(booking.id);
+    } else {
+      console.warn('Booking missing provider/customer role info, deleting for customer by default');
+      deleted = await BookingService.deleteBookingForCustomer(booking.id);
+    }
 
-  const providerRole = booking.provider?.role;
-  const customerRole = booking.customer?.role;
+    if (deleted) {
+      setOpenDelete(false);
+      fetchBookings();
+    }
 
-  if (customerRole === 'customer') {
-    deleted = await BookingService.deleteBookingForProvider(booking.id );
-  } else if (providerRole === 'provider') {
-    deleted = await BookingService.deleteBookingForCustomer(booking.id );
-  } else {
-    console.warn("Booking missing provider/customer role info, deleting for customer by default");
-    deleted = await BookingService.deleteBookingForCustomer(booking.id);
-  }
-
-  if (deleted) {
-    setOpenDelete(false);
-    fetchBookings(); 
-  }
-
-     setSuccessMessage("Booking deleted successfully!");
-};
+    setSuccessMessage('Booking deleted successfully!');
+  };
   return {
-   onConfirmDelete,
-   openDelete,
+    onConfirmDelete,
+    openDelete,
     setOpenDelete,
     cancelDeleteModal,
     search,
@@ -205,14 +188,11 @@ const onConfirmDelete = async (booking: any) => {
     setNoteInput,
     successMessage,
     setSuccessMessage,
+  };
+};
 
-  }
-}
-
-
-
-export const useCustomerBooking = ({user}: {user: {id: string}}) => {
-const [bookings, setBookings] = useState<BookingCustomer[]>([]);
+export const useCustomerBooking = ({ user }: { user: { id: string } }) => {
+  const [bookings, setBookings] = useState<BookingCustomer[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [error, setError] = useState<string | null>(null);
@@ -221,16 +201,16 @@ const [bookings, setBookings] = useState<BookingCustomer[]>([]);
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showBookAgainModal, setShowBookAgainModal] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
-    const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState("");
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       const data = await BookingService.fetchBookingsByCustomer(user?.id);
-   
+
       setBookings(data);
     } catch (err) {
       console.error('Error fetching bookings:', err);
@@ -244,25 +224,25 @@ const [bookings, setBookings] = useState<BookingCustomer[]>([]);
     fetchBookings();
   }, [fetchBookings]);
 
-const handleViewDetails = (booking: BookingCustomer): void => {
+  const handleViewDetails = (booking: BookingCustomer): void => {
     setSelectedBooking(booking);
     setShowDetailsModal(true);
-};
+  };
 
-const handleReschedule = (booking: BookingCustomer): void => {
+  const handleReschedule = (booking: BookingCustomer): void => {
     setSelectedBooking(booking);
     setShowRescheduleModal(true);
-};
+  };
 
-const handleBookAgain = (booking: BookingCustomer) => {
-  setSelectedBooking(booking);
-  setShowBookAgainModal(true);
-};
+  const handleBookAgain = (booking: BookingCustomer) => {
+    setSelectedBooking(booking);
+    setShowBookAgainModal(true);
+  };
 
-const handleCancel = (booking: BookingCustomer): void => {
+  const handleCancel = (booking: BookingCustomer): void => {
     setSelectedBooking(booking);
     setShowCancelModal(true);
-};
+  };
 
   const handleRescheduleSuccess = () => {
     fetchBookings();
@@ -272,112 +252,100 @@ const handleCancel = (booking: BookingCustomer): void => {
     fetchBookings();
   };
 
-  
   const handleBookAgainSuccess = async () => {
-  await fetchBookings(); // refresh UI
-};
+    await fetchBookings(); // refresh UI
+  };
 
-
-const getStatusConfig = (status: string): StatusConfig => {
+  const getStatusConfig = (status: string): StatusConfig => {
     const configs: Record<string, StatusConfig> = {
-        confirmed: {
-            color: 'bg-[#008800]/20 text-[#008800] border-[#008800]/30',
-            icon: CheckCircle,
-            label: 'Confirmed',
-             badge: 'bg-[#008800]'
-        },
-        pending: {
-            color: 'bg-chart-3/20 text-chart-3 border-chart-3/30',
-            icon: AlertCircle,
-            label: 'Pending',
-                 badge: 'bg-chart-4'
-        },
-        cancelled: {
-            color: 'bg-red-50 text-red-700 border-red-200',
-            icon: XCircle,
-            label: 'Cancelled',
-                badge: 'bg-chart-1'
-        }
+      confirmed: {
+        color: 'bg-[#008800]/20 text-[#008800] border-[#008800]/30',
+        icon: CheckCircle,
+        label: 'Confirmed',
+        badge: 'bg-[#008800]',
+      },
+      pending: {
+        color: 'bg-chart-3/20 text-chart-3 border-chart-3/30',
+        icon: AlertCircle,
+        label: 'Pending',
+        badge: 'bg-chart-4',
+      },
+      cancelled: {
+        color: 'bg-red-50 text-red-700 border-red-200',
+        icon: XCircle,
+        label: 'Cancelled',
+        badge: 'bg-chart-1',
+      },
     };
     return configs[status] || configs.pending;
-};
+  };
 
-
-
-const formatDate = (dateString: string): string => {
+  const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     const options: FormatDateOptions = {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     };
     return date.toLocaleDateString('en-US', options);
-};
+  };
 
-
-
-const formatTime = (dateString: string): string => {
+  const formatTime = (dateString: string): string => {
     const date = new Date(dateString);
     const options: FormatTimeOptions = {
-        hour: '2-digit',
-        minute: '2-digit'
+      hour: '2-digit',
+      minute: '2-digit',
     };
     return date.toLocaleTimeString('en-US', options);
-};
+  };
 
-
-const formatAmount = (amount: number, currency: string): string => {
+  const formatAmount = (amount: number, currency: string): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency || 'USD'
-    }).format(amount );
+      currency: currency || 'USD',
+    }).format(amount);
   };
 
   const cancelDeleteModal = () => {
     setOpenDelete(false);
-  }
+  };
 
-const onConfirmDelete = async (booking: any) => {
-  if (!booking) return;
+  const onConfirmDelete = async (booking: any) => {
+    if (!booking) return;
 
-  let deleted = null;
+    let deleted = null;
 
+    const providerRole = booking.provider?.role;
+    const customerRole = booking.customer?.role;
 
+    if (customerRole === 'customer') {
+      deleted = await BookingService.deleteBookingForProvider(booking.id);
+    } else if (providerRole === 'provider') {
+      deleted = await BookingService.deleteBookingForCustomer(booking.id);
+    } else {
+      console.warn('Booking missing provider/customer role info, deleting for customer by default');
+      deleted = await BookingService.deleteBookingForCustomer(booking.id);
+    }
 
-  const providerRole = booking.provider?.role;
-  const customerRole = booking.customer?.role;
+    if (deleted) {
+      setOpenDelete(false);
+      fetchBookings();
+    }
 
-  if (customerRole === 'customer') {
-    deleted = await BookingService.deleteBookingForProvider(booking.id );
-  } else if (providerRole === 'provider') {
-    deleted = await BookingService.deleteBookingForCustomer(booking.id );
-  } else {
-    console.warn("Booking missing provider/customer role info, deleting for customer by default");
-    deleted = await BookingService.deleteBookingForCustomer(booking.id);
-  }
+    setSuccessMessage('Booking deleted successfully!');
+  };
 
-  if (deleted) {
-    setOpenDelete(false);
-    fetchBookings(); 
-  }
-
-      setSuccessMessage("Booking deleted successfully!");
-};
-
-
-  const filteredBookings = bookings.filter(booking => 
-    filter === 'all' || booking.status === filter
+  const filteredBookings = bookings.filter(
+    (booking) => filter === 'all' || booking.status === filter,
   );
 
-  
-
-  return{
+  return {
     bookings,
     loading,
     filter,
     setFilter,
-    openDelete, 
+    openDelete,
     setOpenDelete,
     onConfirmDelete,
     cancelDeleteModal,
@@ -399,45 +367,68 @@ const onConfirmDelete = async (booking: any) => {
     formatTime,
     formatAmount,
     filteredBookings,
-      showBookAgainModal,
-  setShowBookAgainModal,
-  handleBookAgain,
-  handleBookAgainSuccess,
-  openMenuId,
-  setOpenMenuId,
+    showBookAgainModal,
+    setShowBookAgainModal,
+    handleBookAgain,
+    handleBookAgainSuccess,
+    openMenuId,
+    setOpenMenuId,
     successMessage,
     setSuccessMessage,
-  }
-}
+  };
+};
 
-
-export const useConfirmBooking =({profile , providerId}: {profile: any, providerId: string})=>{
-
+export const useConfirmBooking = ({
+  profile,
+  providerId,
+}: {
+  profile: any;
+  providerId: string;
+}) => {
   const [selectedSlot, setSelectedSlot] = useState<any | null>(null);
   const [showBooking, setShowBooking] = useState(false);
+   const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  
-  const handleConfirmBooking = async (data: {currency: string, amount: number, servicesId: string }) => {
-
+  const handleConfirmBooking = async (data: {
+    provider_payout_enabled: boolean;
+    currency: string;
+    amount: number;
+    servicesId: string;
+  }) => {
     if (!selectedSlot) return;
 
-    
-
+    if(data.provider_payout_enabled === false) {
+      setErrorMessage('Provider does not have payout enabled.');
+      setShowError(true);
+      return;
+    }
     try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        
-        body: JSON.stringify({customer_id: profile.id, availability_id: selectedSlot.id, provider_id: providerId , currency: data.currency, amount: data.amount, services_id: data.servicesId }),
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+
+        body: JSON.stringify({
+          customer_id: profile.id,
+          availability_id: selectedSlot.id,
+          provider_id: providerId,
+          currency: data.currency,
+          amount: data.amount,
+          services_id: data.servicesId,
+        }),
       });
 
-   const { url } = await res.json();
+    if (!res.ok) {
+  const error = await res.text();
+  throw new Error(error || 'Checkout failed');
+}
 
-
-  window.location.href = url;
+const { url } = await res.json();
+window.location.href = url;
     } catch (err) {
       console.error(err);
-      alert("Failed to create booking");
+     setErrorMessage('Failed to create booking');
+  setShowError(true);
     }
   };
 
@@ -446,12 +437,13 @@ export const useConfirmBooking =({profile , providerId}: {profile: any, provider
     setSelectedSlot,
     showBooking,
     setShowBooking,
-    handleConfirmBooking
+    handleConfirmBooking,
+    showError,
+    setShowError,
+    errorMessage,
 
-  }
-}
-
-
+  };
+};
 
 interface Provider {
   id: string;
@@ -459,63 +451,68 @@ interface Provider {
   full_name: string;
   service_type: string;
   hourly_rate: number;
+  payout_enabled: boolean;
 }
 
-
-export const useBookingModal = ({ provider, slot, onConfirm }: { provider: Provider; slot: AvailabilityRecord; onConfirm: (data: { servicesId: string; amount: number; currency: string }) => void }) =>{
+export const useBookingModal = ({
+  provider,
+  slot,
+  onConfirm,
+}: {
+  provider: Provider;
+  slot: AvailabilityRecord;
+  onConfirm: (data: { servicesId: string; amount: number; currency: string; provider_payout_enabled: boolean }, ) => void;
+}) => {
   interface Services {
     id?: string;
     title: string;
     price: number;
     currency: string;
     duration_minutes: number;
-  }  
+  }
 
-  
-  
   const { services } = useExtraService(provider.id);
   const [selectedService, setSelectedService] = useState<Services | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+ 
 
   // Safely parse start_time
-  const startTime = slot.start_time && slot.date
-    ? new Date(`${slot.date}T${slot.start_time}`)
-    : null;
+  const startTime =
+    slot.start_time && slot.date ? new Date(`${slot.date}T${slot.start_time}`) : null;
 
   const isValidDate = startTime && !isNaN(startTime.getTime());
 
   const formattedDate = isValidDate
-    ? startTime.toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
+    ? startTime.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
       })
-    : "Invalid date";
+    : 'Invalid date';
 
   const formattedTime = isValidDate
-    ? startTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    : "Invalid time";
+    ? startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    : 'Invalid time';
 
   const avatarSrc =
-    provider.avatar_url && provider.avatar_url.trim() !== ""
+    provider.avatar_url && provider.avatar_url.trim() !== ''
       ? provider.avatar_url
-      : "https://api.dicebear.com/7.x/initials/svg?seed=" +
-        encodeURIComponent(provider.full_name);
+      : 'https://api.dicebear.com/7.x/initials/svg?seed=' + encodeURIComponent(provider.full_name);
 
   const handleConfirm = () => {
+
     if (selectedService) {
-    
- onConfirm({
-    servicesId: selectedService.id!,
-    amount: selectedService.price,
-    currency: selectedService.currency,
-  });
+      onConfirm({
+        provider_payout_enabled: provider.payout_enabled,
+        servicesId: selectedService.id!,
+        amount: selectedService.price,
+        currency: selectedService.currency,
+      });
     }
   };
 
   return {
-
     services,
     selectedService,
     setSelectedService,
@@ -524,8 +521,6 @@ export const useBookingModal = ({ provider, slot, onConfirm }: { provider: Provi
     formattedDate,
     formattedTime,
     avatarSrc,
-    handleConfirm
-
-
-  }
-}
+    handleConfirm,
+  };
+};

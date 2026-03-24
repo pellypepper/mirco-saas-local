@@ -1,12 +1,12 @@
-"use client";
-import MainDisplay from "@/component/AdminBooking/MainDisplay";
+'use client';
+import MainDisplay from '@/component/AdminBooking/MainDisplay';
 
 const Booking = () => {
   return (
     <div>
       <MainDisplay />
     </div>
-  )
-}
+  );
+};
 
-export default Booking
+export default Booking;

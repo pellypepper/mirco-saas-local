@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { ChevronUp, ChevronDown, ChevronsUpDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo, useState } from 'react';
+import { ChevronUp, ChevronDown, ChevronsUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
 
 type Column<T> = {
   key: string;
@@ -18,7 +18,7 @@ export default function DataTable<T extends Record<string, any>>({
   pageSizeOptions?: number[];
 }) {
   const [sortKey, setSortKey] = useState<string | null>(null);
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(pageSizeOptions[0]);
   const [selectedProvider, setSelectedProvider] = useState<T | null>(null);
@@ -31,10 +31,10 @@ export default function DataTable<T extends Record<string, any>>({
       if (va == null && vb == null) return 0;
       if (va == null) return 1;
       if (vb == null) return -1;
-      if (typeof va === "number" && typeof vb === "number") return va - vb;
+      if (typeof va === 'number' && typeof vb === 'number') return va - vb;
       return String(va).localeCompare(String(vb));
     });
-    if (sortDir === "desc") sortedRows.reverse();
+    if (sortDir === 'desc') sortedRows.reverse();
     return sortedRows;
   }, [rows, sortKey, sortDir]);
 
@@ -45,8 +45,8 @@ export default function DataTable<T extends Record<string, any>>({
   function toggleSort(k: string) {
     if (sortKey !== k) {
       setSortKey(k);
-      setSortDir("asc");
-    } else setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+      setSortDir('asc');
+    } else setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
   }
 
   const startRow = (page - 1) * pageSize + 1;
@@ -73,7 +73,7 @@ export default function DataTable<T extends Record<string, any>>({
                           className="inline-flex items-center justify-center w-6 h-6 rounded-md hover:bg-slate-200 transition-colors"
                         >
                           {sortKey === col.key ? (
-                            sortDir === "asc" ? (
+                            sortDir === 'asc' ? (
                               <ChevronUp className="w-4 h-4 text-indigo-600" />
                             ) : (
                               <ChevronDown className="w-4 h-4 text-indigo-600" />
@@ -96,8 +96,11 @@ export default function DataTable<T extends Record<string, any>>({
                   onClick={() => setSelectedProvider(r)}
                 >
                   {columns.map((c) => (
-                    <td key={c.key} className="px-6 py-4 text-sm text-slate-600 first:pl-8 last:pr-8">
-                      {c.render ? c.render(r) : String(r[c.key] ?? "")}
+                    <td
+                      key={c.key}
+                      className="px-6 py-4 text-sm text-slate-600 first:pl-8 last:pr-8"
+                    >
+                      {c.render ? c.render(r) : String(r[c.key] ?? '')}
                     </td>
                   ))}
                 </tr>
@@ -107,8 +110,18 @@ export default function DataTable<T extends Record<string, any>>({
                   <td colSpan={columns.length} className="px-6 py-16 text-center">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
-                        <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                        <svg
+                          className="w-6 h-6 text-slate-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                          />
                         </svg>
                       </div>
                       <p className="text-sm font-medium text-slate-700">No results found</p>
@@ -143,12 +156,12 @@ export default function DataTable<T extends Record<string, any>>({
         <div className="flex items-center gap-4">
           <div className="text-sm text-slate-600 font-medium">
             {total === 0 ? (
-              "No entries"
+              'No entries'
             ) : (
               <>
-                Showing <span className="text-slate-900">{startRow}</span> to{" "}
-                <span className="text-slate-900">{endRow}</span> of <span className="text-slate-900">{total}</span>{" "}
-                entries
+                Showing <span className="text-slate-900">{startRow}</span> to{' '}
+                <span className="text-slate-900">{endRow}</span> of{' '}
+                <span className="text-slate-900">{total}</span> entries
               </>
             )}
           </div>
@@ -163,7 +176,11 @@ export default function DataTable<T extends Record<string, any>>({
               else if (page >= pages - 2) pageNum = pages - 4 + i;
               else pageNum = page - 2 + i;
               return (
-                <button key={pageNum} onClick={() => setPage(pageNum)} className={`w-9 h-9 rounded-lg ${page === pageNum ? "bg-indigo-600 text-white" : "bg-white border"}`}>
+                <button
+                  key={pageNum}
+                  onClick={() => setPage(pageNum)}
+                  className={`w-9 h-9 rounded-lg ${page === pageNum ? 'bg-indigo-600 text-white' : 'bg-white border'}`}
+                >
                   {pageNum}
                 </button>
               );
@@ -179,28 +196,57 @@ export default function DataTable<T extends Record<string, any>>({
       {selectedProvider && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white p-6 rounded-2xl w-full max-w-2xl overflow-y-auto max-h-[90vh] relative">
-            <button className="absolute top-4 right-4 text-gray-500" onClick={() => setSelectedProvider(null)}>
+            <button
+              className="absolute top-4 right-4 text-gray-500"
+              onClick={() => setSelectedProvider(null)}
+            >
               ✕
             </button>
             <h2 className="text-xl font-bold mb-4">{selectedProvider.name}</h2>
             <div className="grid grid-cols-2 gap-4">
-              <p><strong>Service Type:</strong> {selectedProvider.service_type}</p>
-              <p><strong>Location:</strong> {selectedProvider.location}</p>
-              <p><strong>Country:</strong> {selectedProvider.country}</p>
-              <p><strong>Phone:</strong> {selectedProvider.phone_number || "N/A"}</p>
-              <p><strong>Email:</strong> {selectedProvider.email}</p>
-              <p><strong>Website:</strong> {selectedProvider.website || "N/A"}</p>
-              <p><strong>Payout Enabled:</strong> {selectedProvider.payout_enabled ? "Yes" : "No"}</p>
-              <p><strong>Stripe Account:</strong> {selectedProvider.stripe_account_id || "N/A"}</p>
-              <p><strong>Years of Experience:</strong> {selectedProvider.years_of_experience || "N/A"}</p>
-              <p><strong>Total Revenue:</strong> ${Number(selectedProvider.revenue || 0).toLocaleString()}</p>
-              <p><strong>Total Bookings:</strong> {selectedProvider.bookings}</p>
+              <p>
+                <strong>Service Type:</strong> {selectedProvider.service_type}
+              </p>
+              <p>
+                <strong>Location:</strong> {selectedProvider.location}
+              </p>
+              <p>
+                <strong>Country:</strong> {selectedProvider.country}
+              </p>
+              <p>
+                <strong>Phone:</strong> {selectedProvider.phone_number || 'N/A'}
+              </p>
+              <p>
+                <strong>Email:</strong> {selectedProvider.email}
+              </p>
+              <p>
+                <strong>Website:</strong> {selectedProvider.website || 'N/A'}
+              </p>
+              <p>
+                <strong>Payout Enabled:</strong> {selectedProvider.payout_enabled ? 'Yes' : 'No'}
+              </p>
+              <p>
+                <strong>Stripe Account:</strong> {selectedProvider.stripe_account_id || 'N/A'}
+              </p>
+              <p>
+                <strong>Years of Experience:</strong>{' '}
+                {selectedProvider.years_of_experience || 'N/A'}
+              </p>
+              <p>
+                <strong>Total Revenue:</strong> $
+                {Number(selectedProvider.revenue || 0).toLocaleString()}
+              </p>
+              <p>
+                <strong>Total Bookings:</strong> {selectedProvider.bookings}
+              </p>
               <div className="col-span-2">
                 <strong>Monthly Revenue:</strong>
                 {selectedProvider.monthly?.length ? (
                   <ul className="list-disc ml-6">
                     {selectedProvider.monthly.map((m: any, idx: number) => (
-                      <li key={idx}>{m.month}: ${Number(m.total || 0).toLocaleString()}</li>
+                      <li key={idx}>
+                        {m.month}: ${Number(m.total || 0).toLocaleString()}
+                      </li>
                     ))}
                   </ul>
                 ) : (

@@ -1,8 +1,8 @@
-"use client"
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 
 const useMainNavBar = () => {
-     const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [isProviderSignup, setIsProviderSignup] = useState(false);
@@ -45,8 +45,7 @@ const useMainNavBar = () => {
     handleToggle,
     handleClose,
     handleProviderSignup,
-    
-  }
-}
+  };
+};
 
-export default useMainNavBar
+export default useMainNavBar;

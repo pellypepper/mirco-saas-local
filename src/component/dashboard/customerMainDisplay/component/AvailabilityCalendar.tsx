@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Calendar, ChevronLeft, ChevronRight, Zap, TrendingUp } from "lucide-react";
-import AvailabilityGrid from "./AvailabilityGrid";
-import AvailabilityFooter from "./AvailabilityFooter";
-import { useAvailabilityCalendar } from "@/hooks/useAvailability";
-import { useMainNavBar } from "@/hooks/MainNavContext";
+import { Calendar, ChevronLeft, ChevronRight, Zap, TrendingUp } from 'lucide-react';
+import AvailabilityGrid from './AvailabilityGrid';
+import AvailabilityFooter from './AvailabilityFooter';
+import { useAvailabilityCalendar } from '@/hooks/useAvailability';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
 const AvailabilityCalendar = ({
   groupedSlots,
@@ -32,12 +32,12 @@ const AvailabilityCalendar = ({
   const { isDarkMode } = useMainNavBar();
 
   /* THEME TOKENS */
-  const surface = isDarkMode ? "bg-zinc-800" : "bg-white";
-  const surfaceSoft = isDarkMode ? "bg-zinc-900" : "bg-zinc-100";
-  const border = isDarkMode ? "border-zinc-700" : "border-zinc-200";
+  const surface = isDarkMode ? 'bg-zinc-800' : 'bg-white';
+  const surfaceSoft = isDarkMode ? 'bg-zinc-900' : 'bg-zinc-100';
+  const border = isDarkMode ? 'border-zinc-700' : 'border-zinc-200';
 
-  const textPrimary = isDarkMode ? "text-white" : "text-zinc-900";
-  const textSecondary = isDarkMode ? "text-zinc-400" : "text-zinc-600";
+  const textPrimary = isDarkMode ? 'text-white' : 'text-zinc-900';
+  const textSecondary = isDarkMode ? 'text-zinc-400' : 'text-zinc-600';
 
   return (
     <div className="relative">
@@ -51,7 +51,9 @@ const AvailabilityCalendar = ({
                 <Calendar size={28} className="text-white" />
               </div>
               <div>
-                <h2 className={`text-xl md:text-3xl font-black flex items-center gap-2 ${textPrimary}`}>
+                <h2
+                  className={`text-xl md:text-3xl font-black flex items-center gap-2 ${textPrimary}`}
+                >
                   Available Appointments
                   <Zap size={24} className="text-chart-4" />
                 </h2>
@@ -62,24 +64,28 @@ const AvailabilityCalendar = ({
             </div>
 
             {/* VIEW TOGGLE */}
-            <div className={`flex w-full md:w-auto items-center gap-2 p-1 rounded-2xl border-2 shadow-lg ${surfaceSoft} ${border}`}>
-              {["week", "month"].map((mode) => (
+            <div
+              className={`flex w-full md:w-auto items-center gap-2 p-1 rounded-2xl border-2 shadow-lg ${surfaceSoft} ${border}`}
+            >
+              {['week', 'month'].map((mode) => (
                 <button
                   key={mode}
                   onClick={() => setViewMode(mode as any)}
                   className={`relative px-3 py-2 rounded-xl font-bold transition ${
                     viewMode === mode
-                      ? "text-white"
+                      ? 'text-white'
                       : isDarkMode
-                      ? "text-zinc-400 hover:bg-zinc-800 hover:text-white"
-                      : "text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900"
+                        ? 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                        : 'text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900'
                   }`}
                 >
                   {viewMode === mode && (
-                    <div className={`absolute inset-0 rounded-xl ${mode === "week" ? "bg-chart-2" : "bg-chart-3"}`} />
+                    <div
+                      className={`absolute inset-0 rounded-xl ${mode === 'week' ? 'bg-chart-2' : 'bg-chart-3'}`}
+                    />
                   )}
                   <span className="relative flex items-center gap-2 text-sm">
-                    {mode === "week" ? "Week View" : "Month View"}
+                    {mode === 'week' ? 'Week View' : 'Month View'}
                     {viewMode === mode && <TrendingUp size={16} />}
                   </span>
                 </button>
@@ -88,33 +94,39 @@ const AvailabilityCalendar = ({
           </div>
 
           {/* WEEK NAVIGATION */}
-          {viewMode === "week" && (
+          {viewMode === 'week' && (
             <div className="relative">
-              <div className={`flex items-center justify-between p-5 rounded-2xl border-2 shadow-lg ${surfaceSoft} ${border}`}>
+              <div
+                className={`flex items-center justify-between p-5 rounded-2xl border-2 shadow-lg ${surfaceSoft} ${border}`}
+              >
                 <button
                   onClick={() => setWeekOffset(Math.max(0, weekOffset - 1))}
                   disabled={!hasPrevWeek}
                   className={`p-2 rounded-xl transition ${
                     hasPrevWeek
-                      ? `${isDarkMode ? "bg-zinc-800/50 text-zinc-100 hover:bg-chart-2 hover:text-white border-2 border-zinc-700/50" : `bg-white border-gray-300 hover:bg-chart-2 hover:text-white` 
-                      
-                      }`
-                      : "opacity-50 cursor-not-allowed"
+                      ? `${
+                          isDarkMode
+                            ? 'bg-zinc-800/50 text-zinc-100 hover:bg-chart-2 hover:text-white border-2 border-zinc-700/50'
+                            : `bg-white border-gray-300 hover:bg-chart-2 hover:text-white`
+                        }`
+                      : 'opacity-50 cursor-not-allowed'
                   } ${border}`}
                 >
                   <ChevronLeft size={20} />
                 </button>
 
                 <div className="text-center">
-                  <div className={`text-xs uppercase font-bold ${textSecondary}`}>
-                    Viewing Week
-                  </div>
+                  <div className={`text-xs uppercase font-bold ${textSecondary}`}>Viewing Week</div>
                   <div className={`text-base md:text-xl font-black ${textPrimary}`}>
-                    {new Date(weekDates[0]).toLocaleDateString("en-US", { month: "short", day: "numeric" })} —{" "}
-                    {new Date(weekDates[6]).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
+                    {new Date(weekDates[0]).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })}{' '}
+                    —{' '}
+                    {new Date(weekDates[6]).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
                     })}
                   </div>
                 </div>
@@ -124,8 +136,8 @@ const AvailabilityCalendar = ({
                   disabled={!hasNextWeek}
                   className={`p-2 rounded-xl transition ${
                     hasNextWeek
-                      ? `${isDarkMode ? "bg-zinc-800/50 text-zinc-600 hover:bg-chart-2 hover:text-white border-2 border-zinc-700/50" : "bg-white border-gray-300 hover:bg-chart-2 hover:text-white"}`
-                      : "opacity-50 cursor-not-allowed"
+                      ? `${isDarkMode ? 'bg-zinc-800/50 text-zinc-600 hover:bg-chart-2 hover:text-white border-2 border-zinc-700/50' : 'bg-white border-gray-300 hover:bg-chart-2 hover:text-white'}`
+                      : 'opacity-50 cursor-not-allowed'
                   } ${border}`}
                 >
                   <ChevronRight size={20} />

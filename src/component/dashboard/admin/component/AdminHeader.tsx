@@ -1,13 +1,6 @@
-"use client";
-
-
-
+'use client';
 
 const AdminHeader = () => {
-
-
- 
-
   return (
     <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
       <div>
@@ -16,8 +9,6 @@ const AdminHeader = () => {
           Welcome back! Here's what's happening today.
         </p>
       </div>
-
-     
     </div>
   );
 };

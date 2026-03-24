@@ -1,12 +1,10 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get("code");
-
- 
+  const code = requestUrl.searchParams.get('code');
 
   if (code) {
     const cookieStore = await cookies();
@@ -23,31 +21,24 @@ export async function GET(request: Request) {
             });
           },
         },
-      }
+      },
     );
 
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-
-
     if (error) {
- 
       return NextResponse.redirect(
-        new URL(`/reset-password?error=${encodeURIComponent(error.message)}`, requestUrl.origin)
+        new URL(`/reset-password?error=${encodeURIComponent(error.message)}`, requestUrl.origin),
       );
     }
 
-   
     return NextResponse.redirect(
-  new URL(
-    `/reset-password?access_token=${data.session?.access_token}&refresh_token=${data.session?.refresh_token}&type=recovery`,
-    requestUrl.origin
-  )
-);
+      new URL(
+        `/reset-password?access_token=${data.session?.access_token}&refresh_token=${data.session?.refresh_token}&type=recovery`,
+        requestUrl.origin,
+      ),
+    );
   }
 
-
-  return NextResponse.redirect(
-    new URL("/reset-password?error=missing_code", requestUrl.origin)
-  );
+  return NextResponse.redirect(new URL('/reset-password?error=missing_code', requestUrl.origin));
 }

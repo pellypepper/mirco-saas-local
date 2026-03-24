@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Revenue from "@/component/AdminRevenue/revenue";
-import { useProviders } from "@/hooks/useRevenue";
-import useRevenue from "@/hooks/useRevenue";
+import Revenue from '@/component/AdminRevenue/revenue';
+import { useProviders } from '@/hooks/useRevenue';
+import useRevenue from '@/hooks/useRevenue';
 
 const MainDisplay = () => {
   const { providers, loading } = useProviders();

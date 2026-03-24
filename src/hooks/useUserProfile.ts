@@ -1,108 +1,95 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { uploadAvatar, updateProfile,  } from "@/services/profileService";
-import { getProviderWithEmail } from "@/services/profileService.server";
+import { useState, useRef, useEffect } from 'react';
+import { uploadAvatar, updateProfile } from '@/services/profileService';
+import { getProviderWithEmail } from '@/services/profileService.server';
 
 const useUserProfile = (profile: any) => {
   const [formData, setFormData] = useState({
-    full_name: profile?.full_name || "",
-    service_type: profile?.service_type || "",
-    phone_number: profile?.phone_number || "",
-    bio: profile?.bio || "",
-    website: profile?.website || "",
-    years_of_experience: profile?.years_of_experience || "",
-    location: profile?.location || "",
-    country: profile?.country || "",
+    full_name: profile?.full_name || '',
+    service_type: profile?.service_type || '',
+    phone_number: profile?.phone_number || '',
+    bio: profile?.bio || '',
+    website: profile?.website || '',
+    years_of_experience: profile?.years_of_experience || '',
+    location: profile?.location || '',
+    country: profile?.country || '',
   });
 
-  const [imageUrl, setImageUrl] = useState(profile?.avatar_url || "");
+  const [imageUrl, setImageUrl] = useState(profile?.avatar_url || '');
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-const [showErrorModal, setShowErrorModal] = useState(false);
-  const [notifications, setNotifications] = useState("");
-  const [error, setError] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [notifications, setNotifications] = useState('');
+  const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const role = profile?.role?.toLowerCase();
 
-// Check for incomplete profile and set notifications
- useEffect(() => {
-  if (!profile) return;
+  // Check for incomplete profile and set notifications
+  useEffect(() => {
+    if (!profile) return;
 
-  // Convert profile object to array of values
-  const profileValues = Object.values(profile);
-  
-  const unfilledFields = profileValues.filter((field) =>
-    field === null || field === undefined || field === ""
-  );
+    // Convert profile object to array of values
+    const profileValues = Object.values(profile);
 
-  const unFilledFieldsLength = unfilledFields.length;
-
-  
-  if ( role === "customer" && unFilledFieldsLength > 0) {
-      if(  profile.full_name === null || profile.address === null || profile.phone_number === null || profile.bio === null) {
-         setNotifications(
-      `Please complete your profile for a better experience.`
-    ); 
-
-      }
-      else if(unFilledFieldsLength ==  6 && profile.avatar_url === null) {
-      setNotifications(
-        `Your profile picture is missing. Please upload a pics so you can be visible to providers.`
-      );
-     
-    } 
-  }else if ( role === "provider" && unFilledFieldsLength > 0) {
-    if(unFilledFieldsLength > 2 && profile.stripe_account_id === null) {
-       setNotifications(
-      `Your profile is incomplete. Please fill in the missing information.`
+    const unfilledFields = profileValues.filter(
+      (field) => field === null || field === undefined || field === '',
     );
-    
 
-    } else if(unFilledFieldsLength ==  2 && profile.avatar_url === null) {
-      setNotifications(
-        `Your profile picture is missing. Please upload a pics to attract more customers.`
-      );
-         
-    } 
-    
-  } 
-  
-  else {
-    setNotifications("");
-  }
-}, [profile, role]);
+    const unFilledFieldsLength = unfilledFields.length;
+
+    if (role === 'customer' && unFilledFieldsLength > 0) {
+      if (
+        profile.full_name === null ||
+        profile.address === null ||
+        profile.phone_number === null ||
+        profile.bio === null
+      ) {
+        setNotifications(`Please complete your profile for a better experience.`);
+      } else if (unFilledFieldsLength == 6 && profile.avatar_url === null) {
+        setNotifications(
+          `Your profile picture is missing. Please upload a pics so you can be visible to providers.`,
+        );
+      }
+    } else if (role === 'provider' && unFilledFieldsLength > 0) {
+      if (unFilledFieldsLength > 2 && profile.stripe_account_id === null) {
+        setNotifications(`Your profile is incomplete. Please fill in the missing information.`);
+      } else if (unFilledFieldsLength == 2 && profile.avatar_url === null) {
+        setNotifications(
+          `Your profile picture is missing. Please upload a pics to attract more customers.`,
+        );
+      }
+    } else {
+      setNotifications('');
+    }
+  }, [profile, role]);
 
   const providerForm =
-    role === "provider"
+    role === 'provider'
       ? [
-          { id: "full_name", label: "Full Name", type: "text" },
-          { id: "service_type", label: "Service Type", type: "text" },
-              { id: "phone_number", label: "Phone Number", type: "text" },
-          { id: "bio", label: "Bio", type: "textarea" },
-                      { id: "website", label: "Website", type: "text" },
-                        { id: "country", label: "Country", type: "text" },
-          { id: "location", label: "Address", type: "text" },
-                    { id: "years_of_experience", label: "Years of Experience", type: "text" },
+          { id: 'full_name', label: 'Full Name', type: 'text' },
+          { id: 'service_type', label: 'Service Type', type: 'text' },
+          { id: 'phone_number', label: 'Phone Number', type: 'text' },
+          { id: 'bio', label: 'Bio', type: 'textarea' },
+          { id: 'website', label: 'Website', type: 'text' },
+          { id: 'country', label: 'Country', type: 'text' },
+          { id: 'location', label: 'Address', type: 'text' },
+          { id: 'years_of_experience', label: 'Years of Experience', type: 'text' },
         ]
       : [
-          { id: "full_name", label: "Full Name", type: "text" },
-          { id: "location", label: "Address", type: "text" },
-                      { id: "phone_number", label: "Phone Number", type: "number" },
-          { id: "bio", label: "Bio", type: "textarea" },
+          { id: 'full_name', label: 'Full Name', type: 'text' },
+          { id: 'location', label: 'Address', type: 'text' },
+          { id: 'phone_number', label: 'Phone Number', type: 'number' },
+          { id: 'bio', label: 'Bio', type: 'textarea' },
         ];
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
-
-  
 
   const handleImageClick = () => fileInputRef.current?.click();
 
@@ -112,19 +99,18 @@ const [showErrorModal, setShowErrorModal] = useState(false);
 
     try {
       setLoading(true);
-      setError("");
-      setMessage("");
+      setError('');
+      setMessage('');
 
-      const url = await uploadAvatar( file);
+      const url = await uploadAvatar(file);
       setImageUrl(url);
-       setSuccessMessage("Image uploaded successfully. click save to update your profile");
-    setShowSuccessModal(true);
+      setSuccessMessage('Image uploaded successfully. click save to update your profile');
+      setShowSuccessModal(true);
     } catch (err) {
       console.error(err);
-      setError("Image upload failed");
-      setErrorMessage(" Image upload failed. Please try again.");
+      setError('Image upload failed');
+      setErrorMessage(' Image upload failed. Please try again.');
       setShowErrorModal(true);
-
     } finally {
       setLoading(false);
     }
@@ -133,17 +119,17 @@ const [showErrorModal, setShowErrorModal] = useState(false);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
-    setError("");
+    setMessage('');
+    setError('');
 
     try {
       await updateProfile(profile.id, role, formData, imageUrl);
-   setSuccessMessage("Profile updated successfully");
-    setShowSuccessModal(true);
+      setSuccessMessage('Profile updated successfully');
+      setShowSuccessModal(true);
     } catch (err) {
       console.error(err);
-      setErrorMessage("Profile update failed");
-    setShowErrorModal(true);
+      setErrorMessage('Profile update failed');
+      setShowErrorModal(true);
     } finally {
       setLoading(false);
     }
@@ -162,32 +148,28 @@ const [showErrorModal, setShowErrorModal] = useState(false);
     handleImageClick,
     handleImageUpload,
     handleSubmit,
-      showSuccessModal,
-  showErrorModal,
- 
-      successMessage,
-        errorMessage,
-  setShowSuccessModal,
-  setShowErrorModal,
+    showSuccessModal,
+    showErrorModal,
+
+    successMessage,
+    errorMessage,
+    setShowSuccessModal,
+    setShowErrorModal,
   };
 };
 
-
 export const useGetProviderEmail = (providerId: string) => {
-const [providerData, setProviderData] = useState<any>(null);
+  const [providerData, setProviderData] = useState<any>(null);
 
-useEffect(() => {
-  async function fetchProvider() {
-    const data = await getProviderWithEmail(providerId);
-    setProviderData(data);
-  }
-  fetchProvider();
-}, [providerId]);
+  useEffect(() => {
+    async function fetchProvider() {
+      const data = await getProviderWithEmail(providerId);
+      setProviderData(data);
+    }
+    fetchProvider();
+  }, [providerId]);
 
-
-return providerData;
-}
-
-
+  return providerData;
+};
 
 export default useUserProfile;

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useForgotPassword } from "../../hooks/useAuth";
+import { useForgotPassword } from '../../hooks/useAuth';
 import {
   Card,
   CardHeader,
@@ -8,22 +8,19 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Loader from "../Spinner";
-import SuccessModal from "../SuccessModal";
-import ErrorModal from "../ErrorModal";
-import { useMainNavBar } from "@/hooks/MainNavContext";
-import { Mail, KeyRound, ArrowLeft, Shield } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+} from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import Loader from '../Spinner';
+import SuccessModal from '../SuccessModal';
+import ErrorModal from '../ErrorModal';
+import { useMainNavBar } from '@/hooks/MainNavContext';
+import { Mail, KeyRound, ArrowLeft, Shield } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ForgotPassword() {
-  const {
-    setIsForgotPassword,
-    setIsLogin,
-  } = useMainNavBar();
+  const { setIsForgotPassword, setIsLogin } = useMainNavBar();
 
   const {
     handleBackToLogin,
@@ -35,7 +32,7 @@ export default function ForgotPassword() {
     setSuccessOpen,
     errorOpen,
     setErrorOpen,
-    errorMessage
+    errorMessage,
   } = useForgotPassword({ setIsForgotPassword, setIsLogin });
 
   return (
@@ -71,7 +68,7 @@ export default function ForgotPassword() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale:  0.95, y: 20 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.3 }}
           className="relative w-full max-w-md z-10"
         >
@@ -86,7 +83,6 @@ export default function ForgotPassword() {
               </div>
             )}
 
-       
             <CardHeader className="relative text-center pt-8 pb-6 space-y-4">
               {/* Icon */}
               <div className="inline-flex items-center justify-center w-16 h-16 bg-chart-2 rounded-2xl mb-2 mx-auto shadow-lg">
@@ -94,10 +90,10 @@ export default function ForgotPassword() {
               </div>
 
               <CardTitle className="text-2xl md:text-3xl font-bold text-zinc-950">
-                Forgot Password? 
+                Forgot Password?
               </CardTitle>
               <CardDescription className="text-gray-600 text-base">
-            Enter your email and we'll send you a reset link
+                Enter your email and we'll send you a reset link
               </CardDescription>
             </CardHeader>
 
@@ -123,15 +119,13 @@ export default function ForgotPassword() {
                   />
                 </div>
 
-         
-
                 {/* Submit Button */}
                 <Button
                   type="submit"
                   disabled={loading}
                   className="w-full h-12  bg-chart-2 text-white hover:shadow-lg hover:shadow-chart-2/50 hover:scale-105 transition-all duration-300 rounded-xl font-bold text-base disabled:opacity-50 disabled: cursor-not-allowed"
                 >
-                  {loading ? "Sending..." : "Send Reset Link"}
+                  {loading ? 'Sending...' : 'Send Reset Link'}
                 </Button>
               </form>
             </CardContent>
@@ -150,7 +144,7 @@ export default function ForgotPassword() {
 
               {/* Help Text */}
               <div className="text-center text-xs text-gray-500 pt-2">
-                Remember your password? {" "}
+                Remember your password?{' '}
                 <button
                   onClick={handleBackToLogin}
                   className="cursor-pointer text-chart-2 font-semibold hover:underline"
@@ -164,12 +158,12 @@ export default function ForgotPassword() {
           {/* Additional Help */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity:  1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             className="mt-6 text-center"
           >
             <p className="text-sm text-white/90">
-              Need help? {" "}
+              Need help?{' '}
               <a href="#" className="text-chart-4 font-semibold hover:underline">
                 Contact Support
               </a>

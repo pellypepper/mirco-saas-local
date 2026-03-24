@@ -1,10 +1,18 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import { Filter, Download, Search, TrendingUp, DollarSign, RotateCcw, Calendar} from "lucide-react";
-import DataTable from "./component/DataTable";
-import AdvancedFilterDrawer from "./component/AdvancedFilterDrawer";
-import Loader from "../Spinner";
+import { useState, useMemo } from 'react';
+import {
+  Filter,
+  Download,
+  Search,
+  TrendingUp,
+  DollarSign,
+  RotateCcw,
+  Calendar,
+} from 'lucide-react';
+import DataTable from './component/DataTable';
+import AdvancedFilterDrawer from './component/AdvancedFilterDrawer';
+import Loader from '../Spinner';
 
 const Revenue = ({
   filterOpen,
@@ -24,67 +32,64 @@ const Revenue = ({
   setFilterOpen: (open: boolean) => void;
   handleFilterClose: () => void;
   handleFilterReset: () => void;
-  filterState:  any;
+  filterState: any;
   handleSearch: (term: string) => void;
   handleFilterOpen: () => void;
   handleFilterApply: (state: any) => void;
-  handleExportAll: (type: "csv" | "xlsx" | "pdf") => () => void;
+  handleExportAll: (type: 'csv' | 'xlsx' | 'pdf') => () => void;
   loading: boolean;
   uniqueServices?: string[];
 }) => {
-  const [query, setQuery] = useState("");
-
+  const [query, setQuery] = useState('');
 
   // ----------------------------
   // Table columns
   // ----------------------------
   const columns = useMemo(
     () => [
-      { key: "full_name", label: "Full Name", sortable: true },
-      { key: "email", label: "Email" },
-      { key: "service_type", label: "Category" },
-      { key: "location", label: "Location" },
-      { key: "country", label: "Country" },
-      { key: "phone_number", label: "Phone" },
-      { key: "website", label: "Website" },
+      { key: 'full_name', label: 'Full Name', sortable: true },
+      { key: 'email', label: 'Email' },
+      { key: 'service_type', label: 'Category' },
+      { key: 'location', label: 'Location' },
+      { key: 'country', label: 'Country' },
+      { key: 'phone_number', label: 'Phone' },
+      { key: 'website', label: 'Website' },
       {
-        key: "payout_enabled",
-        label:  "Payout Enabled",
+        key: 'payout_enabled',
+        label: 'Payout Enabled',
         render: (p: any) => (
           <span
             className={`px-3 py-1 rounded-full text-xs font-medium ${
-              p.payout_enabled
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
+              p.payout_enabled ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
             }`}
           >
-            {p.payout_enabled ? "Yes" : "No"}
+            {p.payout_enabled ? 'Yes' : 'No'}
           </span>
         ),
       },
       {
-        key: "adminFee",
-        label: "Admin Fee",
-        sortable: true,
-        render:  (p: any) =>
-          `$${Number(p.adminFee || 0).toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits:  2,
-          })}`,
-      },
-      {
-        key: "revenue",
-        label: "Revenue",
+        key: 'adminFee',
+        label: 'Admin Fee',
         sortable: true,
         render: (p: any) =>
-          `$${Number(p.revenue || 0).toLocaleString("en-US", {
+          `$${Number(p.adminFee || 0).toLocaleString('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}`,
       },
-      { key: "bookings", label: "Bookings", sortable: true },
+      {
+        key: 'revenue',
+        label: 'Revenue',
+        sortable: true,
+        render: (p: any) =>
+          `$${Number(p.revenue || 0).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`,
+      },
+      { key: 'bookings', label: 'Bookings', sortable: true },
     ],
-    []
+    [],
   );
 
   // ----------------------------
@@ -94,28 +99,28 @@ const Revenue = ({
     const totalRevenue = filtered.reduce((sum, p) => sum + (p.revenue || 0), 0);
     const totalBookings = filtered.reduce((sum, p) => sum + (p.bookings || 0), 0);
     const totalAdminFee = filtered.reduce((sum, p) => sum + (p.adminFee || 0), 0);
-    const avgRevenue = totalBookings ?  totalRevenue / totalBookings : 0;
+    const avgRevenue = totalBookings ? totalRevenue / totalBookings : 0;
 
     return [
       {
-        label: "Total Revenue",
+        label: 'Total Revenue',
         value: `$${totalRevenue.toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })}`,
         icon: DollarSign,
       },
-      { label: "Total Bookings", value: totalBookings. toLocaleString(), icon: Calendar },
+      { label: 'Total Bookings', value: totalBookings.toLocaleString(), icon: Calendar },
       {
-        label: "Total Admin Fee",
+        label: 'Total Admin Fee',
         value: `$${totalAdminFee.toLocaleString(undefined, {
-          minimumFractionDigits:  2,
+          minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })}`,
         icon: DollarSign,
       },
       {
-        label:  "Avg per Booking",
+        label: 'Avg per Booking',
         value: `$${avgRevenue.toFixed(2)}`,
         icon: TrendingUp,
       },
@@ -126,9 +131,9 @@ const Revenue = ({
   const activeFiltersCount = useMemo(() => {
     let count = 0;
     if (filterState.startDate) count++;
-    if (filterState. endDate) count++;
-    if (filterState.service && filterState.service !== "All") count++;
-    if (filterState.status && filterState.status !== "All") count++;
+    if (filterState.endDate) count++;
+    if (filterState.service && filterState.service !== 'All') count++;
+    if (filterState.status && filterState.status !== 'All') count++;
     if (filterState.minRevenue !== null) count++;
     if (filterState.maxRevenue !== null) count++;
     return count;
@@ -148,13 +153,13 @@ const Revenue = ({
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Revenue Dashboard</h1>
           <p className="text-slate-600 mt-1">
-            Showing {filtered.length} of {filtered. length} providers
+            Showing {filtered.length} of {filtered.length} providers
           </p>
         </div>
         {activeFiltersCount > 0 && (
           <div className="px-4 py-2 bg-chart-2/10 border border-chart-2/20 rounded-lg">
             <span className="text-sm font-medium text-chart-2">
-              {activeFiltersCount} active filter{activeFiltersCount > 1 ? "s" : ""}
+              {activeFiltersCount} active filter{activeFiltersCount > 1 ? 's' : ''}
             </span>
           </div>
         )}
@@ -172,7 +177,7 @@ const Revenue = ({
               <p className="text-2xl font-bold text-slate-900">{s.value}</p>
             </div>
             <div className="p-3 bg-chart-2/10 rounded-xl">
-              <s. icon className="w-6 h-6 text-chart-2/60" />
+              <s.icon className="w-6 h-6 text-chart-2/60" />
             </div>
           </div>
         ))}
@@ -205,33 +210,33 @@ const Revenue = ({
           )}
         </button>
         {activeFiltersCount > 0 && (
-  <button
-    onClick={handleFilterReset}
-    className="px-6 py-3 bg-red-50 border-2 border-red-200 text-red-700 rounded-xl font-medium hover:bg-red-100 transition-all flex items-center gap-2"
-  >
-    <RotateCcw className="w-4 h-4" />
-    Clear Filters
-  </button>
-)}
+          <button
+            onClick={handleFilterReset}
+            className="px-6 py-3 bg-red-50 border-2 border-red-200 text-red-700 rounded-xl font-medium hover:bg-red-100 transition-all flex items-center gap-2"
+          >
+            <RotateCcw className="w-4 h-4" />
+            Clear Filters
+          </button>
+        )}
         <div className="relative group">
           <button className="px-6 py-3 bg-chart-2/80 text-white rounded-xl flex items-center gap-2 hover:bg-chart-2 transition-colors">
             <Download className="w-5 h-5" /> Export
           </button>
           <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
             <button
-              onClick={handleExportAll("csv")}
+              onClick={handleExportAll('csv')}
               className="w-full p-3 text-left hover:bg-slate-50 rounded-t-xl transition-colors"
             >
               Export as CSV
             </button>
             <button
-              onClick={handleExportAll("xlsx")}
+              onClick={handleExportAll('xlsx')}
               className="w-full p-3 text-left hover:bg-slate-50 transition-colors"
             >
               Export as XLSX
             </button>
             <button
-              onClick={handleExportAll("pdf")}
+              onClick={handleExportAll('pdf')}
               className="w-full p-3 text-left hover:bg-slate-50 rounded-b-xl transition-colors"
             >
               Export as PDF

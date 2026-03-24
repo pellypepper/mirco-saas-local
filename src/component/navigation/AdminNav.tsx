@@ -1,15 +1,25 @@
-"use client";
-import { Bell, Settings, LogOut, CalendarCheck, Shield, Menu, Users, DollarSign, X } from "lucide-react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useNotifications } from "@/hooks/useNotification";
-import { notificationService } from "@/services/notificationService";
+'use client';
+import {
+  Bell,
+  Settings,
+  LogOut,
+  CalendarCheck,
+  Shield,
+  Menu,
+  Users,
+  DollarSign,
+  X,
+} from 'lucide-react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useNotifications } from '@/hooks/useNotification';
+import { notificationService } from '@/services/notificationService';
 
 const AdminNav = ({
   handleLogout,
   user,
   profile,
-}:  {
+}: {
   handleLogout: () => void;
   user: any;
   profile: any;
@@ -18,14 +28,8 @@ const AdminNav = ({
   const [menuOpen, setMenuOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
 
-  const {
-    notifications,
-    unreadCount,
-    markAsRead,
-    markAllAsRead,
-    clearAll,
-    deleteNotification,
-  } = useNotifications();
+  const { notifications, unreadCount, markAsRead, markAllAsRead, clearAll, deleteNotification } =
+    useNotifications();
 
   const handleNotificationClick = (notification: any) => {
     markAsRead(notification.id);
@@ -54,7 +58,7 @@ const AdminNav = ({
           <div className="flex items-center gap-3 relative">
             {/* Notification Button */}
             <button
-              onClick={() => setNotificationOpen(! notificationOpen)}
+              onClick={() => setNotificationOpen(!notificationOpen)}
               className="relative p-2 hover:bg-slate-100 rounded-xl transition-colors"
             >
               <Bell className="w-5 h-5 text-slate-600" />
@@ -117,12 +121,14 @@ const AdminNav = ({
                           <li
                             key={notification.id}
                             className={`group relative px-4 py-3 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 ${
-                              ! notification.read ? 'bg-blue-50/30' : ''
+                              !notification.read ? 'bg-blue-50/30' : ''
                             }`}
                             onClick={() => handleNotificationClick(notification)}
                           >
                             <div className="flex items-start gap-3">
-                              <div className={`w-10 h-10 rounded-lg ${style.color} flex items-center justify-center flex-shrink-0 text-lg`}>
+                              <div
+                                className={`w-10 h-10 rounded-lg ${style.color} flex items-center justify-center flex-shrink-0 text-lg`}
+                              >
                                 {style.icon}
                               </div>
                               <div className="flex-1 min-w-0">
@@ -141,8 +147,8 @@ const AdminNav = ({
                               </div>
                               <button
                                 onClick={(e) => {
-                                  e. stopPropagation();
-                                  deleteNotification(notification. id);
+                                  e.stopPropagation();
+                                  deleteNotification(notification.id);
                                 }}
                                 className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 rounded transition-all"
                               >
@@ -185,32 +191,40 @@ const AdminNav = ({
               <div className="absolute top-12 right-14 w-56 bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden">
                 <ul className="flex flex-col py-2">
                   <li
-                    onClick={() => (router.push("/dashboard/Admin"), setMenuOpen(false))}
+                    onClick={() => (router.push('/dashboard/Admin'), setMenuOpen(false))}
                     className="px-4 py-3 hover:bg-gradient-to-r hover:from-chart-2/20 hover:tochart-3/20 cursor-pointer transition-all flex items-center gap-3 group"
                   >
                     <Settings className="w-4 h-4 text-gray-600 group-hover:text-chart-2 transition-colors" />
-                    <span className="font-medium text-gray-700 group-hover:text-chart-2">Dashboard</span>
+                    <span className="font-medium text-gray-700 group-hover:text-chart-2">
+                      Dashboard
+                    </span>
                   </li>
                   <li
-                    onClick={() => (router.push("/dashboard/Admin/revenue"), setMenuOpen(false))}
+                    onClick={() => (router.push('/dashboard/Admin/revenue'), setMenuOpen(false))}
                     className="px-4 py-3 hover:bg-gradient-to-r hover: from-chart-2/20 hover: tochart-3/20 cursor-pointer transition-all flex items-center gap-3 group"
                   >
                     <DollarSign className="w-4 h-4 text-gray-600 group-hover:text-chart-2 transition-colors" />
-                    <span className="font-medium text-gray-700 group-hover:text-chart-2">Revenue & Payout</span>
+                    <span className="font-medium text-gray-700 group-hover:text-chart-2">
+                      Revenue & Payout
+                    </span>
                   </li>
                   <li
-                    onClick={() => (router.push("/dashboard/Admin/users"), setMenuOpen(false))}
+                    onClick={() => (router.push('/dashboard/Admin/users'), setMenuOpen(false))}
                     className="px-4 py-3 hover:bg-gradient-to-r hover:from-chart-2/20 hover:tochart-3/20 cursor-pointer transition-all flex items-center gap-3 group"
                   >
                     <Users className="w-4 h-4 text-gray-600 group-hover:text-chart-2 transition-colors" />
-                    <span className="font-medium text-gray-700 group-hover:text-chart-2">User Management</span>
+                    <span className="font-medium text-gray-700 group-hover:text-chart-2">
+                      User Management
+                    </span>
                   </li>
                   <li
-                    onClick={() => (router.push("/dashboard/Admin/booking"), setMenuOpen(false))}
+                    onClick={() => (router.push('/dashboard/Admin/booking'), setMenuOpen(false))}
                     className="px-4 py-3 hover:bg-gradient-to-r hover: from-chart-2/20 hover: tochart-3/20 cursor-pointer transition-all flex items-center gap-3 group"
                   >
                     <CalendarCheck className="w-4 h-4 text-gray-600 group-hover:text-chart-2 transition-colors" />
-                    <span className="font-medium text-gray-700 group-hover:text-chart-2">Bookings</span>
+                    <span className="font-medium text-gray-700 group-hover:text-chart-2">
+                      Bookings
+                    </span>
                   </li>
                   <div className="h-px bg-slate-200 my-2"></div>
                   <li
@@ -218,7 +232,9 @@ const AdminNav = ({
                     className="px-4 py-3 hover:bg-gradient-to-r hover:from-chart-1/20 hover:to-chart-4/20 cursor-pointer transition-all flex items-center gap-3 group"
                   >
                     <LogOut className="w-4 h-4 text-gray-600 group-hover:text-chart-1 transition-colors" />
-                    <span className="font-medium text-gray-700 group-hover:text-chart-1">Logout</span>
+                    <span className="font-medium text-gray-700 group-hover:text-chart-1">
+                      Logout
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -230,11 +246,13 @@ const AdminNav = ({
             {/* User */}
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold text-slate-900">{profile?.full_name || "Admin"}</p>
+                <p className="text-sm font-semibold text-slate-900">
+                  {profile?.full_name || 'Admin'}
+                </p>
                 <p className="text-xs text-slate-500">{user?.email}</p>
               </div>
               <div className="w-9 h-9 rounded-full bg-chart-2 flex items-center justify-center text-white font-bold shadow-lg">
-                {profile?.full_name?.[0]?.toUpperCase() || "A"}
+                {profile?.full_name?.[0]?.toUpperCase() || 'A'}
               </div>
             </div>
           </div>

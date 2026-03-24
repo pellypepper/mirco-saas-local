@@ -1,10 +1,9 @@
+'use client';
 
-"use client";
-
-import { useState } from "react";
+import { useState } from 'react';
 
 export const useDashboardModals = () => {
-  const [isMounted, setIsMounted] = useState(false); 
+  const [isMounted, setIsMounted] = useState(false);
   const [emailOpen, setEmailOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
 

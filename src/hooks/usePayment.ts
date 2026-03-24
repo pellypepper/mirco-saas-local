@@ -1,7 +1,7 @@
-"use client"; 
+'use client';
 
-import { useState, useEffect } from "react";
-import { fetchBookingByPayment, fetchService, fetchProfile } from "@/services/PaymentService";
+import { useState, useEffect } from 'react';
+import { fetchBookingByPayment, fetchService, fetchProfile } from '@/services/PaymentService';
 
 export const useBooking = (sessionId: string | null, customerId: string | null) => {
   const [booking, setBooking] = useState<any>(null);

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { X, Calendar, Clock, RefreshCw, CheckCircle } from "lucide-react";
-import { BookingCustomer } from "@/types/type";
-import { useCustomerModal } from "@/hooks/useModal";
-import SuccessModal from "@/component/SuccessModal";
-import { useMainNavBar } from "@/hooks/MainNavContext";
+import { X, Calendar, Clock, RefreshCw, CheckCircle } from 'lucide-react';
+import { BookingCustomer } from '@/types/type';
+import { useCustomerModal } from '@/hooks/useModal';
+import SuccessModal from '@/component/SuccessModal';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
 const RescheduleModal = ({
   booking,
@@ -30,20 +30,22 @@ const RescheduleModal = ({
     handleReschedule,
   } = useCustomerModal({ onReschedule, onClose, booking });
 
-  const minDate = new Date().toISOString().split("T")[0];
+  const minDate = new Date().toISOString().split('T')[0];
 
   /* THEME TOKENS */
-  const surface = isDarkMode ? "bg-zinc-800" : "bg-white";
-  const surfaceSoft = isDarkMode ? "bg-zinc-900" : "bg-zinc-100";
-  const surfaceInner = isDarkMode ? "bg-zinc-900" : "bg-white";
-  const border = isDarkMode ? "border-zinc-700" : "border-zinc-300";
+  const surface = isDarkMode ? 'bg-zinc-800' : 'bg-white';
+  const surfaceSoft = isDarkMode ? 'bg-zinc-900' : 'bg-zinc-100';
+  const surfaceInner = isDarkMode ? 'bg-zinc-900' : 'bg-white';
+  const border = isDarkMode ? 'border-zinc-700' : 'border-zinc-300';
 
-  const textPrimary = isDarkMode ? "text-white" : "text-zinc-900";
-  const textSecondary = isDarkMode ? "text-zinc-400" : "text-zinc-600";
-  const textMuted = "text-zinc-500";
+  const textPrimary = isDarkMode ? 'text-white' : 'text-zinc-900';
+  const textSecondary = isDarkMode ? 'text-zinc-400' : 'text-zinc-600';
+  const textMuted = 'text-zinc-500';
 
   return (
-  <div className={`${isDarkMode ? "bg-black/50" : "bg-white/50"} fixed inset-0  backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-300`}>
+    <div
+      className={`${isDarkMode ? 'bg-black/50' : 'bg-white/50'} fixed inset-0  backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-300`}
+    >
       <div
         className={`rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl animate-in zoom-in duration-500 border-2 ${surface} ${border}`}
       >
@@ -55,12 +57,8 @@ const RescheduleModal = ({
                 <RefreshCw size={24} className="text-white" />
               </div>
               <div>
-                <h2 className="text-3xl font-black text-white">
-                  Reschedule Appointment
-                </h2>
-                <p className="text-white/90 text-sm font-medium">
-                  Choose a new date and time
-                </p>
+                <h2 className="text-3xl font-black text-white">Reschedule Appointment</h2>
+                <p className="text-white/90 text-sm font-medium">Choose a new date and time</p>
               </div>
             </div>
             <button
@@ -76,22 +74,18 @@ const RescheduleModal = ({
         <div className="overflow-y-auto max-h-[calc(90vh-200px)] p-6 space-y-6 custom-scrollbar">
           {/* CURRENT BOOKING */}
           <div className={`rounded-2xl p-5 border-2 ${surfaceSoft} ${border}`}>
-            <p className={`text-xs font-bold uppercase mb-2 ${textMuted}`}>
-              Current Appointment
-            </p>
-            <p className={`font-black text-xl mb-1 ${textPrimary}`}>
-              {booking.services.title}
-            </p>
+            <p className={`text-xs font-bold uppercase mb-2 ${textMuted}`}>Current Appointment</p>
+            <p className={`font-black text-xl mb-1 ${textPrimary}`}>{booking.services.title}</p>
             <p className={textSecondary}>
-              {new Date(booking.booking_date).toLocaleDateString("en-US", {
-                weekday: "short",
-                month: "short",
-                day: "numeric",
-              })}{" "}
-              at{" "}
-              {new Date(booking.booking_date).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
+              {new Date(booking.booking_date).toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+              })}{' '}
+              at{' '}
+              {new Date(booking.booking_date).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
               })}
             </p>
           </div>
@@ -130,13 +124,13 @@ const RescheduleModal = ({
               {loading ? (
                 <div className="text-center py-12">
                   <div className="w-12 h-12 border-4 border-chart-2 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                  <p className={`${textMuted} font-medium mt-4`}>
-                    Loading available slots...
-                  </p>
+                  <p className={`${textMuted} font-medium mt-4`}>Loading available slots...</p>
                 </div>
               ) : availableSlots.filter((s) => !s.is_booked).length === 0 ? (
                 <div className={`text-center py-12 rounded-2xl border-2 ${surfaceSoft} ${border}`}>
-                  <div className={`inline-flex p-4 rounded-full border-2 mb-3 ${surfaceInner} ${border}`}>
+                  <div
+                    className={`inline-flex p-4 rounded-full border-2 mb-3 ${surfaceInner} ${border}`}
+                  >
                     <Clock size={32} className="text-zinc-500" />
                   </div>
                   <p className={textMuted}>No available slots for this date</p>
@@ -159,7 +153,7 @@ const RescheduleModal = ({
                           }}
                           className={`group relative px-4 py-4 rounded-xl font-bold transition-all duration-300 border-2 ${
                             selectedTime === label
-                              ? "bg-chart-2 text-white border-transparent"
+                              ? 'bg-chart-2 text-white border-transparent'
                               : `${surfaceInner} ${border} ${textSecondary} hover:border-chart-2`
                           }`}
                         >
@@ -172,9 +166,7 @@ const RescheduleModal = ({
                               />
                             </>
                           )}
-                          <span className="relative block text-center">
-                            {label}
-                          </span>
+                          <span className="relative block text-center">{label}</span>
                         </button>
                       );
                     })}
@@ -199,15 +191,15 @@ const RescheduleModal = ({
               className={`group flex-1 px-6 py-4 rounded-xl font-bold transition-all duration-300 relative overflow-hidden ${
                 !selectedDate || !selectedTime || loading
                   ? `${surfaceInner} ${border} text-zinc-400 cursor-not-allowed border-2`
-                  : "bg-chart-2 text-white hover:shadow-[0_0_30px_rgba(235,115,35,0.3)]"
+                  : 'bg-chart-2 text-white hover:shadow-[0_0_30px_rgba(235,115,35,0.3)]'
               }`}
             >
               {!loading && selectedDate && selectedTime && (
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
               )}
               <span className="relative flex items-center justify-center gap-2">
-                <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
-                {loading ? "Rescheduling..." : "Confirm Reschedule"}
+                <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
+                {loading ? 'Rescheduling...' : 'Confirm Reschedule'}
               </span>
             </button>
           </div>
@@ -228,7 +220,7 @@ const RescheduleModal = ({
           width: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: ${isDarkMode ? "#27272a" : "#e5e7eb"};
+          background: ${isDarkMode ? '#27272a' : '#e5e7eb'};
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {

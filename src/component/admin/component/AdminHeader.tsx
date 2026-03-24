@@ -1,6 +1,6 @@
-"use client";
-import { Filter, Download, Search } from "lucide-react";
-import { useState } from "react";
+'use client';
+import { Filter, Download, Search } from 'lucide-react';
+import { useState } from 'react';
 
 interface AdminHeaderProps {
   onSearch?: (value: string) => void;
@@ -9,7 +9,7 @@ interface AdminHeaderProps {
 }
 
 const AdminHeader = ({ onSearch, onFilter, onExport }: AdminHeaderProps) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -25,8 +25,6 @@ const AdminHeader = ({ onSearch, onFilter, onExport }: AdminHeaderProps) => {
           Welcome back! Here's what's happening today.
         </p>
       </div>
-
-     
     </div>
   );
 };

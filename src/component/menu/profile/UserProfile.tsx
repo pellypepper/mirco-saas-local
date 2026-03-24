@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { Camera, X, User, CheckCircle } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import Loader from "../../Spinner";
-import useUserProfile from "@/hooks/useUserProfile";
-import { useMainNavBar } from "@/hooks/MainNavContext";
-import SuccessModal from "@/component/SuccessModal";
-import ErrorModal from "@/component/ErrorModal";
+import Image from 'next/image';
+import { Camera, X, User, CheckCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import Loader from '../../Spinner';
+import useUserProfile from '@/hooks/useUserProfile';
+import { useMainNavBar } from '@/hooks/MainNavContext';
+import SuccessModal from '@/component/SuccessModal';
+import ErrorModal from '@/component/ErrorModal';
 
 interface ProviderProfileProps {
   profile: any;
@@ -36,20 +36,17 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
     setShowSuccessModal,
     setShowErrorModal,
 
-      successMessage,
-        errorMessage,
-
+    successMessage,
+    errorMessage,
   } = useUserProfile(profile);
 
   /* THEME TOKENS */
-  const surface = isDarkMode ? "bg-zinc-800" : "bg-white";
-  const surfaceSoft = isDarkMode ? "bg-zinc-900" : "bg-zinc-100";
-  const border = isDarkMode ? "border-zinc-700" : "border-zinc-200";
+  const surface = isDarkMode ? 'bg-zinc-800' : 'bg-white';
+  const surfaceSoft = isDarkMode ? 'bg-zinc-900' : 'bg-zinc-100';
+  const border = isDarkMode ? 'border-zinc-700' : 'border-zinc-200';
 
-  const textPrimary = isDarkMode ? "text-white" : "text-zinc-900";
-  const textMuted = "text-zinc-500";
-
-  
+  const textPrimary = isDarkMode ? 'text-white' : 'text-zinc-900';
+  const textMuted = 'text-zinc-500';
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-md z-50 px-4 animate-in fade-in duration-300">
@@ -66,12 +63,8 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
                 <User size={20} className="text-white" />
               </div>
               <div>
-                <h2 className="text-xl md:text-3xl font-black text-white">
-                  Edit Profile
-                </h2>
-                <p className="text-white/90 text-sm font-medium">
-                  Update your information
-                </p>
+                <h2 className="text-xl md:text-3xl font-black text-white">Edit Profile</h2>
+                <p className="text-white/90 text-sm font-medium">Update your information</p>
               </div>
             </div>
 
@@ -91,14 +84,9 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
           {/* PROFILE IMAGE */}
           <div className="flex flex-col items-center">
             <div className="relative group mb-6">
-             
-
               <div className="relative">
                 {imageUrl ? (
-                  <div
-                    onClick={handleImageClick}
-                    className="relative cursor-pointer group/img"
-                  >
+                  <div onClick={handleImageClick} className="relative cursor-pointer group/img">
                     <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-zinc-900 shadow-2xl">
                       <Image
                         src={imageUrl}
@@ -127,9 +115,7 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
 
               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2">
                 <div className="px-3 py-1 bg-zinc-700 rounded-full border-2 border-zinc-900 shadow-lg">
-                  <span className="text-white text-xs font-bold uppercase">
-                    Change Photo
-                  </span>
+                  <span className="text-white text-xs font-bold uppercase">Change Photo</span>
                 </div>
               </div>
             </div>
@@ -155,7 +141,7 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
                   {field.label}
                 </Label>
 
-                {field.type === "textarea" ? (
+                {field.type === 'textarea' ? (
                   <textarea
                     id={field.id}
                     value={formData[field.id as keyof typeof formData]}
@@ -185,13 +171,9 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
               type="submit"
               disabled={loading}
               className={`group w-full py-4 rounded-xl font-bold transition-all duration-300 relative overflow-hidden ${
-                loading
-                  ? `${surfaceSoft} ${border} text-zinc-600`
-                  : "bg-chart-2 text-white"
+                loading ? `${surfaceSoft} ${border} text-zinc-600` : 'bg-chart-2 text-white'
               }`}
             >
-        
-
               <span className="relative flex items-center justify-center gap-2">
                 {loading ? (
                   <>
@@ -224,25 +206,24 @@ const UserProfile = ({ profile, onClose }: ProviderProfileProps) => {
       </div>
 
       {showSuccessModal && (
-  <SuccessModal
-  open={showSuccessModal}
-   message={successMessage}
-    onClose={() => setShowSuccessModal(false)}
-  />
-)}
+        <SuccessModal
+          open={showSuccessModal}
+          message={successMessage}
+          onClose={() => setShowSuccessModal(false)}
+        />
+      )}
 
-{showErrorModal && (
-  <ErrorModal
-  open={showErrorModal}
-    message={errorMessage}
-    onClose={() => setShowErrorModal(false)}
-  />
-)}
+      {showErrorModal && (
+        <ErrorModal
+          open={showErrorModal}
+          message={errorMessage}
+          onClose={() => setShowErrorModal(false)}
+        />
+      )}
 
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 5px;
-         
         }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: #27272a;

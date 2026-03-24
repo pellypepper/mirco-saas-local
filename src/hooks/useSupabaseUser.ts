@@ -1,6 +1,6 @@
-"use client";
-import { useEffect, useState } from "react";
-import { supabase } from "../libs/supabaseClient";
+'use client';
+import { useEffect, useState } from 'react';
+import { supabase } from '../libs/supabaseClient';
 
 export function useSupabaseUser() {
   const [user, setUser] = useState<any>(null);

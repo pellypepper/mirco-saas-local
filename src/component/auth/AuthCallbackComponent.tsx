@@ -1,21 +1,20 @@
-"use client";
+'use client';
 
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import Loader from "@/component/Spinner";
-import { useMainNavBar } from "@/hooks/MainNavContext";
+import Loader from '@/component/Spinner';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
 function CallbackContent() {
-
   const { isDarkMode } = useMainNavBar();
 
-  const bgPrimary = isDarkMode ? "bg-zinc-900" : "bg-zinc-50";
+  const bgPrimary = isDarkMode ? 'bg-zinc-900' : 'bg-zinc-50';
 
   return (
     <div className={`min-h-screen ${bgPrimary} flex items-center justify-center`}>
       <div className="text-center">
         <Loader message="Completing sign in..." />
-        <p className={`mt-4 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}>
+        <p className={`mt-4 text-sm ${isDarkMode ? 'text-zinc-400' : 'text-zinc-600'}`}>
           Please wait while we authenticate your account
         </p>
       </div>

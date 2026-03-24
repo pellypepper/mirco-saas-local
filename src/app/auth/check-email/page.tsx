@@ -1,12 +1,7 @@
+'use client';
 
-"use client";
-
-import CheckEmail from "@/component/auth/CheckEmail";
+import CheckEmail from '@/component/auth/CheckEmail';
 
 export default function CheckEmailPage() {
-
-
-  return (
-    <CheckEmail />
-  );
+  return <CheckEmail />;
 }

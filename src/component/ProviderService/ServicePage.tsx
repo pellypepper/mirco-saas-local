@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import  ServiceHeader from "@/component/ProviderService/component/serviceHeader";
-import ServiceMain from "@/component/ProviderService/component/serviceMain";
-import ServiceGrid from "@/component/ProviderService/component/serviceGrid";
-import Services from "@/hooks/useServices";
-import { useMainNavBar } from "@/hooks/MainNavContext";
+import ServiceHeader from '@/component/ProviderService/component/serviceHeader';
+import ServiceMain from '@/component/ProviderService/component/serviceMain';
+import ServiceGrid from '@/component/ProviderService/component/serviceGrid';
+import Services from '@/hooks/useServices';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
 export default function ServicesPage() {
-  const { 
+  const {
     services,
     currencies,
     selectedCurrency,
@@ -25,7 +25,18 @@ export default function ServicesPage() {
     serviceDuration,
     setServiceDuration,
     cancelEdit,
-    handleDeleteService
+    handleDeleteService,
+    showSuccess,
+    setShowSuccess,
+    successMessage,
+    showError,
+    setShowError,
+    errorMessage,
+    showDelete,
+    setShowDelete,
+    deleteMessage,
+
+
   } = Services();
 
   const { isDarkMode } = useMainNavBar();
@@ -33,22 +44,28 @@ export default function ServicesPage() {
   const totalRevenue = services.reduce((sum, s) => sum + s.price, 0);
 
   return (
-    <div className={`"min-h-screen ${isDarkMode ? "bg-zinc-800" : "bg-white"} p-4 md:p-8"`}>
+    <div className={`"min-h-screen ${isDarkMode ? 'bg-zinc-800' : 'bg-white'} p-4 md:p-8"`}>
       <div className=" mx-auto space-y-6">
-        
         {/* HERO HEADER */}
         <ServiceHeader
-          services={services} 
+          services={services}
           totalRevenue={totalRevenue}
           selectedCurrency={selectedCurrency}
           serviceCurrency={serviceCurrency}
-         
-
         />
 
         {/* ADD/EDIT SERVICE FORM */}
-     <ServiceMain
+        <ServiceMain
           handleAddService={handleAddService}
+          showSuccess={showSuccess}
+          setShowSuccess={setShowSuccess}
+          successMessage={successMessage}
+         
+          showError={showError}
+          setShowError={setShowError}
+          errorMessage={errorMessage}
+         
+
           serviceName={serviceName}
           setServiceName={setServiceName}
           servicePrice={servicePrice}
@@ -63,16 +80,20 @@ export default function ServicesPage() {
           cancelEdit={cancelEdit}
           selectedCurrency={selectedCurrency}
           currencies={currencies}
- isDarkMode={isDarkMode}
+          isDarkMode={isDarkMode}
         />
 
         {/* SERVICES GRID */}
         <ServiceGrid
           services={services}
-         currencies={currencies}
+          currencies={currencies}
           handleEditService={handleEditService}
           handleDeleteService={handleDeleteService}
-           isDarkMode={isDarkMode}
+          isDarkMode={isDarkMode}
+            showDelete={showDelete}
+            setShowDelete={setShowDelete}
+            deleteMessage={deleteMessage}
+           
         />
       </div>
     </div>

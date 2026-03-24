@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useSearchParams } from "next/navigation"; // ✅ add this
-import { useEffect } from "react";       
-import { useResetPasswordForm } from "@/hooks/useResetPasswordForm";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import Loader from "../../component/Spinner";
-import SuccessModal from "../../component/SuccessModal";
-import ErrorModal from "../../component/ErrorModal";
-import { useMainNavBar } from "@/hooks/MainNavContext";
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation'; // ✅ add this
+import { useEffect } from 'react';
+import { useResetPasswordForm } from '@/hooks/useResetPasswordForm';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import Loader from '../../component/Spinner';
+import SuccessModal from '../../component/SuccessModal';
+import ErrorModal from '../../component/ErrorModal';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
-import { MeshGradient } from "@paper-design/shaders-react";
-import { KeyRound, Lock, ShieldCheck } from "lucide-react";
+import { MeshGradient } from '@paper-design/shaders-react';
+import { KeyRound, Lock, ShieldCheck } from 'lucide-react';
 
 export default function ResetPasswordPage() {
   const { setIsLogin } = useMainNavBar();
-    const searchParams = useSearchParams(); 
+  const searchParams = useSearchParams();
   const {
     newPassword,
     setNewPassword,
     confirmPassword,
     setConfirmPassword,
     loading,
-setErrorMessage,
+    setErrorMessage,
     successOpen,
     setSuccessOpen,
     errorOpen,
@@ -35,15 +35,13 @@ setErrorMessage,
     tokenVerified,
   } = useResetPasswordForm();
 
-    useEffect(() => {
-    const error = searchParams.get("error");
+  useEffect(() => {
+    const error = searchParams.get('error');
     if (error) {
       setErrorMessage(decodeURIComponent(error));
       setErrorOpen(true);
     }
   }, [searchParams, setErrorMessage, setErrorOpen]);
-
- 
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -67,24 +65,24 @@ setErrorMessage,
         {/* Mesh Gradient Background */}
         <div className="absolute inset-0 pointer-events-none opacity-40">
           <MeshGradient
-            colors={["#219ebc", "#219ebc", "#219ebc", "#219ebc"]}
+            colors={['#219ebc', '#219ebc', '#219ebc', '#219ebc']}
             distortion={0.8}
             speed={0.6}
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: '100%', height: '100%' }}
           />
         </div>
 
         {/* Decorative gradients */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-chart-3/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-chart-2/20 rounded-full blur-3xl animate-pulse delay-1000" />
-        
+
         {/* Grid Pattern Overlay */}
-        <div 
+        <div
           className="absolute inset-0 opacity-10"
           style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
                             linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
-            backgroundSize: '50px 50px'
+            backgroundSize: '50px 50px',
           }}
         />
       </div>
@@ -101,13 +99,12 @@ setErrorMessage,
         <CardHeader className="text-center px-8 ">
           <div className="flex justify-center">
             <div className="relative">
-           
               <div className="relative bg-chart-2 p-4 rounded-2xl shadow-lg">
                 <KeyRound className="w-8 h-8 text-white" />
               </div>
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <CardTitle className="text-xl md:text-2xl font-bold text-white">
               Reset Password
@@ -135,8 +132,8 @@ setErrorMessage,
           <form onSubmit={handleSubmit} className="">
             {/* New Password */}
             <div className="space-y-2">
-              <Label 
-                htmlFor="newPassword" 
+              <Label
+                htmlFor="newPassword"
                 className="text-white font-medium flex items-center gap-2"
               >
                 <Lock className="w-4 h-4 text-chart-4" />
@@ -154,15 +151,13 @@ setErrorMessage,
                   className="bg-white/5 border-white/10 text-white placeholder:text-gray-400 focus:border-chart-2 focus:ring-chart-2/50 h-12 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
-              <p className="text-xs text-gray-400 mt-1">
-                Must be at least 6 characters long
-              </p>
+              <p className="text-xs text-gray-400 mt-1">Must be at least 6 characters long</p>
             </div>
 
             {/* Confirm Password */}
             <div className="space-y-2 mt-2">
-              <Label 
-                htmlFor="confirmPassword" 
+              <Label
+                htmlFor="confirmPassword"
                 className="text-white font-medium flex items-center gap-2"
               >
                 <ShieldCheck className="w-4 h-4 text-chart-4" />
@@ -183,9 +178,9 @@ setErrorMessage,
             </div>
 
             {/* Submit Button */}
-            <Button 
-              type="submit" 
-              className="w-full h-10 md:h-12 bg-chart-2 hover:bg-chart-2/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-3" 
+            <Button
+              type="submit"
+              className="w-full h-10 md:h-12 bg-chart-2 hover:bg-chart-2/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-3"
               disabled={loading || !tokenVerified}
             >
               {loading ? (
@@ -210,27 +205,26 @@ setErrorMessage,
           {/* Security Notice */}
           <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-xl">
             <p className="text-xs text-gray-300 text-center leading-relaxed">
-              <span className="font-semibold text-white">Security Tip:</span> Use a strong password with a mix of letters, numbers, and special characters.
+              <span className="font-semibold text-white">Security Tip:</span> Use a strong password
+              with a mix of letters, numbers, and special characters.
             </p>
           </div>
         </CardContent>
-        
-          {/* Footer Text */}
-      <div className="  text-center">
-        <p className="text-sm text-gray-400">
-          Remember your password?{" "}
-         <Link
-  href="/"
-  className="text-white hover:text-chart-3 font-semibold transition-colors duration-200"
-  onClick={() => setIsLogin(true)}
->
-  Sign in instead
-</Link>
-        </p>
-      </div>
-      </Card>
 
-    
+        {/* Footer Text */}
+        <div className="  text-center">
+          <p className="text-sm text-gray-400">
+            Remember your password?{' '}
+            <Link
+              href="/"
+              className="text-white hover:text-chart-3 font-semibold transition-colors duration-200"
+              onClick={() => setIsLogin(true)}
+            >
+              Sign in instead
+            </Link>
+          </p>
+        </div>
+      </Card>
     </div>
   );
 }

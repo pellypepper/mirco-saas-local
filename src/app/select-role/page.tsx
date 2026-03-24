@@ -1,11 +1,7 @@
-"use client";
+'use client';
 
-import MainDisplay from "@/component/select-role/MainDisplay";
+import MainDisplay from '@/component/select-role/MainDisplay';
 
 export default function SelectRolePage() {
- 
-
-  return (
-      <MainDisplay /> 
-  );
+  return <MainDisplay />;
 }

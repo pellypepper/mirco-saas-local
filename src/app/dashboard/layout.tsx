@@ -1,23 +1,21 @@
-"use client";
+'use client';
 
-import { ReactNode, useState, useEffect } from "react";
-import Navbar from "@/component/navigation/DashboardNavbar";
-import { UserProvider } from "@/hooks/UserContext";
-import UserProfile from "@/component/menu/profile/UserProfile";
-import Loader from "@/component/Spinner";
-import { ChangeEmailModal, ChangePasswordModal } from "@/component/menu/setting/UserSetting";
-import { useDashboardAuth } from "@/hooks/dashboard/useDashboardAuth";
-import { useDashboardLayout } from "@/hooks/useDashboardLayout";
-import useUserProfile from "@/hooks/useUserProfile";
-import Notification from "@/component/Notification";
+import { ReactNode, useState, useEffect } from 'react';
+import Navbar from '@/component/navigation/DashboardNavbar';
+import { UserProvider } from '@/hooks/UserContext';
+import UserProfile from '@/component/menu/profile/UserProfile';
+import Loader from '@/component/Spinner';
+import { ChangeEmailModal, ChangePasswordModal } from '@/component/menu/setting/UserSetting';
+import { useDashboardAuth } from '@/hooks/dashboard/useDashboardAuth';
+import { useDashboardLayout } from '@/hooks/useDashboardLayout';
+import useUserProfile from '@/hooks/useUserProfile';
+import Notification from '@/component/Notification';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-export default function DashboardLayout({
-  children
-}: LayoutProps) {
+export default function DashboardLayout({ children }: LayoutProps) {
   const [isClient, setIsClient] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
@@ -37,7 +35,7 @@ export default function DashboardLayout({
     togglePassword,
     passwordOpen,
     setPasswordOpen,
-    handleLogout
+    handleLogout,
   } = useDashboardLayout();
 
   const { notifications } = useUserProfile(profile);
@@ -48,12 +46,12 @@ export default function DashboardLayout({
   useEffect(() => setIsClient(true), []);
 
   // Notification dropdown animation every 1 minute
- useEffect(() => {
+  useEffect(() => {
     if (!notifications) return;
 
     const runNotificationCycle = () => {
       setShowNotification(true);
-      
+
       setTimeout(() => {
         setShowNotification(false);
       }, 10000);
@@ -89,9 +87,13 @@ export default function DashboardLayout({
         <main>{children}</main>
       </UserProvider>
 
-{notifications && (
-<Notification notifications={notifications} showNotification={showNotification} setShowNotification={setShowNotification} />
-)}
+      {notifications && (
+        <Notification
+          notifications={notifications}
+          showNotification={showNotification}
+          setShowNotification={setShowNotification}
+        />
+      )}
       {isClient && (
         <>
           {isMounted && <UserProfile profile={profile} onClose={() => setIsMounted(false)} />}

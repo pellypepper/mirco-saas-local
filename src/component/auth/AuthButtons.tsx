@@ -1,35 +1,31 @@
-"use client";
-import useOAuthLogin from "@/hooks/useOAuthLogin";
-import Loader from "../Spinner";
-import { useMainNavBar } from "@/hooks/MainNavContext";
+'use client';
+import useOAuthLogin from '@/hooks/useOAuthLogin';
+import Loader from '../Spinner';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
 export default function AuthButtons() {
   const { handleOAuth, loadingProvider } = useOAuthLogin();
   const { isDarkMode } = useMainNavBar(); // Add this hook
 
   /* THEME TOKENS */
-  const buttonBg = isDarkMode ? "bg-white" : "bg-white";
-  const buttonText = isDarkMode ? "text-zinc-900" : "text-zinc-900";
-  const buttonBorder = isDarkMode ? "border-zinc-700" : "border-zinc-300";
-  const buttonHover = isDarkMode ? "hover:bg-zinc-100" : "hover:bg-gray-50";
+  const buttonBg = isDarkMode ? 'bg-white' : 'bg-white';
+  const buttonText = isDarkMode ? 'text-zinc-900' : 'text-zinc-900';
+  const buttonBorder = isDarkMode ? 'border-zinc-700' : 'border-zinc-300';
+  const buttonHover = isDarkMode ? 'hover:bg-zinc-100' : 'hover:bg-gray-50';
 
   return (
     <div className="flex justify-center mt-4">
       <button
-        onClick={() => handleOAuth("google")}
-        disabled={loadingProvider === "google"}
+        onClick={() => handleOAuth('google')}
+        disabled={loadingProvider === 'google'}
         className={`group relative flex items-center justify-center gap-3 ${buttonBg} ${buttonText} w-full py-3 px-6 rounded-xl border-2 ${buttonBorder} ${buttonHover} font-bold transition-all duration-300 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed`}
       >
-        {loadingProvider === "google" ? (
+        {loadingProvider === 'google' ? (
           <Loader message="Logging in..." />
         ) : (
           <>
             {/* Google Icon SVG */}
-            <svg 
-              className="w-5 h-5" 
-              viewBox="0 0 24 24" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                 fill="#4285F4"

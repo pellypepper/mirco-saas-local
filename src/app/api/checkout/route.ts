@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
-import StripeService from "@/services/stripeService";
-import {getAvailabilityById} from "@/services/availabilityService";
-import { getProviderStripeId } from "@/services/providerService";
-import { validateCheckoutInput } from "@/services/validationService";
-import { calculateFees } from "@/services/feeService";
+import { NextResponse } from 'next/server';
+import StripeService from '@/services/stripeService';
+import { getAvailabilityById } from '@/services/availabilityService';
+import { getProviderStripeId } from '@/services/providerService';
+import { validateCheckoutInput } from '@/services/validationService';
+import { calculateFees } from '@/services/feeService';
 
 export async function POST(req: Request) {
   try {
@@ -20,18 +20,15 @@ export async function POST(req: Request) {
     // Check availability
     const availability = await getAvailabilityById(availability_id);
     if (!availability || availability.is_booked) {
-      return NextResponse.json(
-        { error: "This time slot is no longer available" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'This time slot is no longer available' }, { status: 400 });
     }
 
     // Check provider Stripe onboarding
     const stripeAccount = await getProviderStripeId(provider_id);
     if (!stripeAccount) {
       return NextResponse.json(
-        { error: "Provider has not completed Stripe onboarding" },
-        { status: 400 }
+        { error: 'Provider has not completed Stripe onboarding' },
+        { status: 400 },
       );
     }
 
@@ -42,15 +39,15 @@ export async function POST(req: Request) {
     const session = await StripeService.createCheckoutSession({
       ...input,
       stripeAccount,
-      fees
+      fees,
     });
 
     return NextResponse.json({ url: session.url });
   } catch (err: any) {
-    console.error("CHECKOUT ERROR:", err);
+    console.error('CHECKOUT ERROR:', err);
     return NextResponse.json(
-      { error: err.message || "Failed to create checkout session" },
-      { status: 500 }
+      { error: err.message || 'Failed to create checkout session' },
+      { status: 500 },
     );
   }
 }

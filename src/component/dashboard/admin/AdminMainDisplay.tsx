@@ -1,30 +1,22 @@
-"use client";
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 
-import AdminHeader from "./component/AdminHeader";
-import TimeRange from "./component/TimeRange";
-import OverviewStat from "./component/OverviewStat";
-import ChartsRow from "./component/ChartsRow";
-import Performance from "./component/Performance";
-import TransactionsRow from "./component/TransactionRows";
-import SecondaryMetrics from "./component/SecondaryMetric";
-import FooterStats from "./component/FooterStats";
-import StatCard from "./component/StatsCard";
-import { useAdminDashboard } from "@/hooks/useAdminDashboard";
+import AdminHeader from './component/AdminHeader';
+import TimeRange from './component/TimeRange';
+import OverviewStat from './component/OverviewStat';
+import ChartsRow from './component/ChartsRow';
+import Performance from './component/Performance';
+import TransactionsRow from './component/TransactionRows';
+import SecondaryMetrics from './component/SecondaryMetric';
+import FooterStats from './component/FooterStats';
+import StatCard from './component/StatsCard';
+import { useAdminDashboard } from '@/hooks/useAdminDashboard';
 
 export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState('6m');
 
-  const {
-    overview,
-    revenueData,
-    bookingStatus,
-    topProviders,
-    recentCustomers,
-    categoryData
-  } = useAdminDashboard(timeRange);
-
-
+  const { overview, revenueData, bookingStatus, topProviders, recentCustomers, categoryData } =
+    useAdminDashboard(timeRange);
 
   return (
     <div className="min-h-screen">
@@ -39,19 +31,13 @@ export default function AdminDashboard() {
         <OverviewStat overview={overview} StatCard={StatCard} />
 
         {/* Charts Row */}
-        <ChartsRow 
-          revenueData={revenueData} 
-          bookingStatus={bookingStatus}
-        />
+        <ChartsRow revenueData={revenueData} bookingStatus={bookingStatus} />
 
         {/* Category Performance */}
         <Performance categoryData={categoryData} />
 
         {/* Tables Row */}
-        <TransactionsRow 
-          topProviders={topProviders} 
-          recentCustomers={recentCustomers}
-        />
+        <TransactionsRow topProviders={topProviders} recentCustomers={recentCustomers} />
 
         {/* Secondary Metrics */}
         <SecondaryMetrics overview={overview} StatCard={StatCard} />

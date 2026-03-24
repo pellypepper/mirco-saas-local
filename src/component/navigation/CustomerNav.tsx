@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { NavItem } from "./component/NavItem";
-import { SettingsDropdown } from "./component/SettingsDropdown";
+import { useRouter } from 'next/navigation';
+import { NavItem } from './component/NavItem';
+import { SettingsDropdown } from './component/SettingsDropdown';
 
 interface CustomerNavProps {
   horizontal?: boolean;
@@ -14,7 +14,6 @@ interface CustomerNavProps {
 }
 
 const CustomerNav = ({
-
   setOpen,
   handleLogout,
   toggleProfile,
@@ -22,13 +21,37 @@ const CustomerNav = ({
   onChangePassword,
 }: CustomerNavProps) => {
   const router = useRouter();
-  const menuClass =  "flex flex-col w-full ";
+  const menuClass = 'flex flex-col w-full ';
 
   return (
     <ul className={`${menuClass} `}>
-      <NavItem className="text-white hover:bg-chart-2" onClick={() => { router.replace("/dashboard/Customer"); setOpen?.(false); }}>Home</NavItem>
-      <NavItem className="text-white hover:bg-chart-2" onClick={() => { router.replace("/dashboard/Customer/booking"); setOpen?.(false); }}>View Bookings</NavItem>
-      <NavItem className="text-white hover:bg-chart-2" onClick={() => { toggleProfile?.(); setOpen?.(false); }}>Profile</NavItem>
+      <NavItem
+        className="text-white hover:bg-chart-2"
+        onClick={() => {
+          router.replace('/dashboard/Customer');
+          setOpen?.(false);
+        }}
+      >
+        Home
+      </NavItem>
+      <NavItem
+        className="text-white hover:bg-chart-2"
+        onClick={() => {
+          router.replace('/dashboard/Customer/booking');
+          setOpen?.(false);
+        }}
+      >
+        View Bookings
+      </NavItem>
+      <NavItem
+        className="text-white hover:bg-chart-2"
+        onClick={() => {
+          toggleProfile?.();
+          setOpen?.(false);
+        }}
+      >
+        Profile
+      </NavItem>
 
       <SettingsDropdown
         onChangeEmail={onChangeEmail}
@@ -36,7 +59,15 @@ const CustomerNav = ({
         closeParent={() => setOpen?.(false)}
       />
 
-      <NavItem className="text-white hover:bg-chart-2" onClick={() => { handleLogout(); setOpen?.(false); }}>Logout</NavItem>
+      <NavItem
+        className="text-white hover:bg-chart-2"
+        onClick={() => {
+          handleLogout();
+          setOpen?.(false);
+        }}
+      >
+        Logout
+      </NavItem>
     </ul>
   );
 };
