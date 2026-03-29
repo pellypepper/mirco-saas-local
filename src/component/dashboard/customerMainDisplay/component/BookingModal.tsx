@@ -187,7 +187,7 @@ const BookingModal = ({ provider, slot, onConfirm, onClose }: BookingModalProps)
                           >
                             {service.price}
                           </span>{' '}
-                          {provider.default_currency.toUpperCase()}
+                          {provider?.default_currency.toUpperCase()}
                         </div>
                       </button>
                     ))

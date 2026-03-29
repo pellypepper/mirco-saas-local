@@ -30,6 +30,7 @@ static async createCheckoutSession({
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&customer_id=${customer_id}`,
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/providers/${provider_id}`,
     customer_creation: 'always',
+    
 
     line_items: [
       {
