@@ -1,13 +1,14 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Trash2, DollarSign, Clock, Briefcase, Edit2, Sparkles } from 'lucide-react';
+import { Trash2,  Clock, Briefcase, Edit2, Sparkles } from 'lucide-react';
 import SuccessModal from '@/component/SuccessModal';
-import ErrorModal from '@/component/ErrorModal';
+import { getCurrencySymbol } from '@/lib/checkCurrency';
+
 
 const ServiceGrid = ({
   services,
-  currencies,
+
   handleEditService,
   handleDeleteService,
   isDarkMode,
@@ -17,7 +18,7 @@ const ServiceGrid = ({
   
 }: {
   services: any[];
-  currencies: { code: string; symbol: string }[];
+
   handleEditService: (service: any) => void;
   handleDeleteService: (serviceId: string) => void;
   isDarkMode: boolean;
@@ -67,7 +68,7 @@ const ServiceGrid = ({
         </div>
       ) : (
         services.map((service, index) => {
-          const currencyObj = currencies.find((c) => c.code === service.currency) || currencies[0];
+
           return (
             <div
               key={service.id}
@@ -109,16 +110,18 @@ const ServiceGrid = ({
                       <div
                         className={`p-2 ${isDarkMode ? 'bg-chart-2/20' : 'bg-chart-2/10'} rounded-lg`}
                       >
-                        <DollarSign className="w-5 h-5 text-chart-2" />
+                        <div className="w-5 h-5 flex justify-center items-center text-chart-2" >
+<span className='text-2xl'>  {getCurrencySymbol(service.currency)}</span>
+                        </div>
                       </div>
                       <span className={`text-4xl font-black ${textPrimary}`}>
-                        {currencyObj.symbol}
+                 
                         {service.price.toFixed(2)}
                       </span>
                       <span
                         className={`text-sm text-[#008800] font-black px-2 py-1 ${isDarkMode ? 'bg-[#008800]/10 border-[#008800]/30' : 'bg-green-50 border-green-200'} rounded-lg border`}
                       >
-                        {service.currency}
+                        {service.currency.toUpperCase()}
                       </span>
                     </div>
 

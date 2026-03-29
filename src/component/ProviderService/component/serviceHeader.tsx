@@ -6,8 +6,7 @@ const ServiceHeader = ({
 }: {
   services: any[];
   totalRevenue: number;
-  selectedCurrency: { symbol: string };
-  serviceCurrency: string;
+  
 }) => {
   return (
     <div className="relative overflow-hidden bg-gradient-to-br from-chart-2 to-chart-3 rounded-3xl shadow-2xl">

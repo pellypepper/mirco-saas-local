@@ -4,12 +4,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { Service } from '@/types/type';
 import { getServices, addService, updateService, deleteService } from '@/services/Services';
 import { useUser } from '@/hooks/UserContext';
-import { currencies } from '@/data/country';
-import { set } from 'react-hook-form';
+
+
 
 const Services = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [serviceName, setServiceName] = useState('');
+
   const [servicePrice, setServicePrice] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -19,11 +20,13 @@ const Services = () => {
   const [showDelete, setShowDelete] = useState(false);
   const [errorDeleteMessage, setErrorDeleteMessage] = useState('');
   const [showDeleteError, setShowDeleteError] = useState(false);
-  const [serviceCurrency, setServiceCurrency] = useState(currencies[0].code);
+
   const [serviceDuration, setServiceDuration] = useState('');
   const [serviceDescription, setServiceDescription] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const { profile } = useUser();
+  const hasCurrency = profile?.default_currency ? true : false;
+  const [serviceCurrency, setServiceCurrency] = useState(profile?.default_currency || '');
 
   const loadServices = useCallback(async (profileId: string) => {
     const fetched = await getServices(profileId);
@@ -36,6 +39,7 @@ const Services = () => {
   }, [profile, loadServices]);
 
 const handleAddService = async () => {
+   if (!hasCurrency) return;
   if (!serviceName || !servicePrice) {
     setErrorMessage('Name and price are required.');
     setShowError(true);
@@ -84,7 +88,7 @@ const handleAddService = async () => {
     // reset form
     setServiceName('');
     setServicePrice('');
-    setServiceCurrency(currencies[0].code);
+    setServiceCurrency(profile.default_currency || '');
     setServiceDuration('');
     setServiceDescription('');
   } catch (err) {
@@ -113,7 +117,7 @@ const handleDeleteService = async (id: string) => {
   }
 };
 
-  const selectedCurrency = currencies.find((c) => c.code === serviceCurrency) || currencies[0];
+
 
   const handleEditService = (service: Service) => {
     setServiceName(service.title);
@@ -128,12 +132,13 @@ const handleDeleteService = async (id: string) => {
     setServiceName('');
     setServicePrice('');
     setServiceDescription('');
-    setServiceCurrency(currencies[0].code);
+    setServiceCurrency(profile?.default_currency || '');
     setServiceDuration('');
     setEditingId(null);
   };
 
   return {
+    profile,
     services,
     setServices,
     loadServices,
@@ -150,20 +155,18 @@ const handleDeleteService = async (id: string) => {
     setServiceCurrency,
     serviceDuration,
     setServiceDuration,
-    selectedCurrency,
-    currencies,
+ 
     cancelEdit,
     handleEditService,
     handleDeleteService,
     showSuccess,
     setShowSuccess,
     successMessage,
-
     showError,
     setShowError,
     errorMessage,
 errorDeleteMessage,
-
+hasCurrency,
     showDeleteError,
     setShowDeleteError,
     showDelete,

@@ -19,6 +19,7 @@ import { useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMainNavBar } from '@/hooks/MainNavContext';
 import { stat } from 'fs';
+import { getCurrencySymbol } from '@/lib/checkCurrency';
 
 export const CustomerBookingsGrid = ({
   filteredBookings,
@@ -261,7 +262,9 @@ export const CustomerBookingsGrid = ({
                   <div className="relative flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className={`p-1 md:p-1.5  bg-chart-2 rounded-xl`}>
-                        <DollarSign className="w-6 h-6 text-white" />
+            <span className="w-6 h-6 text-white flex items-center justify-center font-bold text-lg">
+    {getCurrencySymbol(booking.currency)}
+  </span>
                       </div>
                       <div>
                         <p

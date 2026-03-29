@@ -7,6 +7,7 @@ import BookingService from '@/services/bookingService';
 import { AvailabilityRecord, BookingCustomer, BookingProvider } from '@/types/type';
 import useExtraService from './extraServices';
 
+
 interface FormatTimeOptions {
   hour: '2-digit';
   minute: '2-digit';
@@ -301,10 +302,9 @@ export const useCustomerBooking = ({ user }: { user: { id: string } }) => {
   };
 
   const formatAmount = (amount: number, currency: string): string => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency || 'USD',
-    }).format(amount);
+
+      return `${amount.toFixed(2)}`;
+    
   };
 
   const cancelDeleteModal = () => {
@@ -398,36 +398,35 @@ export const useConfirmBooking = ({
   }) => {
     if (!selectedSlot) return;
 
-    if(data.provider_payout_enabled === false) {
-      setErrorMessage('Provider does not have payout enabled.');
-      setShowError(true);
-      return;
-    }
     try {
+     
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-
         body: JSON.stringify({
           customer_id: profile.id,
           availability_id: selectedSlot.id,
           provider_id: providerId,
-          currency: data.currency,
           amount: data.amount,
           services_id: data.servicesId,
         }),
       });
 
-    if (!res.ok) {
-  const error = await res.text();
-  throw new Error(error || 'Checkout failed');
-}
+      if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      const message =
+        errorData?.error || errorData?.message || 'Checkout failed';
+      throw new Error(message);
+    }
 
 const { url } = await res.json();
+if (!url) {
+  throw new Error("Stripe checkout URL missing");
+}
 window.location.href = url;
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-     setErrorMessage('Failed to create booking');
+     setErrorMessage(err.message);
   setShowError(true);
     }
   };
@@ -500,6 +499,8 @@ export const useBookingModal = ({
       ? provider.avatar_url
       : 'https://api.dicebear.com/7.x/initials/svg?seed=' + encodeURIComponent(provider.full_name);
 
+const isProviderBlocked = !provider.payout_enabled;
+
   const handleConfirm = () => {
 
     if (selectedService) {
@@ -513,6 +514,7 @@ export const useBookingModal = ({
   };
 
   return {
+    isProviderBlocked,
     services,
     selectedService,
     setSelectedService,

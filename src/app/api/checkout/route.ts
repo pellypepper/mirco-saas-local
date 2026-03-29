@@ -5,9 +5,12 @@ import { getProviderStripeId } from '@/services/providerService';
 import { validateCheckoutInput } from '@/services/validationService';
 import { calculateFees } from '@/services/feeService';
 
+
 export async function POST(req: Request) {
   try {
     const input = await req.json();
+
+
 
     // Validate request
     const validationError = validateCheckoutInput(input);
@@ -24,13 +27,22 @@ export async function POST(req: Request) {
     }
 
     // Check provider Stripe onboarding
-    const stripeAccount = await getProviderStripeId(provider_id);
-    if (!stripeAccount) {
-      return NextResponse.json(
-        { error: 'Provider has not completed Stripe onboarding' },
-        { status: 400 },
-      );
-    }
+const providerStripe = await getProviderStripeId(provider_id);
+
+if (!providerStripe) {
+  return NextResponse.json(
+    { error: 'Provider has not connected a Stripe account' },
+    { status: 400 },
+  );
+}
+
+if (!providerStripe.payoutEnabled) {
+  return NextResponse.json(
+    { error: 'Provider has not completed Stripe onboarding' },
+    { status: 400 },
+  );
+}
+
 
     // Calculate fees
     const fees = calculateFees(Number(amount));
@@ -38,7 +50,8 @@ export async function POST(req: Request) {
     // Create Stripe session
     const session = await StripeService.createCheckoutSession({
       ...input,
-      stripeAccount,
+   stripeAccount: providerStripe.stripeAccountId,
+   currency: providerStripe.currency,
       fees,
     });
 

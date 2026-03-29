@@ -7,6 +7,7 @@ import Loader from '../Spinner';
 import Processing from './Processing';
 import SuccessDisplay from './SuccessDisplay';
 import { downloadReceipt, addToCalendar, shareBooking } from '@/lib/HelperFunction';
+import {getCurrencySymbol} from '@/lib/checkCurrency';
 
 export default function PaymentSuccessPage() {
   const [confetti, setConfetti] = useState(true);
@@ -52,8 +53,8 @@ export default function PaymentSuccessPage() {
   const location = providerData?.location || profileData?.location || 'Location not specified';
   const confirmationEmail = booking.customer_email || '';
   const amount = booking.amount
-    ? `${booking.currency === 'usd' ? '$' : '£'}${parseFloat(booking.amount).toFixed(2)}`
-    : '£0.00';
+    ? `${getCurrencySymbol(booking.currency)}${parseFloat(booking.amount).toFixed(2)}`
+    : '0.00';
 
   return (
     <SuccessDisplay

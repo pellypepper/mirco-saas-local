@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { User, Calendar, Clock, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { getCurrencySymbol } from '@/lib/checkCurrency';
 
 const detailModal = ({
   selectedBooking,
@@ -105,7 +106,7 @@ const detailModal = ({
 
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-50 to-green-50 px-4 py-2 rounded-xl border border-green-200">
               <span className="text-xl font-bold text-gray-900">
-                {selectedBooking.currency}
+                {getCurrencySymbol(selectedBooking.currency)}
                 {selectedBooking.amount}
               </span>
               <span className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-1 rounded-full">

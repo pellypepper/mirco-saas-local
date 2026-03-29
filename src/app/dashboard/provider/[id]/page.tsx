@@ -9,7 +9,7 @@ import useAvailability from '@/hooks/useAvailability';
 import Loader from '@/component/Spinner';
 import { useUser } from '@/hooks/UserContext';
 import { useConfirmBooking } from '@/hooks/useBooking';
-import ErrorModal from '@/component/ErrorModal';
+
 
 export default function ProviderPage({ params }: any) {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function ProviderPage({ params }: any) {
   const { availability, loading } = useAvailability(providerId);
 
   // Booking modal state
-  const { handleConfirmBooking, errorMessage, showError, setShowError, selectedSlot, setSelectedSlot, showBooking, setShowBooking } =
+  const { handleConfirmBooking,  selectedSlot, setSelectedSlot, showBooking, setShowBooking } =
     useConfirmBooking({ profile, providerId });
 
   if (loading || providerLoading) return <Loader />;
@@ -43,11 +43,10 @@ export default function ProviderPage({ params }: any) {
       />
 
       {showBooking && selectedSlot && (
+        
         <BookingModal
           slot={selectedSlot}
-          errorMessage={errorMessage}
-          showError={showError}
-          setShowError={setShowError}
+      
           provider={providerData}
           onConfirm={handleConfirmBooking}
           onClose={() => setShowBooking(false)}

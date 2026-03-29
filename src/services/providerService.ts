@@ -1,4 +1,5 @@
 import { supabase } from '@/libs/supabaseClient';
+import { supabaseAdmin } from '@/libs/supabaseAdmin'; 
 
 export const fetchServiceTypes = async (): Promise<string[]> => {
   const { data, error } = await supabase.from('profiles').select('service_type');
@@ -51,15 +52,23 @@ export const fetchProviderById = async (providerId: string) => {
   if (!error) return data || [];
 };
 
-export const getProviderStripeId = async (providerId: string): Promise<string | null> => {
-  const { data, error } = await supabase
+export const getProviderStripeId = async (
+  providerId: string
+): Promise<{ stripeAccountId: string; payoutEnabled: boolean; currency: string } | null> => {
+  const { data, error } = await supabaseAdmin
     .from('profiles')
-    .select('stripe_account_id')
+  .select('stripe_account_id, payout_enabled, default_currency')
     .eq('id', providerId)
-    .single();
-  if (error) {
+    .maybeSingle();
+
+  if (error || !data?.stripe_account_id) {
     console.error('getProviderStripeId error:', error);
     return null;
   }
-  return data?.stripe_account_id || null;
+
+  return {
+    stripeAccountId: data.stripe_account_id,
+    payoutEnabled: data.payout_enabled ?? false,
+     currency: data.default_currency || 'gbp',
+  };
 };

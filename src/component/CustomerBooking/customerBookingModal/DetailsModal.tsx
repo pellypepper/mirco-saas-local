@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { BookingCustomer } from '@/types/type';
 import { useMainNavBar } from '@/hooks/MainNavContext';
+import { getCurrencySymbol } from '@/lib/checkCurrency';
 
 const DetailsModal = ({
   booking,
@@ -91,9 +92,11 @@ const DetailsModal = ({
                   border={border}
                 />
                 <InfoPill
-                  icon={<DollarSign className="text-green-600" />}
+                  icon={  <span className="w-6 h-6 text-green-600 flex items-center justify-center font-bold text-lg">
+    {getCurrencySymbol(booking.currency)}
+  </span>}
                   label="Amount"
-                  value={`$${(booking.amount / 100).toFixed(2)}`}
+                  value={`${(booking.amount / 100).toFixed(2)}`}
                   surfaceInner={surfaceInner}
                   border={border}
                 />

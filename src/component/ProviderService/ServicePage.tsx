@@ -8,9 +8,9 @@ import { useMainNavBar } from '@/hooks/MainNavContext';
 
 export default function ServicesPage() {
   const {
+    profile,
     services,
-    currencies,
-    selectedCurrency,
+
     handleAddService,
     serviceName,
     setServiceName,
@@ -36,6 +36,7 @@ export default function ServicesPage() {
     setShowDelete,
     deleteMessage,
 
+hasCurrency,
 
   } = Services();
 
@@ -50,8 +51,7 @@ export default function ServicesPage() {
         <ServiceHeader
           services={services}
           totalRevenue={totalRevenue}
-          selectedCurrency={selectedCurrency}
-          serviceCurrency={serviceCurrency}
+      
         />
 
         {/* ADD/EDIT SERVICE FORM */}
@@ -60,12 +60,12 @@ export default function ServicesPage() {
           showSuccess={showSuccess}
           setShowSuccess={setShowSuccess}
           successMessage={successMessage}
-         
+         profile={profile}
           showError={showError}
           setShowError={setShowError}
           errorMessage={errorMessage}
-         
-
+      
+hasCurrency={hasCurrency}
           serviceName={serviceName}
           setServiceName={setServiceName}
           servicePrice={servicePrice}
@@ -78,15 +78,14 @@ export default function ServicesPage() {
           serviceDuration={serviceDuration}
           setServiceDuration={setServiceDuration}
           cancelEdit={cancelEdit}
-          selectedCurrency={selectedCurrency}
-          currencies={currencies}
+        
           isDarkMode={isDarkMode}
         />
 
         {/* SERVICES GRID */}
         <ServiceGrid
           services={services}
-          currencies={currencies}
+  
           handleEditService={handleEditService}
           handleDeleteService={handleDeleteService}
           isDarkMode={isDarkMode}

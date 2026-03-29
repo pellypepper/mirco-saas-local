@@ -14,7 +14,8 @@ import Image from 'next/image';
 import { AvailabilityRecord } from '@/types/type';
 import { useBookingModal } from '@/hooks/useBooking';
 import { useMainNavBar } from '@/hooks/MainNavContext';
-import ErrorModal from '@/component/ErrorModal';
+import { getCurrencySymbol } from '@/lib/checkCurrency';
+
 
 interface Provider {
   id: string;
@@ -23,6 +24,7 @@ interface Provider {
   service_type: string;
   payout_enabled: boolean;
   hourly_rate: number;
+  default_currency: string;
 }
 
 interface BookingModalProps {
@@ -30,12 +32,10 @@ interface BookingModalProps {
   slot: AvailabilityRecord;
   onConfirm: (data: { servicesId: string; amount: number; currency: string , provider_payout_enabled: boolean }) => void;
   onClose: () => void;
-  errorMessage: string;
-  showError: boolean;
-  setShowError: (show: boolean) => void;
+  
 }
 
-const BookingModal = ({ provider, slot, errorMessage, showError, setShowError, onConfirm, onClose }: BookingModalProps) => {
+const BookingModal = ({ provider, slot, onConfirm, onClose }: BookingModalProps) => {
 
   const {
     services,
@@ -46,13 +46,14 @@ const BookingModal = ({ provider, slot, errorMessage, showError, setShowError, o
     formattedDate,
     formattedTime,
     avatarSrc,
+    isProviderBlocked,
     handleConfirm,
   } = useBookingModal({ provider, slot, onConfirm });
   const { isDarkMode } = useMainNavBar();
 
   return (
     <div
-      className={` fixed inset-0 ${isDarkMode ? 'bg-black/20' : 'bg-white/20'} backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-300`}
+      className={` fixed inset-0 ${isDarkMode ? 'bg-black/20' : 'bg-white/20'} backdrop-blur-md flex items-center justify-center z-40 p-4 animate-in fade-in duration-300`}
     >
       <div
         className={`custom-scrollbar h-full w-full overflow-y-auto  ${isDarkMode ? 'bg-zinc-800 border-zinc-700' : 'bg-white border-gray-300'} border-2 rounded-3xl shadow-2xl max-w-lg  overflow-hidden animate-in zoom-in duration-500`}
@@ -138,7 +139,7 @@ const BookingModal = ({ provider, slot, errorMessage, showError, setShowError, o
                         className={`text-sm ${isDarkMode ? 'text-zinc-400' : 'text-zinc-600'} mt-1`}
                       >
                         {selectedService.duration_minutes} min •{' '}
-                        <span className="text-chart-2 font-bold">{selectedService.price}</span>
+                        <span className="text-chart-2 font-bold">{getCurrencySymbol(provider.default_currency)}{selectedService.price}</span>
                       </div>
                     </>
                   ) : (
@@ -186,7 +187,7 @@ const BookingModal = ({ provider, slot, errorMessage, showError, setShowError, o
                           >
                             {service.price}
                           </span>{' '}
-                          {service.currency}
+                          {provider.default_currency.toUpperCase()}
                         </div>
                       </button>
                     ))
@@ -284,7 +285,7 @@ const BookingModal = ({ provider, slot, errorMessage, showError, setShowError, o
                   <div
                     className={`text-2xl md:text-4xl font-black ${isDarkMode ? 'text-white' : 'text-zinc-900'}`}
                   >
-                    {selectedService.currency} {selectedService.price}
+                    {getCurrencySymbol(provider.default_currency)}{selectedService.price}
                   </div>
                 </div>
               </div>
@@ -294,9 +295,9 @@ const BookingModal = ({ provider, slot, errorMessage, showError, setShowError, o
           {/* Confirm Button */}
           <button
             onClick={handleConfirm}
-            disabled={!selectedService}
+            disabled={!selectedService || isProviderBlocked}
             className={`group w-full py-5 rounded-2xl font-black text-lg transition-all duration-300 shadow-xl flex items-center justify-center gap-3 ${
-              selectedService
+              selectedService && !isProviderBlocked
                 ? `${isDarkMode ? 'bg-chart-2' : 'bg-chart-2'} text-white hover:shadow-chart-2/30 hover:scale-105`
                 : `${isDarkMode ? 'bg-zinc-900 border-2 border-zinc-700 text-zinc-600 cursor-not-allowed' : 'bg-zinc-100 border-2 border-zinc-300 text-zinc-600 cursor-not-allowed'}`
             }`}
@@ -307,6 +308,11 @@ const BookingModal = ({ provider, slot, errorMessage, showError, setShowError, o
             />
             Confirm & Pay
           </button>
+          {isProviderBlocked && (
+  <p className="text-red-500 text-sm">
+    This provider isnt verified and cannot receive payments yet.
+  </p>
+)}
 
           {/* Security Notice */}
           <div className="flex items-center justify-center gap-2 text-zinc-500 text-sm">
@@ -316,15 +322,7 @@ const BookingModal = ({ provider, slot, errorMessage, showError, setShowError, o
         </div>
       </div>
 
-        {showError && (
-            <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
-        <ErrorModal
-        open={showError}
-          message={errorMessage}
-          onClose={() => setShowError(false)}
-        />
-        </div>
-      )}
+      
 
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
@@ -336,7 +334,7 @@ const BookingModal = ({ provider, slot, errorMessage, showError, setShowError, o
           border-radius: 10px;
         }
 
-        . custom-scrollbar::-webkit-scrollbar-thumb {
+        .custom-scrollbar::-webkit-scrollbar-thumb {
           background: rgba(0, 150, 137, 0.5);
           border-radius: 10px;
           transition: background 0.3s ease;

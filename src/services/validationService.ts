@@ -5,7 +5,7 @@ export const validateCheckoutInput = (input: any) => {
     'customer_id',
     'services_id',
     'amount',
-    'currency',
+
   ];
 
   for (const field of required) {

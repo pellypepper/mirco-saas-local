@@ -3,11 +3,12 @@ import ValidateMetaService from './validateMetaService';
 import { fetchServiceById } from './Services';
 import { markAvailabilityAsBooked, checkAvailabilitySlotExists } from './availabilityService';
 import customerEmailService from './customerEmailService';
-import { getProviderWithEmail } from './profileService';
+import { getProviderWithEmail } from './profileService.server';
 import EmailService from './emailService';
 import { PaymentMetadata } from '@/types/type';
 import BookingService from './bookingService';
 import { createBookingAction } from '@/app/actions/createBooking';
+import StripeService from "@/services/stripeService";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2022-11-15',
@@ -17,6 +18,7 @@ class StripeWebhookService {
   static async handleRequest(req: Request) {
     const body = await req.text();
     const sig = req.headers.get('stripe-signature');
+    
 
     if (!sig) throw new Error('Missing stripe-signature');
 
@@ -35,7 +37,7 @@ class StripeWebhookService {
         break;
 
       case 'account.updated':
-        await ProviderService.updateStripeAccount(event.data.object as Stripe.Account);
+        await StripeService.updateStripeAccount(event.data.object as Stripe.Account);
         break;
 
       default:
