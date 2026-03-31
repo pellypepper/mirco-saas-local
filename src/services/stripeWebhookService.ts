@@ -19,6 +19,7 @@ class StripeWebhookService {
     const body = await req.text();
     const sig = req.headers.get('stripe-signature');
     
+   
 
     if (!sig) throw new Error('Missing stripe-signature');
 

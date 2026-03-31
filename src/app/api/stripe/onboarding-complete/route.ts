@@ -14,17 +14,13 @@ export async function GET(req: Request) {
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/dashboard`);
   }
 
-    await stripe.accounts.update(accountId, {
-    capabilities: {
-      transfers: { requested: true },
-      card_payments: { requested: true },
-    },
-  });
+    await stripe.accounts.update(accountId);
 
   // Fetch the real current state directly from Stripe
   const account = await stripe.accounts.retrieve(accountId);
 
- 
+  console.log('Stripe account details:', account);
+  
 
   await supabaseAdmin
     .from('profiles')

@@ -71,7 +71,7 @@ const Navbar = ({
               flex items-center gap-1.5 md:gap-2.5
               ${
                 profile?.payout_enabled
-                  ? 'bg-[#023047] border-chart-2 border-2 text-white shadow-md hover:shadow-lg hover:scale-105'
+                  ? ' border-zinc-600 border-2 text-white shadow-md hover:shadow-lg hover:scale-105'
                   : 'bg-chart-2 text-white shadow-md hover:shadow-lg hover:scale-105 hover:from-chart-2/80 hover:to-chart-3/80'
               }
             `}
@@ -95,12 +95,12 @@ const Navbar = ({
 
               <button
                 onClick={() => setOpen(!open)}
-                className="p-1 md:p-2 rounded-md border  border-white/80  hover:bg-chart-2  transition"
+                className="p-1 md:p-2 rounded-md border  border-chart-2  hover:bg-zinc-200  transition"
               >
                 {open ? (
-                  <X className="w-6 h-6 text-white" />
+                  <X className="w-6 h-6 text-chart-2" />
                 ) : (
-                  <Menu className=" w-6 h-6 text-white" />
+                  <Menu className=" w-6 h-6 text-chart-2" />
                 )}
               </button>
             </div>

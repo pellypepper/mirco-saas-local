@@ -43,7 +43,6 @@ if (!providerStripe.payoutEnabled) {
   );
 }
 
-
     // Calculate fees
     const fees = calculateFees(Number(amount));
 

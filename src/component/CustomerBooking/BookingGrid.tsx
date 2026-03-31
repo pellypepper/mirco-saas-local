@@ -92,16 +92,12 @@ export const CustomerBookingsGrid = ({
               {/* Header Section */}
               <div className="flex items-start justify-between gap-4 mb-6">
                 <div className="flex-1">
-                  <h3
-                    className={`text-xl md:text-2xl font-black mb-2 leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-                  >
-                    {booking.services.title}
-                  </h3>
-                  <p
-                    className={`text-xs md:text-base leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-zinc-400'}`}
-                  >
-                    {booking.services.description}
-                  </p>
+               <h3 className={`text-xl md:text-2xl font-black mb-2 leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+  {booking.services?.title ?? 'Service not available'}
+</h3>
+<p className={`text-xs md:text-base leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-zinc-400'}`}>
+  {booking.services?.description ?? 'No description available'}
+</p>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -201,7 +197,7 @@ export const CustomerBookingsGrid = ({
                       <p
                         className={`font-black ${isDarkMode ? 'text-white' : 'text-gray-700'} text-sm`}
                       >
-                        {booking.services.duration_minutes} min
+                        {booking.services?.duration_minutes ?? 0} min
                       </p>
                     </div>
                   </div>
