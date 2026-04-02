@@ -191,7 +191,7 @@ const RescheduleModal = ({
               className={`group flex-1 px-6 py-4 rounded-xl font-bold transition-all duration-300 relative overflow-hidden ${
                 !selectedDate || !selectedTime || loading
                   ? `${surfaceInner} ${border} text-zinc-400 cursor-not-allowed border-2`
-                  : 'bg-chart-2 text-white hover:shadow-[0_0_30px_rgba(235,115,35,0.3)]'
+                  : 'bg-chart-2 text-white '
               }`}
             >
               {!loading && selectedDate && selectedTime && (

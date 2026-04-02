@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { uploadAvatar, updateProfile } from '@/services/profileService';
-import { getProviderWithEmail } from '@/services/profileService.server';
+import { getEmail } from '@/services/profileService.server';
 
 const useUserProfile = (profile: any) => {
   const [formData, setFormData] = useState({
@@ -163,7 +163,7 @@ export const useGetProviderEmail = (providerId: string) => {
 
   useEffect(() => {
     async function fetchProvider() {
-      const data = await getProviderWithEmail(providerId);
+      const data = await getEmail(providerId);
       setProviderData(data);
     }
     fetchProvider();

@@ -117,23 +117,23 @@ const BookAgainModal = ({
             ) : (
               <div>
                 <label className="flex items-center gap-3 mb-3">
-                  <div className="p-2 bg-chart-4 rounded-lg">
+                  <div className="p-2 bg-chart-2 rounded-lg">
                     <Clock className="w-5 h-5 text-white" />
                   </div>
                   <span className="font-bold text-white uppercase tracking-wider text-sm">
                     Available Times
                   </span>
                 </label>
-                <div className="space-y-3 max-h-80 overflow-auto custom-scrollbar">
+                <div className="space-y-3 max-h-80  overflow-auto custom-scrollbar">
                   {slots.map((slot) => (
                     <div
                       key={slot.id}
                       onClick={() => setSelectedSlot(slot)}
-                      className={`group relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                      className={`group relative p-4 rounded-xl border-2  cursor-pointer transition-all duration-300 ${
                         selectedSlot?.id === slot.id
-                          ? 'border-chart-2 bg-chart-2/10'
-                          : 'border-zinc-700 hover:border-chart-2 bg-zinc-900'
-                      }`}
+                          ? ' '
+                          : ' hover:border-chart-2 '
+                      } ${textPrimary} ${border}`}
                     >
                       {selectedSlot?.id === slot.id && (
                         <div className="absolute inset-0 bg-chart-2 rounded-xl opacity-10 blur-lg"></div>
@@ -142,13 +142,14 @@ const BookAgainModal = ({
                       <div className="relative flex items-center gap-4">
                         <div
                           className={`p-2 rounded-lg ${
-                            selectedSlot?.id === slot.id ? 'bg-chart-2' : 'bg-zinc-800'
-                          }`}
+                            selectedSlot?.id === slot.id ? 'bg-chart-2' : 'bg-zinc-100'
+                           
+                          } ${ isDarkMode ? 'bg-zinc-700' : 'bg-zinc-100'}`}
                         >
                           <Calendar
-                            className={`w-5 h-5 ${
-                              selectedSlot?.id === slot.id ? 'text-white' : 'text-zinc-500'
-                            }`}
+                            className={`w-5 h-5  ${
+                              selectedSlot?.id === slot.id ? 'text-zinc-500' : 'text-zinc-500'
+                            } `}
                           />
                         </div>
                         <div>
@@ -191,7 +192,7 @@ const BookAgainModal = ({
                 onClick={handleConfirm}
                 className={`group flex-1 px-6 py-3 rounded-xl font-bold text-white transition-all duration-300 relative overflow-hidden ${
                   selectedSlot
-                    ? 'bg-chart-4 hover:shadow-chart-4/20'
+                    ? 'bg-chart-2 hover:shadow-chart-2/20'
                     : `${surfaceInner} ${border} border ${textPrimary} cursor-not-allowed`
                 }`}
               >

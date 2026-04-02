@@ -70,7 +70,7 @@ hasCurrency: boolean;
   const inputBorder = isDarkMode ? 'border-zinc-700' : 'border-zinc-300';
   const inputText = isDarkMode ? 'text-white' : 'text-zinc-900';
   const inputPlaceholder = isDarkMode ? 'placeholder:text-zinc-500' : 'placeholder:text-zinc-400';
-  const selectBg = isDarkMode ? 'bg-zinc-900' : 'bg-white';
+ 
   const cancelBtnBg = isDarkMode ? 'bg-zinc-900' : 'bg-zinc-100';
   const cancelBtnBorder = isDarkMode ? 'border-zinc-700' : 'border-zinc-300';
   const cancelBtnHover = isDarkMode
@@ -80,7 +80,7 @@ hasCurrency: boolean;
   const disabledBorder = isDarkMode ? 'border-zinc-700' : 'border-zinc-300';
   const disabledText = isDarkMode ? 'text-zinc-600' : 'text-zinc-400';
 
-console.log('hasCurrency:', hasCurrency);
+
   return (
     <div
       className={`${bgPrimary} border-2 ${border} rounded-3xl shadow-2xl overflow-hidden transition-colors duration-300`}

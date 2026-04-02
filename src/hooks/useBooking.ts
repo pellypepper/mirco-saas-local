@@ -2,10 +2,17 @@
 
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
-
+import { getEmail } from '@/services/profileService.server';
 import BookingService from '@/services/bookingService';
 import { AvailabilityRecord, BookingCustomer, BookingProvider } from '@/types/type';
 import useExtraService from './extraServices';
+import {sendCustomerBookingConfirmedEmail, 
+ 
+
+  sendCustomerBookingCancelledEmail,
+  sendProviderBookingCancelledEmail,
+  sendProviderBookingConfirmedEmail, sendConfirmationEmail, sendProviderNotificationEmail} from '@/lib/emailSender';
+import { set } from 'react-hook-form';
 
 
 interface FormatTimeOptions {
@@ -27,6 +34,8 @@ interface StatusConfig {
   badge: string;
 }
 
+
+
 export const useProviderBooking = ({ user }: { user: { id: string } }) => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
@@ -42,6 +51,8 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
   const [noteInput, setNoteInput] = useState('');
   const [openDelete, setOpenDelete] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+
+ 
 
   // Fetch bookings from backend
   const fetchBookings = async () => {
@@ -100,7 +111,16 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
 
   // Confirm booking
   const handleConfirmBooking = async (id: string) => {
+
+    if (!selectedBooking?.provider_id) {
+  console.error('Missing provider_id');
+  return;
+}
+    setLoading(true);
     const updated = await BookingService.updateBookingStatus(id, 'confirmed');
+
+    const provider = await getEmail( selectedBooking?.provider_id)
+    const customer = await getEmail (selectedBooking?.customer.id )
 
     if (!updated) return;
 
@@ -110,11 +130,53 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
     setShowConfirmModal(false);
     setShowDetailsModal(false);
 
+    //send confirmation emails
+sendProviderBookingConfirmedEmail({
+  to: provider?.email || '',
+  bookingId: selectedBooking?.id || '',
+  amount: selectedBooking?.amount.toString() || '',
+  formattedDate: formatDate(selectedBooking?.booking_date || ''),
+  bookingTime: formatTime(selectedBooking?.booking_date || ''),
+  serviceName: selectedBooking?.services.title || '',
+  serviceDescription: selectedBooking?.services.description || '',
+  duration_minutes: selectedBooking?.services.duration_minutes || 0,
+  customerName: customer?.full_name || '',
+  customerEmail: customer?.email || '',
+  customerPhone: customer?.phone_number || '',
+})
+
+sendCustomerBookingConfirmedEmail({
+  to: customer?.email || '',
+  bookingId: selectedBooking?.id || '',
+  amount: selectedBooking?.amount.toString() || '',
+  formattedDate: formatDate(selectedBooking?.booking_date || ''),
+  bookingTime: formatTime(selectedBooking?.booking_date || ''),
+  serviceName: selectedBooking?.services.title || '',
+  serviceDescription: selectedBooking?.services.description || '',
+  duration_minutes: selectedBooking?.services.duration_minutes || 0,
+  providerName: provider?.full_name || '',
+  location: provider?.location || '',
+  country: provider?.country || '',
+  email: provider?.email || '',
+  phone_number: provider?.phone_number || '',
+
+})
+setLoading(false);
     setSuccessMessage('Booking confirmed successfully!');
   };
 
   // Cancel booking
   const handleCancelBooking = async (id: string) => {
+    setLoading(true);
+
+
+     if (!selectedBooking) {
+    console.error('No booking selected');
+    return;
+  }
+     const provider = await getEmail(selectedBooking?.provider_id );  
+    const customer = await  getEmail(selectedBooking?.customer.id );
+ 
     const updated = await BookingService.updateBookingStatus(id, 'cancelled');
 
     const markAvailable = await BookingService.makeSlotAvailable(
@@ -127,10 +189,39 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
 
     // Update UI after DB update
     setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b)));
+   await  sendCustomerBookingCancelledEmail(
+      {
+        to: customer?.email || '',
+        bookingId: selectedBooking?.id.toString() || '',
+        amount: selectedBooking?.amount.toString() || '',
+        formattedDate: formatDate(selectedBooking?.booking_date || ''),
+        providerName: provider.full_name ?? '',
+        bookingTime: formatTime(selectedBooking?.booking_date || ''),
+        serviceName: selectedBooking?.services.title || '',
+        cancellationReason: 'Provider cancelled the booking',
+        cancelledBy: 'provider',
+      
+      }
+    )
 
+    await sendProviderBookingCancelledEmail(
+      {
+        to: provider?.email || '',
+        bookingId: selectedBooking?.id.toString() || '',
+        amount: selectedBooking?.amount.toString() || '',
+        formattedDate: formatDate(selectedBooking?.booking_date || ''),
+        customerName: customer.full_name,
+        customerPhone: customer.phone_number ?? '',
+        customerEmail: customer.email ?? '',
+        bookingTime: formatTime(selectedBooking?.booking_date || ''),
+        serviceName: selectedBooking?.services.title || '',
+        cancellationReason: 'Provider cancelled the booking',
+        cancelledBy: 'provider',
+      }
+    )
     setShowCancelModal(false);
     setShowDetailsModal(false);
-
+    setLoading(false);
     setSuccessMessage('Booking cancelled successfully!');
   };
 
@@ -206,6 +297,8 @@ export const useCustomerBooking = ({ user }: { user: { id: string } }) => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState('');
 
+
+
   const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
@@ -230,18 +323,68 @@ export const useCustomerBooking = ({ user }: { user: { id: string } }) => {
     setShowDetailsModal(true);
   };
 
-  const handleReschedule = (booking: BookingCustomer): void => {
+
+  const handleReschedule = async (booking: BookingCustomer): void => {
+        setLoading(true);
     setSelectedBooking(booking);
     setShowRescheduleModal(true);
+     setLoading(false);
   };
 
-  const handleBookAgain = (booking: BookingCustomer) => {
+  const handleBookAgain = async(booking: BookingCustomer) => {
+if (!booking?.provider_id) {
+  console.error('Missing provider_id');
+  return;
+}
+    setLoading(true);
+
     setSelectedBooking(booking);
+
+     const customer = await getEmail(booking?.customer_id );
+ const provider =await getEmail(booking?.provider_id );
+
+
+    sendProviderNotificationEmail({
+      to: provider.email ?? '',
+      bookingId: booking.id.toString(),
+      amount: booking.amount.toString(),
+      formattedDate: formatDate(booking.booking_date),
+      bookingTime: formatTime(booking.booking_date),
+      serviceName: booking.services.title,
+      serviceDescription: booking.services.description,
+      duration_minutes: booking.services.duration_minutes,
+      customerName: customer.full_name ?? '',
+      customerEmail: customer.email ?? '',
+      customerPhone: customer.phone_number ?? '',
+    });
+
+    sendConfirmationEmail({
+      to: customer.email ?? '',
+      bookingId: booking.id.toString(),
+      amount: booking.amount.toString(),
+      formattedDate: formatDate(booking.booking_date),
+      bookingTime: formatTime(booking.booking_date),
+      serviceName: booking.services.title,
+
+      serviceDescription: booking.services.description,
+      duration_minutes: booking.services.duration_minutes,
+      providerName: provider.full_name ?? '',
+      location: provider.location ?? '',
+      country: booking.provider.country,
+      email: provider.email,
+      phone_number: booking.provider.phone_number || '',
+    });
+
+     setLoading(false);
     setShowBookAgainModal(true);
+
+   
   };
 
   const handleCancel = (booking: BookingCustomer): void => {
+
     setSelectedBooking(booking);
+  
     setShowCancelModal(true);
   };
 

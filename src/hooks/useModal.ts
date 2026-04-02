@@ -2,7 +2,17 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import BookingService from '@/services/bookingService';
-import { set } from 'react-hook-form';
+import {
+  sendCustomerBookingCancelledEmail,
+  sendProviderBookingCancelledEmail,
+  sendConfirmationEmail,
+  sendProviderNotificationEmail,
+
+ } from '@/lib/emailSender';
+ import { getEmail } from '@/services/profileService.server';
+
+
+
 
 export const useCustomerModal = ({
   onCancel,
@@ -26,7 +36,7 @@ export const useCustomerModal = ({
   const fetchSlots = useCallback(async () => {
     setLoading(true);
     try {
-      console.log('Rescheduling to:', selectedDate);
+   
       const slots = await BookingService.fetchAvailableSlots(
         String(booking.provider.id),
         selectedDate,
@@ -56,11 +66,8 @@ export const useCustomerModal = ({
 
     setLoading(true);
     try {
-      const oldDate = booking.booking_date.split('T')[0];
-      const oldStartTime = new Date(booking.booking_date)
-        .toISOString()
-        .split('T')[1]
-        .substring(0, 5); // "HH:MM"
+         const provider = await getEmail(booking.provider_id);  
+    const customer = await  getEmail(booking.customer_id);
 
       // Extract new start time
       const startTime = selectedTime.split(' - ')[0];
@@ -82,6 +89,37 @@ export const useCustomerModal = ({
 
       await fetchSlots(); // Refresh available slots
 
+         sendProviderNotificationEmail({
+            to: provider.email ?? '',
+            bookingId: booking.id.toString(),
+            amount: booking.amount.toString(),
+            formattedDate: newBookingDate.toISOString(),
+            bookingTime: startTime,
+            serviceName: booking.services.title,
+            serviceDescription: booking.services.description,
+            duration_minutes: booking.services.duration_minutes,
+            customerName: customer.full_name ?? '',
+            customerEmail: customer.email ?? '',
+            customerPhone: customer.phone_number ?? '',
+          });
+      
+          sendConfirmationEmail({
+            to: customer.email ?? '',
+            bookingId: booking.id.toString(),
+            amount: booking.amount.toString(),
+            formattedDate: newBookingDate.toISOString(),
+            bookingTime: startTime,
+            serviceName: booking.services.title,
+      
+            serviceDescription: booking.services.description,
+            duration_minutes: booking.services.duration_minutes,
+            providerName: provider.full_name ?? '',
+            location: provider.location ?? '',
+            country: booking.provider.country,
+            email: provider.email,
+            phone_number: booking.provider.phone_number || '',
+          });
+
       setSuccessOpen(true);
 
       setTimeout(() => {
@@ -97,8 +135,41 @@ export const useCustomerModal = ({
 
   const handleCancel = async () => {
     setLoading(true);
+    const provider = await getEmail(booking.provider_id);  
+    const customer = await  getEmail(booking.customer_id);
     try {
       await BookingService.cancelBooking(String(booking.id), booking.availability.id);
+       
+     await  sendCustomerBookingCancelledEmail(
+      {
+        to: customer?.email || '',
+        bookingId: booking.id.toString(),
+        amount: booking.amount.toString(),
+        formattedDate: selectedDate,
+        providerName: provider.full_name ?? '',
+        bookingTime: selectedDate.split('T')[1]?.substring(0, 5) || '',
+        serviceName: booking.services.title,
+        cancellationReason: reason,
+        cancelledBy: 'customer',
+      
+      }
+    )
+
+    await sendProviderBookingCancelledEmail(
+      {
+        to: provider?.email || '',
+        bookingId: booking.id.toString(),
+        amount: booking.amount.toString(),
+        formattedDate: selectedDate,
+        customerName: customer.full_name,
+        customerPhone: customer.phone_number ?? '',
+        customerEmail: customer.email ?? '',
+        bookingTime: selectedDate.split('T')[1]?.substring(0, 5) || '',
+        serviceName: booking.services.title,
+        cancellationReason: reason,
+        cancelledBy: 'customer',
+      }
+    )
       setSuccessOpen(true);
 
       setTimeout(() => {

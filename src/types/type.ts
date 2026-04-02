@@ -66,24 +66,29 @@ export interface BookingProvider {
   };
 }
 
+
+
 export interface BookingCustomer {
-  id: string | number;
-  amount: number;
-  currency: string;
-  status: string;
-  booking_date: string;
+  id: string;
+  customer_id: string; // ✅ ADD THIS
   customer_email: string;
+  provider_id: string;
+  provider: {
+    id: string;
+    email: string;
+    full_name: string;
+    phone_number?: string;
+    location: string;
+    country: string;
+  };
   services: {
+    id: string;
     title: string;
     description: string;
     duration_minutes: number;
   };
-  provider: {
-    id: string | number;
-    full_name: string;
-    location: string;
-    country: string;
-    email?: string;
-    phone_number?: string;
-  };
-}
+  booking_date: string;
+  amount: number;
+  currency: string;
+  status: string;
+};

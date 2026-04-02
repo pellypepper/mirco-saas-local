@@ -3,7 +3,7 @@ import ValidateMetaService from './validateMetaService';
 import { fetchServiceById } from './Services';
 import { markAvailabilityAsBooked, checkAvailabilitySlotExists } from './availabilityService';
 import customerEmailService from './customerEmailService';
-import { getProviderWithEmail } from './profileService.server';
+import { getEmail } from './profileService.server';
 import EmailService from './emailService';
 import { PaymentMetadata } from '@/types/type';
 import BookingService from './bookingService';
@@ -60,8 +60,8 @@ class StripeWebhookService {
     if (exists) return;
 
     // Fetch provider, customer, service
-    const provider = await getProviderWithEmail(metadata.provider_id);
-    const customer = await getProviderWithEmail(metadata.customer_id);
+    const provider = await getEmail(metadata.provider_id);
+    const customer = await getEmail(metadata.customer_id);
     const service = await fetchServiceById(metadata.services_id);
 
     //Set provider email
