@@ -89,7 +89,7 @@ export default function BookingsPage({ user }: { user: any }) {
       <div className="relative mx-auto max-w-8xl">
         {/* HERO HEADER */}
         <div className="mb-8">
-          <div className="relative bg-gradient-to-br from-chart-2 to-chart-3  rounded-3xl shadow-2xl p-6 md:p-8 overflow-hidden">
+          <div className="relative bg-chart-2  rounded-3xl shadow-2xl p-6 md:p-8 overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-chart-2/5 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-chart-2/30 rounded-full -ml-24 -mb-24"></div>

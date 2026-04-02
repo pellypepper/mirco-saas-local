@@ -1,5 +1,5 @@
 'use client';
-import { Briefcase, TrendingUp, Sparkles } from 'lucide-react';
+import { Briefcase,  Sparkles } from 'lucide-react';
 
 const ServiceHeader = ({
   services,
@@ -9,7 +9,7 @@ const ServiceHeader = ({
   
 }) => {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-chart-2 to-chart-3 rounded-3xl shadow-2xl">
+    <div className="relative overflow-hidden bg-chart-2 rounded-3xl shadow-2xl">
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -mr-48 -mt-48" />
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full -ml-32 -mb-32" />

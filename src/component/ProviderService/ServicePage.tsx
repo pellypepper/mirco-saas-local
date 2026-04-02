@@ -73,8 +73,7 @@ hasCurrency={hasCurrency}
           serviceDescription={serviceDescription}
           setServiceDescription={setServiceDescription}
           editingId={editingId}
-          serviceCurrency={serviceCurrency}
-          setServiceCurrency={setServiceCurrency}
+
           serviceDuration={serviceDuration}
           setServiceDuration={setServiceDuration}
           cancelEdit={cancelEdit}

@@ -24,7 +24,7 @@ export default function ProviderDashboard({ profile }: { profile: any }) {
       <div className=" mx-auto">
         <div className="mb-8">
           <div
-            className={`relative ${isDarkMode ? 'bg-gradient-to-br from-chart-2 to-chart-3  ' : 'bg-gradient-to-br from-chart-2 to-chart-3'} rounded-3xl shadow-2xl px-8 md:px-10 py-8 md:py-11 text-white overflow-hidden `}
+            className={`relative bg-chart-2 rounded-3xl shadow-2xl px-8 md:px-10 py-8 md:py-11 text-white overflow-hidden `}
           >
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>

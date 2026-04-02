@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import SuccessModal from '@/component/SuccessModal';
 import ErrorModal from '@/component/ErrorModal';
-import { get } from 'http';
+
 import { getCurrencySymbol } from '@/lib/checkCurrency';
 
 const ServiceMain = ({
@@ -42,13 +42,9 @@ hasCurrency,
   serviceDescription: string;
   setServiceDescription: (description: string) => void;
   editingId: string | null;
-  serviceCurrency: string;
-  setServiceCurrency: (currency: string) => void;
   serviceDuration: string;
   setServiceDuration: (duration: string) => void;
-  currencies: { code: string; symbol: string }[];
-  selectedCurrency: { code: string; symbol: string };
-  cancelEdit: () => void;
+ cancelEdit: () => void;
   isDarkMode: boolean;
   showSuccess: boolean;
   profile: any;
