@@ -208,11 +208,7 @@ export default function BookingsPage({ user }: { user: any }) {
                 className={`relative pl-12 h-12 md:h-14 border-2 ${inputBorder} ${inputBg} ${inputText} focus:border-chart-2 focus:ring-0 rounded-xl text-sm md:text-base font-medium transition-all placeholder:${textSecondary}`}
               />
             </div>
-            <Button className="group h-12 md:h-14 px-6 md:px-8 text-white rounded-xl bg-chart-2 hover:shadow-lg hover:shadow-chart-2/50 transition-all duration-300 font-bold text-sm md:text-base hover:scale-105 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-              <Filter className="w-4 h-4 md:w-5 md:h-5 mr-2 relative" />
-              <span className="relative">Filters</span>
-            </Button>
+            
           </div>
 
           {/* Search Results Info */}

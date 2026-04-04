@@ -85,9 +85,9 @@ const ServiceGrid = ({
                       {service.title}
                     </h3>
                     <div
-                      className={`p-1.5 ${isDarkMode ? 'bg-chart-4/20 border-chart-4/30' : 'bg-chart-4/10 border-chart-4/20'} rounded-lg border`}
+                      className={`p-1.5 ${isDarkMode ? 'bg-chart-2/20 border-chart-2/30' : 'bg-chart-2/10 border-chart-2/20'} rounded-lg border`}
                     >
-                      <Sparkles className="w-4 h-4 text-chart-4" />
+                      <Sparkles className="w-4 h-4 text-chart-2" />
                     </div>
                   </div>
                   {service.description && (

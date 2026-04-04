@@ -168,7 +168,7 @@ export const ProviderBookingGrid = ({
                   setSelectedBooking(booking);
                   setShowConfirmModal(true);
                 }}
-                className="group flex-1 rounded-xl bg-[#008800] text-white hover:shadow-lg hover:shadow-[#008800]/50 transition-all relative overflow-hidden"
+                className="group flex-1 rounded-xl bg-[#008800] text-white hover:shadow-lg transition-all relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 <CheckCircle className="w-4 h-4 mr-2 relative" />

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { adminDashboardService } from '@/services/adminDashboard';
+import { set } from 'react-hook-form';
 
 export function useAdminDashboard(timeRange: string = '6m') {
   const [overview, setOverview] = useState({
@@ -37,6 +38,7 @@ export function useAdminDashboard(timeRange: string = '6m') {
   const [categoryData, setCategoryData] = useState<
     Array<{ category: any; bookings: number; revenue: number }>
   >([]);
+  const [loading , setLoading] = useState(true);
 
   // Helper:  Get date range based on timeRange
   const getDateRange = (range: string) => {
@@ -112,6 +114,7 @@ export function useAdminDashboard(timeRange: string = '6m') {
 
   useEffect(() => {
     const fetchDashboardData = async () => {
+      setLoading(true);
       try {
         const { data: allBookingsData } = await adminDashboardService.getBookings();
         const { data: allCustomersData } = await adminDashboardService.getCustomers();
@@ -294,6 +297,7 @@ export function useAdminDashboard(timeRange: string = '6m') {
           .sort((a, b) => b.revenue - a.revenue);
 
         setCategoryData(categoryPerf);
+        setLoading(false);
       } catch (error) {
         console.error('Admin Dashboard Load Error:', error);
       }
@@ -309,5 +313,6 @@ export function useAdminDashboard(timeRange: string = '6m') {
     topProviders,
     recentCustomers,
     categoryData,
+    loading,
   };
 }

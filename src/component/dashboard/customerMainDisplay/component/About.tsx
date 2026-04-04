@@ -59,7 +59,7 @@ const About = ({ provider }: { provider: any }) => {
           {services?.length > 0 && (
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-chart-4 rounded-xl shadow-lg">
+                <div className="p-3 bg-chart-4/80 rounded-xl shadow-lg">
                   <Briefcase size={24} className="text-white" />
                 </div>
                 <h3 className={`md:text-xl text-lg font-bold ${textPrimary}`}>Services Offered</h3>

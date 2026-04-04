@@ -86,10 +86,10 @@ const BookingModal = ({ provider, slot, onConfirm, onClose }: BookingModalProps)
           <div className="relative group">
             <div className="absolute inset-0 bg-chart-2 rounded-2xl opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500"></div>
             <div
-              className={`relative flex items-center gap-4 p-5 ${isDarkMode ? 'bg-zinc-900 border-zinc-700' : 'bg-white border-gray-300'} border-2 rounded-2xl hover:border-[#eb7323]/50 transition-all duration-300`}
+              className={`relative flex items-center gap-4 p-5 ${isDarkMode ? 'bg-zinc-900 border-zinc-700' : 'bg-white border-gray-300'} border-2 rounded-2xl hover:border-chart-2/50 transition-all duration-300`}
             >
               <div className="relative flex-shrink-0">
-                <div className="absolute inset-0 bg-chart-2 rounded-xl blur-md opacity-50"></div>
+       
                 <div className="relative w-20 h-20 bg-chart-2 rounded-xl flex items-center justify-center overflow-hidden border-2 border-zinc-700">
                   <Image
                     unoptimized

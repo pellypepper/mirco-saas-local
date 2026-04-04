@@ -10,6 +10,7 @@ import { useDashboardAuth } from '@/hooks/dashboard/useDashboardAuth';
 import { useDashboardLayout } from '@/hooks/useDashboardLayout';
 import useUserProfile from '@/hooks/useUserProfile';
 import Notification from '@/component/Notification';
+import { useMainNavBar } from '@/hooks/MainNavContext';
 
 interface LayoutProps {
   children: ReactNode;
@@ -41,7 +42,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
   const { notifications } = useUserProfile(profile);
 
   useDashboardAuth(user, profile, loading);
-
+  const { isDarkMode } = useMainNavBar();
   // client-side rendering for modals
   useEffect(() => setIsClient(true), []);
 
@@ -72,7 +73,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
   }
 
   return (
-    <div>
+       <div className={`min-h-screen ${isDarkMode ? 'bg-zinc-950' : 'bg-white'}`}>
       <UserProvider value={{ user, profile }}>
         <Navbar
           user={user}

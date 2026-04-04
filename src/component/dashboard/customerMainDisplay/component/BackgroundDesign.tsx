@@ -165,7 +165,7 @@ const BackgroundDesign = ({ avatarSrc, provider }: { avatarSrc: string; provider
               <div className="absolute inset-0 rounded-3xl blur-2xl opacity-40 animate-pulse bg-chart-2/30"></div>
 
               <div className="relative w-40 h-40 md:w-48 md:h-48">
-                <div className="absolute inset-0 rounded-3xl rotate-6 bg-chart-4/20"></div>
+                <div className="absolute inset-0 rounded-3xl rotate-6 bg-chart-2/20"></div>
 
                 <div
                   className={`absolute inset-2 rounded-3xl overflow-hidden border-4 ${avatarBg} ${avatarBorder}`}

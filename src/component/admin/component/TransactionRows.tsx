@@ -4,15 +4,17 @@ import { Users, Star, MapPin } from 'lucide-react';
 const TransactionRows = ({
   topProviders,
   recentCustomers,
+  isDarkMode,
 }: {
   topProviders: any[];
   recentCustomers: any[];
+  isDarkMode: boolean;
 }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
       {/* Top Providers */}
       {/* Top Providers */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+      <div className={`bg-white rounded-2xl p-6 shadow-sm border ${isDarkMode ? 'border-slate-600' : 'border-slate-200'}`}>
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-xl font-bold text-slate-900 mb-1">Top Providers</h3>
@@ -29,7 +31,7 @@ const TransactionRows = ({
           {topProviders.map((provider, index) => (
             <div
               key={provider.id}
-              className="flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors"
+              className={`flex items-center gap-4 p-4 rounded-xl border ${isDarkMode ? 'border-slate-600' : 'border-slate-100'} hover:${isDarkMode ? 'bg-slate-600' : 'bg-slate-50'} transition-colors`}
             >
               {/* Rank */}
               <div className="flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-chart-2 to-chart-2 text-white font-bold shadow-lg">
@@ -67,7 +69,7 @@ const TransactionRows = ({
       </div>
 
       {/* Recent Customers */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+      <div className={`bg-white rounded-2xl p-6 shadow-sm border ${isDarkMode ? 'border-slate-600' : 'border-slate-200'}`}>
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-xl font-bold text-slate-900 mb-1">Recent Customers</h3>

@@ -4,13 +4,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { Service } from '@/types/type';
 import { getServices, addService, updateService, deleteService } from '@/services/Services';
 import { useUser } from '@/hooks/UserContext';
+import { set } from 'react-hook-form';
 
 
 
 const Services = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [serviceName, setServiceName] = useState('');
-
+  const [loading , setLoading] = useState(false);
   const [servicePrice, setServicePrice] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -39,6 +40,7 @@ const Services = () => {
   }, [profile, loadServices]);
 
 const handleAddService = async () => {
+    setLoading(true);
    if (!hasCurrency) return;
   if (!serviceName || !servicePrice) {
     setErrorMessage('Name and price are required.');
@@ -91,14 +93,16 @@ const handleAddService = async () => {
     setServiceCurrency(profile.default_currency || '');
     setServiceDuration('');
     setServiceDescription('');
-  } catch (err) {
-    console.error(err);
-    setErrorMessage('Something went wrong while saving the service.');
+    setLoading(false);
+  } catch (err: any) {
+  
+    setErrorMessage(err.message += 'Something went wrong while saving the service.');
     setShowError(true);
   }
 };
 
 const handleDeleteService = async (id: string) => {
+  setLoading(true);
   try {
     await deleteService(id);
 
@@ -110,9 +114,10 @@ const handleDeleteService = async (id: string) => {
     if (editingId === id) {
       cancelEdit();
     }
-  } catch (err) {
-    console.error(err);
-    setErrorDeleteMessage('Failed to delete service.');
+    setLoading(false);
+  } catch (err: any) {
+
+    setErrorDeleteMessage(err.message += 'Failed to delete service.');
     setShowDeleteError(true);
   }
 };
@@ -155,7 +160,7 @@ const handleDeleteService = async (id: string) => {
     setServiceCurrency,
     serviceDuration,
     setServiceDuration,
- 
+ loading,
     cancelEdit,
     handleEditService,
     handleDeleteService,

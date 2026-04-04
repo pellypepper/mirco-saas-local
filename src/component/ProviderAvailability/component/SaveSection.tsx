@@ -39,7 +39,7 @@ export default function SaveSection({
         {/* Left Section - Info */}
         <div className="flex items-start gap-4">
           <div className="relative">
-            <div className="absolute inset-0 bg-chart-2 rounded-2xl blur-lg opacity-50"></div>
+            
             <div className="relative p-3 bg-chart-2 rounded-2xl shadow-lg">
               <Calendar size={24} className="text-white" />
             </div>
@@ -97,7 +97,7 @@ export default function SaveSection({
           <Button
             onClick={handleSave}
             size="lg"
-            className="group relative px-8 py-3 bg-chart-2 text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-[#730071]/50 flex items-center justify-center gap-2 border-0 hover:scale-105 overflow-hidden"
+            className="group relative px-8 py-3 bg-chart-2 text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-chart-2/50 flex items-center justify-center gap-2 border-0 hover:scale-105 overflow-hidden"
           >
             <Save size={18} className="relative" />
             <span className="relative">Save Changes</span>

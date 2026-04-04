@@ -19,7 +19,7 @@ export async function GET(req: Request) {
   // Fetch the real current state directly from Stripe
   const account = await stripe.accounts.retrieve(accountId);
 
-  console.log('Stripe account details:', account);
+ 
   
 
   await supabaseAdmin

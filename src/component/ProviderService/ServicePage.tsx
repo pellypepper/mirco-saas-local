@@ -5,12 +5,13 @@ import ServiceMain from '@/component/ProviderService/component/serviceMain';
 import ServiceGrid from '@/component/ProviderService/component/serviceGrid';
 import Services from '@/hooks/useServices';
 import { useMainNavBar } from '@/hooks/MainNavContext';
+import Loader from '@/component/Spinner';
 
 export default function ServicesPage() {
   const {
     profile,
     services,
-
+loading,
     handleAddService,
     serviceName,
     setServiceName,
@@ -20,8 +21,6 @@ export default function ServicesPage() {
     setServiceDescription,
     editingId,
     handleEditService,
-    serviceCurrency,
-    setServiceCurrency,
     serviceDuration,
     setServiceDuration,
     cancelEdit,
@@ -93,6 +92,8 @@ hasCurrency={hasCurrency}
             deleteMessage={deleteMessage}
            
         />
+
+        {loading && <Loader message="Loading services..." />}
       </div>
     </div>
   );

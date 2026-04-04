@@ -50,7 +50,7 @@ export async function POST(req: Request) {
         .eq('id', userId);
 
       if (updateError) {
-        console.error('Supabase update error:', updateError);
+    
         return NextResponse.json(
           { error: 'Failed to store Stripe account' },
           { status: 500 }

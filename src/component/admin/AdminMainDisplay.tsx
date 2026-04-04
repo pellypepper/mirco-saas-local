@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import AdminHeader from './component/AdminHeader';
 import TimeRange from './component/TimeRange';
@@ -11,40 +11,58 @@ import SecondaryMetrics from './component/SecondaryMetric';
 import FooterStats from './component/FooterStats';
 import StatCard from './component/StatsCard';
 import { useAdminDashboard } from '@/hooks/useAdminDashboard';
+import { useMainNavBar } from '@/hooks/MainNavContext';
+import Loader from '@/component/Spinner';
 
 export default function AdminDashboard() {
-  const { overview, revenueData, bookingStatus, topProviders, recentCustomers, categoryData } =
+  const { overview, loading, revenueData, bookingStatus, topProviders, recentCustomers, categoryData } =
     useAdminDashboard();
-
-  // HANDLERS FOR ADMIN HEADER
-  // -------------------------------
+const memoizedOverview = useMemo(() => overview, [overview]);
+    const { isDarkMode } = useMainNavBar();
+  if (loading) return <Loader message="Loading dashboard data..." />;
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* ⭐ Admin Header with full functionality */}
-        <AdminHeader />
+    <div className={`min-h-screen  `}>
+    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        {/* Time Range Selector */}
-        <TimeRange />
+        {/* ⭐ Admin Header */}
+        <AdminHeader isDarkMode={isDarkMode} />
 
-        {/* Overview Stats */}
-        <OverviewStat overview={overview} StatCard={StatCard} />
+        {/* Time Range */}
+        <TimeRange isDarkMode={isDarkMode} />
 
-        {/* Charts Row */}
-        <ChartsRow revenueData={revenueData} bookingStatus={bookingStatus} />
+        {/* Overview */}
+        <OverviewStat
+          isDarkMode={isDarkMode}
+          overview={memoizedOverview}
+          StatCard={StatCard}
+        />
 
-        {/* Category Performance */}
-        <Performance categoryData={categoryData} />
+        {/* Charts */}
+        <ChartsRow
+          isDarkMode={isDarkMode}
+          revenueData={revenueData}
+          bookingStatus={bookingStatus}
+        />
 
-        {/* Tables Row */}
-        <TransactionsRow topProviders={topProviders} recentCustomers={recentCustomers} />
+        {/* Performance */}
+        <Performance
+          isDarkMode={isDarkMode}
+          categoryData={categoryData}
+        />
 
-        {/* Secondary Metrics */}
-        <SecondaryMetrics overview={overview} StatCard={StatCard} />
+        {/* Tables */}
+        <TransactionsRow
+          isDarkMode={isDarkMode}
+          topProviders={topProviders}
+          recentCustomers={recentCustomers}
+        />
 
-        {/* Footer Stats */}
-        <FooterStats overview={overview} />
+        {/* Secondary */}
+        <SecondaryMetrics overview={memoizedOverview} StatCard={StatCard} />
+
+        {/* Footer */}
+        <FooterStats overview={memoizedOverview} />
       </div>
     </div>
   );

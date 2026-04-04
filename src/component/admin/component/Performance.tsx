@@ -12,11 +12,13 @@ import {
 
 const Performance = ({
   categoryData,
+  isDarkMode,
 }: {
-  categoryData: Array<{ category: string; bookings: number; revenue: number }>;
+  categoryData: Array<{  category: string; bookings: number; revenue: number }>;
+  isDarkMode: boolean;
 }) => {
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-8">
+    <div className={`bg-white rounded-2xl p-6 shadow-sm border ${isDarkMode ? 'border-slate-600' : 'border-slate-200'} mb-8`}>
       <h3 className="text-xl font-bold text-slate-900 mb-4">Category Performance</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={categoryData}>
