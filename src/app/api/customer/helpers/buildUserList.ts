@@ -29,7 +29,7 @@ export function buildUsersList({
     const bookingStats = calculateBookingStats(userBookings);
 
     // Get recent bookings with full details
-    const recentBookings = getRecentBookings(userBookings, providerMap, serviceMap);
+    const recentBookings = getRecentBookings(userBookings, providerMap as any, serviceMap as any);
 
     return {
       ...profile,
