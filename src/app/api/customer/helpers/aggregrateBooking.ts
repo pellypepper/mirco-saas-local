@@ -7,6 +7,19 @@ interface Booking {
   services_id: string;
 }
 
+interface Provider {
+  id: string;
+  full_name: string;
+  avatar_url: string;
+}
+
+interface Service {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+}
+
 interface BookingStats {
   totalBookings: number;
   completedBookings: number;
@@ -44,8 +57,8 @@ export function calculateBookingStats(bookings: Booking[]): BookingStats {
 
 export function getRecentBookings(
   bookings: Booking[],
-  providerMap: Record<string, any>,
-  serviceMap: Record<string, any>,
+  providerMap: Record<string, Provider>,
+  serviceMap: Record<string, Service>,
   limit: number = 5,
 ) {
   const sortedBookings = [...bookings].sort(

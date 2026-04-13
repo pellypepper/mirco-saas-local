@@ -2,7 +2,22 @@
 
 import { supabaseAdmin } from '@/libs/supabaseAdmin';
 
-export const createBookingAction = async (data: any) => {
+interface BookingData {
+  metadata: {
+    provider_id: string;
+    customer_id: string;
+    availability_id: string;
+    services_id: string;
+    amount: number;
+    currency: string;
+    admin_fee: string | number;
+    provider_amount: string | number;
+  };
+  paymentId: string;
+  customer_email: string;
+}
+
+export const createBookingAction = async (data: BookingData) => {
   'use server'; // REQUIRED for client-side calling
 
   const { error } = await supabaseAdmin.from('bookings').insert({

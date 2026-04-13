@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const exists = data.users.some((user) => user.email === email);
 
     return NextResponse.json({ exists });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Server error.' }, { status: 500 });
+  } catch (err: unknown) {
+    return NextResponse.json({ error: (err as Error).message || 'Server error.' }, { status: 500 });
   }
 }
