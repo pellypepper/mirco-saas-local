@@ -21,7 +21,7 @@ const Performance = ({
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={categoryData}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis dataKey="category" stroke="#64748b" style={{ fontSize: '12px' }} />
+          <XAxis dataKey="category" style={{ fontSize: '12px' , stroke:"#64748b" }} />
           <YAxis stroke="#64748b" style={{ fontSize: '12px' }} />
           <Tooltip
             contentStyle={{

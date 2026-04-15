@@ -75,7 +75,7 @@ const RescheduleModal = ({
           {/* CURRENT BOOKING */}
           <div className={`rounded-2xl p-5 border-2 ${surfaceSoft} ${border}`}>
             <p className={`text-xs font-bold uppercase mb-2 ${textMuted}`}>Current Appointment</p>
-            <p className={`font-black text-xl mb-1 ${textPrimary}`}>{booking.services.title}</p>
+            <p className={`font-black text-xl mb-1 ${textPrimary}`}>{booking.services[0]?.title}</p>
             <p className={textSecondary}>
               {new Date(booking.booking_date).toLocaleDateString('en-US', {
                 weekday: 'short',

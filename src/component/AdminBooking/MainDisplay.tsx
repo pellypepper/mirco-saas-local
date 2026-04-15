@@ -92,7 +92,7 @@ const MainDisplay = () => {
     .filter((b) => b.paymentStatus === 'paid')
     .reduce((sum, b) => sum + b.amount, 0);
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed':
         return 'bg-blue-100 text-blue-700 border-blue-200';
@@ -107,7 +107,7 @@ const MainDisplay = () => {
     }
   };
 
-  const getPaymentColor = (status) => {
+  const getPaymentColor = (status: string) => {
     switch (status) {
       case 'paid':
         return 'bg-green-100 text-green-700';

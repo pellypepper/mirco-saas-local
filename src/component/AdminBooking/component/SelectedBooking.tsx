@@ -12,7 +12,7 @@ const SelectedBooking = ({
   setSelectedBooking: React.Dispatch<React.SetStateAction<any>>;
   getStatusColor: (status: string) => string;
   getPaymentColor: (status: string) => string;
-  getStatusIcon: (status: string) => JSX.Element | null;
+  getStatusIcon: (status: string) => React.ReactNode;
 }) => {
   return (
     <div
@@ -80,7 +80,7 @@ const SelectedBooking = ({
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-chart-2 to-chart-3 flex items-center justify-center text-white text-xs font-semibold">
                     {selectedBooking.providerName
                       .split(' ')
-                      .map((n) => n[0])
+                      .map((n: string) => n[0])
                       .join('')}
                   </div>
                   <span className="text-slate-800 font-medium">{selectedBooking.providerName}</span>

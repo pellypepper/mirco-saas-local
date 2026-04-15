@@ -137,7 +137,7 @@ export default function ProviderSignupForm({
                             field === 'password' ? 'password' : field === 'email' ? 'email' : 'text'
                           }
                           placeholder={`Enter your ${field.replace('_', ' ')}`}
-                          {...register(field, {
+                          {...register(field as "name" | "email" | "password" | "service_type" | "custom_service_type" | "price"  | "address" | "country", {
                             required: `${field.replace('_', ' ')} is required`,
                           })}
                           className="h-11 rounded-xl bg-white/10 border-white/20 text-white placeholder:text-zinc-400 focus:border-[#009689] focus:ring-[#009689]/50 transition-all"

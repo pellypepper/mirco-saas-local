@@ -80,14 +80,14 @@ const DetailsModal = ({
               textPrimary={textPrimary}
               textSecondary={textSecondary}
             >
-              <p className="text-3xl font-black mb-2">{booking.services.title}</p>
-              <p className={`${textSecondary} leading-relaxed`}>{booking.services.description}</p>
+              <p className="text-3xl font-black mb-2">{booking.services[0]?.title}</p>
+              <p className={`${textSecondary} leading-relaxed`}>{booking.services[0]?.description}</p>
 
               <div className={`flex flex-wrap gap-4 pt-4 mt-4 border-t-2 ${border}`}>
                 <InfoPill
                   icon={<Clock className="text-chart-4" />}
                   label="Duration"
-                  value={`${booking.services.duration_minutes} min`}
+                  value={`${booking.services[0]?.duration_minutes} min`}
                   surfaceInner={surfaceInner}
                   border={border}
                 />
@@ -117,13 +117,12 @@ const DetailsModal = ({
                 className={`flex items-center gap-4 p-4 rounded-xl border ${surfaceInner} ${border}`}
               >
                 <div className="w-16 h-16 rounded-full bg-chart-4 flex items-center justify-center text-white text-2xl font-black border-2 border-zinc-200">
-                  {booking.provider.full_name.charAt(0)}
+                  {booking.provider[0]?.full_name.charAt(0)}
                 </div>
                 <div className="flex-1">
-                  <p className="font-black text-xl">{booking.provider.full_name}</p>
+                  <p className="font-black text-xl">{booking.provider[0]?.full_name}</p>
                   <div className="flex items-center gap-2 mt-1">
                     <Star className="w-4 h-4 fill-chart-2 text-chart-2" />
-                    <span className="font-bold">{booking.provider.rating}</span>
                     <span className={textMuted}>(reviews)</span>
                   </div>
                 </div>
@@ -133,21 +132,15 @@ const DetailsModal = ({
                 <ContactRow
                   icon={<MapPin className="text-chart-2" />}
                   label="Location"
-                  value={`${booking.provider.location}, ${booking.provider.country}`}
+                  value={`${booking.provider[0]?.location}, ${booking.provider[0]?.country}`}
                   surfaceInner={surfaceInner}
                   border={border}
                 />
-                <ContactRow
-                  icon={<Mail className="text-chart-4" />}
-                  label="Email"
-                  value={booking.provider.email}
-                  surfaceInner={surfaceInner}
-                  border={border}
-                />
+           
                 <ContactRow
                   icon={<Phone className="text-green-600" />}
                   label="Phone"
-                  value={booking.provider.phone_number}
+                  value={booking.provider[0]?.phone_number}
                   surfaceInner={surfaceInner}
                   border={border}
                 />
