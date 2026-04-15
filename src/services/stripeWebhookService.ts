@@ -97,10 +97,15 @@ class StripeWebhookService {
       customer_email,
     });
 
+    const fixedMetadata = {
+      ...metadata,
+      amount: Number(metadata.amount), // Convert to number
+    };
+
     // 8. Save booking & update availability
     await createBookingAction({
       paymentId: payment.id,
-      metadata,
+      metadata: fixedMetadata,
       customer_email,
     });
 
