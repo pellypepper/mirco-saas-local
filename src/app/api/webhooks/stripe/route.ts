@@ -9,15 +9,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function POST(req: Request) {
+  console.log('🔔 Webhook received');
   try {
     const body = await req.text();
     const sig = req.headers.get('stripe-signature');
+    console.log('📝 Signature present:', !!sig);
+    console.log('📦 Body length:', body.length);
 
     if (!sig) {
+      console.error('❌ Missing stripe-signature');
       return NextResponse.json({ error: 'Missing signature' }, { status: 400 });
     }
 
-    // ✅ Try new Event Destinations format first, fall back to classic
     let event: Stripe.Event;
     try {
       event = await stripe.webhooks.constructEventAsync(
@@ -25,15 +28,17 @@ export async function POST(req: Request) {
         sig,
         process.env.STRIPE_WEBHOOK_SECRET!
       );
+      console.log('✅ Event constructed:', event.type);
     } catch (err: any) {
-      console.error('Webhook signature error:', err.message);
+      console.error('❌ Signature error:', err.message);
       return NextResponse.json({ error: err.message }, { status: 400 });
     }
 
     const result = await StripeWebhookService.handleEvent(event);
+    console.log('✅ Event handled:', result);
     return NextResponse.json(result, { status: 200 });
   } catch (err: any) {
-    console.error('Webhook error:', err);
+    console.error('❌ Webhook error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

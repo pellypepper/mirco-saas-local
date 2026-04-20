@@ -30,68 +30,51 @@ class StripeWebhookService {
   }
 
   // PAYMENT HANDLING LOGIC
-  static async handlePayment(payment: Stripe.PaymentIntent) {
-    const metadata = payment.metadata as unknown as PaymentMetadata;
+ static async handlePayment(payment: Stripe.PaymentIntent) {
+  console.log('💳 handlePayment called, payment id:', payment.id);
+  const metadata = payment.metadata as unknown as PaymentMetadata;
+  console.log('📋 metadata:', metadata);
 
-    //Validate metadata
-    ValidateMetaService.validateMetadata(metadata);
+  ValidateMetaService.validateMetadata(metadata);
 
-    // Check if booking already exists
-    const exists = await BookingService.bookingExists(payment.id);
-    if (exists) return;
+  const exists = await BookingService.bookingExists(payment.id);
+  console.log('🔍 booking exists:', exists);
+  if (exists) return;
 
-    // Fetch provider, customer, service
-    const provider = await getEmail(metadata.provider_id);
-    const customer = await getEmail(metadata.customer_id);
-    const service = await fetchServiceById(metadata.services_id);
+  const provider = await getEmail(metadata.provider_id);
+  const customer = await getEmail(metadata.customer_id);
+  console.log('👤 provider:', provider?.email, 'customer:', customer?.email);
 
-    //Set provider email
-    const provider_email = provider?.email;
+  const service = await fetchServiceById(metadata.services_id);
+  console.log('🛎 service:', service?.title);
 
-    //Check availability slot
-    const available = await checkAvailabilitySlotExists(metadata.availability_id);
-    if (!available) return;
-
-    //Fetch customer email from Checkout Session
-    const customer_email = await customerEmailService.getCustomerEmail(payment.id);
-
-    if (!customer_email) {
-      console.error('Customer email not found for payment:', payment.id);
-      return;
-    }
-
-    // 7. Send emails
-    await EmailService.sendCustomerEmail({
-      to: customer_email!,
-      paymentId: payment.id,
-      metadata,
-      provider,
-      service,
-    });
-
-    await EmailService.sendProviderEmail({
-      to: provider_email!,
-      paymentId: payment.id,
-      metadata,
-      customer,
-      service,
-      customer_email,
-    });
-
-    const fixedMetadata = {
-      ...metadata,
-      amount: Number(metadata.amount), // Convert to number
-    };
-
-    // 8. Save booking & update availability
-    await createBookingAction({
-      paymentId: payment.id,
-      metadata: fixedMetadata,
-      customer_email,
-    });
-
-    await markAvailabilityAsBooked(metadata.availability_id);
+  const available = await checkAvailabilitySlotExists(metadata.availability_id);
+  console.log('📅 slot available:', available);
+  if (!available) {
+    console.error('❌ Slot not available, stopping');
+    return;
   }
+
+  const customer_email = await customerEmailService.getCustomerEmail(payment.id);
+  console.log('📧 customer_email:', customer_email);
+  if (!customer_email) {
+    console.error('❌ No customer email found');
+    return;
+  }
+
+  console.log('📨 Sending emails...');
+  await EmailService.sendCustomerEmail({ to: customer_email!, paymentId: payment.id, metadata, provider, service });
+  await EmailService.sendProviderEmail({ to: provider.email!, paymentId: payment.id, metadata, customer, service, customer_email });
+
+  const fixedMetadata = { ...metadata, amount: Number(metadata.amount) };
+
+  console.log('💾 Creating booking...');
+  await createBookingAction({ paymentId: payment.id, metadata: fixedMetadata, customer_email });
+  console.log('✅ Booking created');
+
+  await markAvailabilityAsBooked(metadata.availability_id);
+  console.log('✅ Availability marked as booked');
+}
 }
 
 export default StripeWebhookService;
