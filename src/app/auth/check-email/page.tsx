@@ -6,7 +6,7 @@ import Loader from "@/component/Spinner"
 
 export default function CheckEmailPage() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<Loader message='loading' />}>
       <CheckEmail />
     </Suspense>
   );

@@ -2,11 +2,11 @@
 
 import {
   Clock,
-  DollarSign,
+
   X,
   Star,
   MapPin,
-  Mail,
+
   Phone,
   CheckCircle,
   Calendar,
