@@ -15,36 +15,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 class StripeWebhookService {
-  static async handleRequest(req: Request) {
-    const body = await req.text();
-    const sig = req.headers.get('stripe-signature');
-    
-   
-
-    if (!sig) throw new Error('Missing stripe-signature');
-
-    let event: Stripe.Event;
-
-    try {
-      event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
-    } catch (err: any) {
-      console.error('Stripe signature error:', err.message);
-      throw err;
-    }
-
+ static async handleEvent(event: Stripe.Event) {
     switch (event.type) {
       case 'payment_intent.succeeded':
         await this.handlePayment(event.data.object as Stripe.PaymentIntent);
         break;
-
       case 'account.updated':
         await StripeService.updateStripeAccount(event.data.object as Stripe.Account);
         break;
-
       default:
         console.log('Unhandled event:', event.type);
     }
-
     return { received: true };
   }
 
