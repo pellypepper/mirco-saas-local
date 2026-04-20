@@ -5,22 +5,26 @@ import { insertProfile } from '@/services/authService.server';
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
-
- 
+  const token_hash = requestUrl.searchParams.get('token_hash');
+  const type = requestUrl.searchParams.get('type');
 
   const supabase = await createClient();
 
-  if (code) {
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+  if (token_hash && type) {
+    const { data, error } = await supabase.auth.verifyOtp({
+      token_hash,
+      type: type as any,
+    });
+
+    console.log('verifyOtp result:', data, error); // ← add this log
 
     if (error) {
-      console.error('OAuth error:', error);
+      console.error('Token hash error:', error);
       return NextResponse.redirect(new URL('/login?error=auth_failed', requestUrl.origin));
     }
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    // ✅ Use user from verifyOtp response directly
+    const user = data?.user;
 
     if (user) {
       const { data: existingProfile } = await supabase
@@ -29,7 +33,6 @@ export async function GET(request: Request) {
         .eq('id', user.id)
         .maybeSingle();
 
-      //  No profile exists
       if (!existingProfile) {
         const meta = user.user_metadata || {};
         const fullName = meta.full_name || user.email?.split('@')[0] || 'User';
@@ -38,24 +41,57 @@ export async function GET(request: Request) {
 
         if (insertError) {
           console.error('Failed to insert profile:', insertError);
-          return NextResponse.redirect(
-            new URL('/login?error=profile_creation_failed', requestUrl.origin),
-          );
+          return NextResponse.redirect(new URL('/login?error=profile_creation_failed', requestUrl.origin));
         }
 
-        // Profile created with null role
         return NextResponse.redirect(new URL('/select-role', requestUrl.origin));
       }
 
-      //  Profile exists but no role selected yet
       if (!existingProfile.role) {
         return NextResponse.redirect(new URL('/select-role', requestUrl.origin));
       }
 
-      //  dashboard
-      const dashboardUrl =
-        existingProfile.role === 'customer' ? '/dashboard/Customer' : '/dashboard/Providers';
+      const dashboardUrl = existingProfile.role === 'customer' ? '/dashboard/Customer' : '/dashboard/Providers';
+      return NextResponse.redirect(new URL(dashboardUrl, requestUrl.origin));
+    }
+  }
 
+  // Handle PKCE code flow (desktop)
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (error) {
+      console.error('OAuth error:', error);
+      return NextResponse.redirect(new URL('/login?error=auth_failed', requestUrl.origin));
+    }
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('id, role')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (!existingProfile) {
+        const meta = user.user_metadata || {};
+        const fullName = meta.full_name || user.email?.split('@')[0] || 'User';
+
+        const { error: insertError } = await insertProfile(user.id, null, fullName, undefined);
+
+        if (insertError) {
+          return NextResponse.redirect(new URL('/login?error=profile_creation_failed', requestUrl.origin));
+        }
+
+        return NextResponse.redirect(new URL('/select-role', requestUrl.origin));
+      }
+
+      if (!existingProfile.role) {
+        return NextResponse.redirect(new URL('/select-role', requestUrl.origin));
+      }
+
+      const dashboardUrl = existingProfile.role === 'customer' ? '/dashboard/Customer' : '/dashboard/Providers';
       return NextResponse.redirect(new URL(dashboardUrl, requestUrl.origin));
     }
   }
