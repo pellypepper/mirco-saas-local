@@ -30,7 +30,6 @@ const Revenue = ({
   filterOpen: boolean;
   filtered: any[];
   setFilterOpen: (open: boolean) => void;
-  handleFilterClose: () => void;
   handleFilterReset: () => void;
   filterState: any;
   handleSearch: (term: string) => void;

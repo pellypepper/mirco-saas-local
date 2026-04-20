@@ -6,6 +6,15 @@ export interface TimeSlot {
   isSaved?: boolean;
 }
 
+export interface Slot {
+  id: string;
+ 
+  start_time: string;
+  end_time: string;
+  is_booked: boolean;
+ 
+}
+
 export interface AvailabilityRecord {
   id?: string;
   provider_id: string;
@@ -50,20 +59,20 @@ export interface BookingProvider {
     date: string;
     start_time: string;
     end_time: string;
-  };
+  }[];
 
   services: {
     title: string;
     description: string;
     duration_minutes: number;
-  };
+  }[];
 
   customer: {
     id: string;
     full_name: string;
     phone_number?: string;
     country?: string;
-  };
+  }[];
 }
 
 
@@ -75,18 +84,17 @@ export interface BookingCustomer {
   provider_id: string;
   provider: {
     id: string;
-    email: string;
     full_name: string;
     phone_number?: string;
     location: string;
     country: string;
-  };
+  }[];
   services: {
     id: string;
     title: string;
     description: string;
     duration_minutes: number;
-  };
+  }[];
   booking_date: string;
   amount: number;
   currency: string;

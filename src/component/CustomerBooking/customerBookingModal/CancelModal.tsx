@@ -49,7 +49,7 @@ const CancelModal = ({
             <h2 className="text-3xl font-black text-white">Cancel Booking?</h2>
             <p className="text-white/90 mt-2">
               Are you sure you want to cancel{' '}
-              <span className="font-bold">{booking.services.title}</span>?
+              <span className="font-bold">{booking.services[0]?.title}</span>?
             </p>
           </div>
         </div>
@@ -81,7 +81,7 @@ const CancelModal = ({
               </div>
               <div>
                 <p className={`text-xs font-bold uppercase ${textMuted}`}>Provider</p>
-                <p className={`font-bold ${textPrimary}`}>{booking.provider.full_name}</p>
+                <p className={`font-bold ${textPrimary}`}>{booking.provider[0]?.full_name}</p>
               </div>
             </div>
           </div>

@@ -10,7 +10,7 @@ import {
 
  } from '@/lib/emailSender';
  import { getEmail } from '@/services/profileService.server';
-
+import {Slot} from '@/types/type';
 
 
 

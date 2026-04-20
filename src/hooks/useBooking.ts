@@ -72,8 +72,8 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
 
     return bookings.filter(
       (b) =>
-        b.customer.full_name.toLowerCase().includes(search.toLowerCase()) ||
-        b.services.title.toLowerCase().includes(search.toLowerCase()),
+        b.customer[0]?.full_name.toLowerCase().includes(search.toLowerCase()) ||
+        b.services[0]?.title.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, bookings]);
 
@@ -120,7 +120,7 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
     const updated = await BookingService.updateBookingStatus(id, 'confirmed');
 
     const provider = await getEmail( selectedBooking?.provider_id)
-    const customer = await getEmail (selectedBooking?.customer.id )
+    const customer = await getEmail (selectedBooking?.customer[0]?.id )
 
     if (!updated) return;
 
@@ -137,9 +137,9 @@ sendProviderBookingConfirmedEmail({
   amount: selectedBooking?.amount.toString() || '',
   formattedDate: formatDate(selectedBooking?.booking_date || ''),
   bookingTime: formatTime(selectedBooking?.booking_date || ''),
-  serviceName: selectedBooking?.services.title || '',
-  serviceDescription: selectedBooking?.services.description || '',
-  duration_minutes: selectedBooking?.services.duration_minutes || 0,
+  serviceName: selectedBooking?.services[0]?.title || '',
+  serviceDescription: selectedBooking?.services[0]?.description || '',
+  duration_minutes: selectedBooking?.services[0]?.duration_minutes || 0,
   customerName: customer?.full_name || '',
   customerEmail: customer?.email || '',
   customerPhone: customer?.phone_number || '',
@@ -151,9 +151,9 @@ sendCustomerBookingConfirmedEmail({
   amount: selectedBooking?.amount.toString() || '',
   formattedDate: formatDate(selectedBooking?.booking_date || ''),
   bookingTime: formatTime(selectedBooking?.booking_date || ''),
-  serviceName: selectedBooking?.services.title || '',
-  serviceDescription: selectedBooking?.services.description || '',
-  duration_minutes: selectedBooking?.services.duration_minutes || 0,
+  serviceName: selectedBooking?.services[0]?.title || '',
+  serviceDescription: selectedBooking?.services[0]?.description || '',
+  duration_minutes: selectedBooking?.services[0]?.duration_minutes || 0,
   providerName: provider?.full_name || '',
   location: provider?.location || '',
   country: provider?.country || '',
@@ -175,13 +175,13 @@ setLoading(false);
     return;
   }
      const provider = await getEmail(selectedBooking?.provider_id );  
-    const customer = await  getEmail(selectedBooking?.customer.id );
+    const customer = await  getEmail(selectedBooking?.customer[0]?.id );
  
     const updated = await BookingService.updateBookingStatus(id, 'cancelled');
 
     const markAvailable = await BookingService.makeSlotAvailable(
       selectedBooking?.provider_id || '',
-      selectedBooking?.availability.id || '',
+      selectedBooking?.availability[0]?.id || '',
     );
 
     if (!updated) return;
@@ -197,7 +197,7 @@ setLoading(false);
         formattedDate: formatDate(selectedBooking?.booking_date || ''),
         providerName: provider.full_name ?? '',
         bookingTime: formatTime(selectedBooking?.booking_date || ''),
-        serviceName: selectedBooking?.services.title || '',
+        serviceName: selectedBooking?.services[0]?.title || '',
         cancellationReason: 'Provider cancelled the booking',
         cancelledBy: 'provider',
       
@@ -214,7 +214,7 @@ setLoading(false);
         customerPhone: customer.phone_number ?? '',
         customerEmail: customer.email ?? '',
         bookingTime: formatTime(selectedBooking?.booking_date || ''),
-        serviceName: selectedBooking?.services.title || '',
+        serviceName: selectedBooking?.services[0]?.title || '',
         cancellationReason: 'Provider cancelled the booking',
         cancelledBy: 'provider',
       }
@@ -324,7 +324,7 @@ export const useCustomerBooking = ({ user }: { user: { id: string } }) => {
   };
 
 
-  const handleReschedule = async (booking: BookingCustomer): void => {
+  const handleReschedule = async (booking: BookingCustomer): Promise<void> => {
         setLoading(true);
     setSelectedBooking(booking);
     setShowRescheduleModal(true);
@@ -350,9 +350,9 @@ if (!booking?.provider_id) {
       amount: booking.amount.toString(),
       formattedDate: formatDate(booking.booking_date),
       bookingTime: formatTime(booking.booking_date),
-      serviceName: booking.services.title,
-      serviceDescription: booking.services.description,
-      duration_minutes: booking.services.duration_minutes,
+      serviceName: booking.services[0]?.title,
+      serviceDescription: booking.services[0]?.description,
+      duration_minutes: booking.services[0]?.duration_minutes,
       customerName: customer.full_name ?? '',
       customerEmail: customer.email ?? '',
       customerPhone: customer.phone_number ?? '',
@@ -364,15 +364,15 @@ if (!booking?.provider_id) {
       amount: booking.amount.toString(),
       formattedDate: formatDate(booking.booking_date),
       bookingTime: formatTime(booking.booking_date),
-      serviceName: booking.services.title,
+      serviceName: booking.services[0]?.title,
 
-      serviceDescription: booking.services.description,
-      duration_minutes: booking.services.duration_minutes,
+      serviceDescription: booking.services[0]?.description,
+      duration_minutes: booking.services[0]?.duration_minutes,
       providerName: provider.full_name ?? '',
       location: provider.location ?? '',
-      country: booking.provider.country,
+      country: booking.provider[0]?.country,
       email: provider.email,
-      phone_number: booking.provider.phone_number || '',
+      phone_number: booking.provider[0]?.phone_number || '',
     });
 
      setLoading(false);

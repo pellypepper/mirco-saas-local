@@ -77,7 +77,7 @@ const User = ({
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-chart-2 to-chart-3 flex items-center justify-center text-white font-semibold">
                       {user.full_name
                         .split(' ')
-                        .map((n) => n[0])
+                        .map((n: string) => n[0])
                         .join('')}
                     </div>
                     <div>

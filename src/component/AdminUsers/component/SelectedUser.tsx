@@ -1,5 +1,6 @@
 'use client';
 import { Calendar, Mail, Phone, MapPin, DollarSign } from 'lucide-react';
+import React from 'react';
 
 const SelectedUser = ({
   selectedUser,
@@ -10,7 +11,7 @@ const SelectedUser = ({
   selectedUser: any;
   setSelectedUser: (user: any) => void;
   getStatusColor: (status: string) => string;
-  getStatusIcon: (status: string) => JSX.Element | null;
+  getStatusIcon: (status: string) => React.ReactNode;
 }) => {
   return (
     <div
@@ -28,7 +29,7 @@ const SelectedUser = ({
               <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-2xl font-bold">
                 {selectedUser.full_name
                   .split(' ')
-                  .map((n) => n[0])
+                  .map((n: string) => n[0])
                   .join('')}
               </div>
               <div>
@@ -144,7 +145,7 @@ const SelectedUser = ({
             </h3>
             <div className="space-y-3">
               {selectedUser.recentBookings && selectedUser.recentBookings.length > 0 ? (
-                selectedUser.recentBookings.map((booking) => (
+                selectedUser.recentBookings.map((booking: any) => (
                   <div
                     key={booking.id}
                     className="bg-white rounded-lg p-4 border border-slate-200 hover:border-blue-300 transition-colors"

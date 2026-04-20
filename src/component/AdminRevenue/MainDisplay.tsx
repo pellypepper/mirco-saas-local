@@ -16,7 +16,6 @@ const MainDisplay = () => {
     handleFilterApply,
     handleFilterReset,
     handleExportAll,
-    categoryData,
     uniqueServices,
   } = useRevenue({ providers });
 
@@ -24,7 +23,7 @@ const MainDisplay = () => {
     <div>
       <Revenue
         loading={loading}
-        categoryData={categoryData}
+    
         filtered={filtered}
         filterOpen={filterOpen}
         setFilterOpen={setFilterOpen}
