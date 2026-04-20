@@ -5,6 +5,7 @@ import { createContext, useContext } from 'react';
 interface UserContextType {
   user: any;
   profile: any;
+  loading: boolean; // ✅ add this
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);

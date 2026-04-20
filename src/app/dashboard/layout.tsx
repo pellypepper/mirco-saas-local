@@ -74,7 +74,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
 
   return (
        <div className={`min-h-screen ${isDarkMode ? 'bg-zinc-950' : 'bg-white'}`}>
-      <UserProvider value={{ user, profile }}>
+      <UserProvider value={{ loading, user, profile }}>
         <Navbar
           user={user}
           profile={profile}

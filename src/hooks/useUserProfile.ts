@@ -163,7 +163,8 @@ export const useGetProviderEmail = (providerId: string) => {
 
   useEffect(() => {
     async function fetchProvider() {
-      const data = await getEmail(providerId);
+      const res = await fetch(`/api/provider/${providerId}`); 
+      const data = await res.json();
       setProviderData(data);
     }
     fetchProvider();
