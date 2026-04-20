@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     },
   });
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || `http://localhost:3000`;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL 
 
   // Api call for sending change confirmation email
   await fetch(`${baseUrl}/api/send-change-email`, {
