@@ -2,17 +2,13 @@
 
 import { Calendar, Users, Settings } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import BookingService from '@/services/bookingService';
 import { createClient } from '@/libs/supabaseClient';
 import { fetchAvailabilityProvider } from '@/services/availabilityService';
-
 import { normalizeDate, getMonthStr, getWeekRange } from '@/lib/dashboardDateUtils';
-
 import { calculatePercentageChange, formatActivityMessage } from '@/hooks/dashboardCalculations';
 
-const supabase =  createClient();
-
 const useProvideDashBoard = () => {
+  const supabase = createClient(); // ✅ inside hook
   const [loading, setLoading] = useState(true);
   const [providerId, setProviderId] = useState<string | null>(null);
 
@@ -63,22 +59,19 @@ const useProvideDashBoard = () => {
     },
   ]);
 
-  // ------------------------------
   const loadProvider = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
     const id = session?.user?.id || null;
     setProviderId(id);
     return id;
   };
 
-  // ------------------------------
   const loadDashboard = async (providerId: string) => {
     try {
       setLoading(true);
 
-      const bookings = await BookingService.fetchBookingsByProvider(providerId);
+      const res = await fetch('/api/bookings/provider');
+      const bookings = await res.json();
 
       const todayStr = normalizeDate(new Date().toISOString());
       const currentWeek = getWeekRange(0);
@@ -88,10 +81,8 @@ const useProvideDashBoard = () => {
 
       let currentWeekRevenue = 0;
       let lastWeekRevenue = 0;
-
       const monthlyClientsMap = new Map();
       const lastMonthClientsMap = new Map();
-
       const todaysAppointments: any[] = [];
       const pending: any[] = [];
       const activity: any[] = [];
@@ -101,29 +92,20 @@ const useProvideDashBoard = () => {
 
         const bookingDateObj = new Date(b.booking_date);
         const bookingDateStr = normalizeDate(b.booking_date);
-        const bookingMonth = `${bookingDateObj.getUTCFullYear()}-${String(
-          bookingDateObj.getUTCMonth() + 1,
-        ).padStart(2, '0')}`;
-
+        const bookingMonth = `${bookingDateObj.getUTCFullYear()}-${String(bookingDateObj.getUTCMonth() + 1).padStart(2, '0')}`;
         const customer = Array.isArray(b.customer) ? b.customer[0] : b.customer;
 
-        // Today bookings
         if (bookingDateStr === todayStr && b.status === 'confirmed') todaysAppointments.push(b);
 
-        // Weekly revenue
         if (b.status === 'confirmed') {
           if (bookingDateObj >= currentWeek.start && bookingDateObj <= currentWeek.end)
             currentWeekRevenue += b.amount;
-
           if (bookingDateObj >= lastWeek.start && bookingDateObj <= lastWeek.end)
             lastWeekRevenue += b.amount;
         }
 
-        // Monthly clients
         if (bookingMonth === thisMonth) monthlyClientsMap.set(customer.id, customer);
-
         if (bookingMonth === lastMonth) lastMonthClientsMap.set(customer.id, customer);
-
         if (b.status === 'pending') pending.push(b);
 
         activity.push({
@@ -133,20 +115,12 @@ const useProvideDashBoard = () => {
         });
       });
 
-      // Only latest 5
       activity.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
       activity.splice(5);
 
-      // Weekly revenue change
       const weeklyRevenueChange = calculatePercentageChange(currentWeekRevenue, lastWeekRevenue);
+      const monthlyClientsChange = calculatePercentageChange(monthlyClientsMap.size, lastMonthClientsMap.size);
 
-      // Monthly client change
-      const monthlyClientsChange = calculatePercentageChange(
-        monthlyClientsMap.size,
-        lastMonthClientsMap.size,
-      );
-
-      // Reviews
       const { data: reviews } = await supabase
         .from('reviews')
         .select('rating')
@@ -158,18 +132,14 @@ const useProvideDashBoard = () => {
 
       const ratingChange =
         reviews && reviews.length > 1
-          ? avgRating -
-            reviews.slice(0, -1).reduce((a, b) => a + b.rating, 0) / (reviews.length - 1)
+          ? avgRating - reviews.slice(0, -1).reduce((a, b) => a + b.rating, 0) / (reviews.length - 1)
           : 0;
 
-      // Availability
       const availability = await fetchAvailabilityProvider(providerId);
       const totalSlots = availability.length;
       const filledSlots = availability.filter((a) => a.is_booked).length;
-
       const availabilityFilled = totalSlots ? Math.round((filledSlots / totalSlots) * 100) : 0;
 
-      // Last week availability
       const { data: lastWeekAvailabilityData } = await supabase
         .from('availability')
         .select('*')
@@ -179,21 +149,14 @@ const useProvideDashBoard = () => {
 
       const lastWeekTotal = lastWeekAvailabilityData?.length || 0;
       const lastWeekFilled = lastWeekAvailabilityData?.filter((a) => a.is_booked).length || 0;
-
-      const lastWeekFillRate = lastWeekTotal
-        ? Math.round((lastWeekFilled / lastWeekTotal) * 100)
-        : 0;
-
+      const lastWeekFillRate = lastWeekTotal ? Math.round((lastWeekFilled / lastWeekTotal) * 100) : 0;
       const availabilityChange = availabilityFilled - lastWeekFillRate;
 
-      // Tips
       let tip = '';
       if (weeklyRevenueChange > 20) tip = 'Revenue is up 🟢 compared to last week!';
-      else if (weeklyRevenueChange < -10)
-        tip = 'Revenue dropped last week. Check your service offering!';
+      else if (weeklyRevenueChange < -10) tip = 'Revenue dropped last week. Check your service offering!';
       else tip = 'Your dashboard is steady. Try adding new availability slots for more bookings.';
 
-      // Set dashboard stats
       setStats({
         todayBookings: todaysAppointments.length,
         weeklyRevenue: currentWeekRevenue,

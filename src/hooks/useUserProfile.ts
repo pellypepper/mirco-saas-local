@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { uploadAvatar, updateProfile } from '@/services/profileService';
-import { getEmail } from '@/services/profileService.server';
+
 
 const useUserProfile = (profile: any) => {
   const [formData, setFormData] = useState({

@@ -1,18 +1,18 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import BookingService from '@/services/bookingService';
 import {
   sendCustomerBookingCancelledEmail,
   sendProviderBookingCancelledEmail,
   sendConfirmationEmail,
   sendProviderNotificationEmail,
+} from '@/lib/emailSender';
+import { Slot } from '@/types/type';
 
- } from '@/lib/emailSender';
- import { getEmail } from '@/services/profileService.server';
-import {Slot} from '@/types/type';
-
-
+const getEmail = async (id: string) => {
+  const res = await fetch(`/api/provider/${id}`);
+  return res.json();
+};
 
 export const useCustomerModal = ({
   onCancel,
@@ -36,12 +36,8 @@ export const useCustomerModal = ({
   const fetchSlots = useCallback(async () => {
     setLoading(true);
     try {
-   
-      const slots = await BookingService.fetchAvailableSlots(
-        String(booking.provider.id),
-        selectedDate,
-      );
-
+      const res = await fetch(`/api/availability/${booking.provider.id}?date=${selectedDate}`);
+      const slots = await res.json();
       setAvailableSlots(slots);
     } catch (error) {
       console.error('Error fetching slots:', error);
@@ -51,14 +47,11 @@ export const useCustomerModal = ({
   }, [booking.provider.id, selectedDate]);
 
   useEffect(() => {
-    if (selectedDate) {
-      fetchSlots();
-    }
+    if (selectedDate) fetchSlots();
   }, [selectedDate, fetchSlots]);
 
   const handleReschedule = async () => {
     if (!selectedDate || !selectedTime || !availabilityId) return;
-
     if (!selectedTime.includes(' - ')) {
       console.error('Invalid selectedTime format:', selectedTime);
       return;
@@ -66,62 +59,58 @@ export const useCustomerModal = ({
 
     setLoading(true);
     try {
-         const provider = await getEmail(booking.provider_id);  
-    const customer = await  getEmail(booking.customer_id);
+      const provider = await getEmail(booking.provider_id);
+      const customer = await getEmail(booking.customer_id);
 
-      // Extract new start time
       const startTime = selectedTime.split(' - ')[0];
       const [hours, minutes] = startTime.split(':').map(Number);
-
       const newBookingDate = new Date(selectedDate);
       newBookingDate.setHours(hours, minutes, 0, 0);
 
-      await BookingService.rescheduleBooking(
-        String(booking.id),
-        newBookingDate.toISOString(),
-        availabilityId,
-      );
+      await fetch(`/api/bookings/${booking.id}/reschedule`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          newDate: newBookingDate.toISOString(),
+          availabilityId,
+          oldAvailabilityId: booking.availability.id,
+          providerId: booking.provider.id,
+        }),
+      });
 
-      // ✅ Make the old slot available again
-      await BookingService.makeSlotAvailable(booking.provider.id, booking.availability.id);
+      await fetchSlots();
 
-      await BookingService.markSlotUnavailable(booking.provider.id, availabilityId);
+      sendProviderNotificationEmail({
+        to: provider.email ?? '',
+        bookingId: booking.id.toString(),
+        amount: booking.amount.toString(),
+        formattedDate: newBookingDate.toISOString(),
+        bookingTime: startTime,
+        serviceName: booking.services.title,
+        serviceDescription: booking.services.description,
+        duration_minutes: booking.services.duration_minutes,
+        customerName: customer.full_name ?? '',
+        customerEmail: customer.email ?? '',
+        customerPhone: customer.phone_number ?? '',
+      });
 
-      await fetchSlots(); // Refresh available slots
-
-         sendProviderNotificationEmail({
-            to: provider.email ?? '',
-            bookingId: booking.id.toString(),
-            amount: booking.amount.toString(),
-            formattedDate: newBookingDate.toISOString(),
-            bookingTime: startTime,
-            serviceName: booking.services.title,
-            serviceDescription: booking.services.description,
-            duration_minutes: booking.services.duration_minutes,
-            customerName: customer.full_name ?? '',
-            customerEmail: customer.email ?? '',
-            customerPhone: customer.phone_number ?? '',
-          });
-      
-          sendConfirmationEmail({
-            to: customer.email ?? '',
-            bookingId: booking.id.toString(),
-            amount: booking.amount.toString(),
-            formattedDate: newBookingDate.toISOString(),
-            bookingTime: startTime,
-            serviceName: booking.services.title,
-      
-            serviceDescription: booking.services.description,
-            duration_minutes: booking.services.duration_minutes,
-            providerName: provider.full_name ?? '',
-            location: provider.location ?? '',
-            country: booking.provider.country,
-            email: provider.email,
-            phone_number: booking.provider.phone_number || '',
-          });
+      sendConfirmationEmail({
+        to: customer.email ?? '',
+        bookingId: booking.id.toString(),
+        amount: booking.amount.toString(),
+        formattedDate: newBookingDate.toISOString(),
+        bookingTime: startTime,
+        serviceName: booking.services.title,
+        serviceDescription: booking.services.description,
+        duration_minutes: booking.services.duration_minutes,
+        providerName: provider.full_name ?? '',
+        location: provider.location ?? '',
+        country: booking.provider.country,
+        email: provider.email,
+        phone_number: booking.provider.phone_number || '',
+      });
 
       setSuccessOpen(true);
-
       setTimeout(() => {
         if (onReschedule) onReschedule();
         onClose();
@@ -135,13 +124,16 @@ export const useCustomerModal = ({
 
   const handleCancel = async () => {
     setLoading(true);
-    const provider = await getEmail(booking.provider_id);  
-    const customer = await  getEmail(booking.customer_id);
+    const provider = await getEmail(booking.provider_id);
+    const customer = await getEmail(booking.customer_id);
     try {
-      await BookingService.cancelBooking(String(booking.id), booking.availability.id);
-       
-     await  sendCustomerBookingCancelledEmail(
-      {
+      await fetch(`/api/bookings/${booking.id}/cancel`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ availabilityId: booking.availability.id }),
+      });
+
+      await sendCustomerBookingCancelledEmail({
         to: customer?.email || '',
         bookingId: booking.id.toString(),
         amount: booking.amount.toString(),
@@ -151,12 +143,9 @@ export const useCustomerModal = ({
         serviceName: booking.services.title,
         cancellationReason: reason,
         cancelledBy: 'customer',
-      
-      }
-    )
+      });
 
-    await sendProviderBookingCancelledEmail(
-      {
+      await sendProviderBookingCancelledEmail({
         to: provider?.email || '',
         bookingId: booking.id.toString(),
         amount: booking.amount.toString(),
@@ -168,10 +157,9 @@ export const useCustomerModal = ({
         serviceName: booking.services.title,
         cancellationReason: reason,
         cancelledBy: 'customer',
-      }
-    )
-      setSuccessOpen(true);
+      });
 
+      setSuccessOpen(true);
       setTimeout(() => {
         if (onCancel) onCancel();
         onClose();
@@ -220,12 +208,12 @@ export const useBookAgain = ({
   const providerId = booking.provider.id;
   const serviceId = booking.services.id;
 
-  // Fetch slots for a specific date
   const fetchSlots = useCallback(
     async (date: string) => {
       try {
         setLoading(true);
-        const available = await BookingService.fetchAvailableSlots(providerId, date);
+        const res = await fetch(`/api/availability/${providerId}?date=${date}`);
+        const available = await res.json();
         setSlots(available);
       } catch (e) {
         setSlots([]);
@@ -236,15 +224,13 @@ export const useBookAgain = ({
     [providerId],
   );
 
-  // Fetch today's slots on first load
   useEffect(() => {
     fetchSlots(selectedDate);
   }, [fetchSlots, selectedDate]);
 
-  // Fetch slots whenever date changes
   useEffect(() => {
     fetchSlots(selectedDate);
-    setSelectedSlot(null); // Reset slot when date changes
+    setSelectedSlot(null);
   }, [selectedDate, fetchSlots]);
 
   const handleConfirm = async () => {
@@ -267,18 +253,16 @@ export const useBookAgain = ({
         provider_amount: String(booking.amount),
       },
     };
+
     try {
-      const response = await fetch('/api/create-booking', {
+      await fetch('/api/create-booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bookingPayload),
       });
 
-      const result = await response.json();
-
-      await BookingService.markSlotUnavailable(providerId, selectedSlot.id);
-
-      await BookingService.deleteBookingForCustomer(booking.id);
+      await fetch(`/api/availability/${selectedSlot.id}/unavailable`, { method: 'PATCH' });
+      await fetch(`/api/bookings/${booking.id}`, { method: 'DELETE' });
 
       setSuccess('Booking successful!');
     } catch (err) {
