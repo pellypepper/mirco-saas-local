@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { supabaseAdmin } from '@/libs/supabaseAdmin';
+import { supabaseAdmin} from '@/libs/supabaseAdmin';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing STRIPE_SECRET_KEY in environment variables');
@@ -75,6 +75,7 @@ class StripeService {
   }
 
   static async updateStripeAccount(account: any) {
+    
     const { error } = await supabaseAdmin
       .from('profiles')
       .update({

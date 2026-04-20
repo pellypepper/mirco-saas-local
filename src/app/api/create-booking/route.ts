@@ -4,6 +4,8 @@ import { supabaseAdmin } from '@/libs/supabaseAdmin';
 export async function POST(request: Request) {
   const data = await request.json();
 
+ 
+
   const bookingData = {
     provider_id: data.metadata.provider_id,
     customer_id: data.metadata.customer_id,

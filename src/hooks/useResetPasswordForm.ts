@@ -4,7 +4,9 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { resetPassword } from '@/services/resetPasswordService';
 import { useMainNavBar } from './MainNavContext';
-import { supabase } from '@/libs/supabaseClient';
+import { createClient } from '@/libs/supabaseClient';
+
+const supabase = createClient();
 
 export function useResetPasswordForm() {
   const router = useRouter();

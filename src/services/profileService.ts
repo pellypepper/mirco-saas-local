@@ -1,6 +1,7 @@
-import { supabase } from '@/libs/supabaseClient';
+import { createClient } from '@/libs/supabaseClient';
 
 export const uploadAvatar = async (file: File) => {
+  const supabase =  createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -29,7 +30,7 @@ export const updateProfile = async (
   const sanitized = Object.fromEntries(
     Object.entries(formData).map(([key, value]) => [key, value === '' ? null : value]),
   );
-
+  const supabase =  createClient();
   const { error } = await supabase
     .from('profiles')
     .update({ ...sanitized, avatar_url: imageUrl })

@@ -1,7 +1,8 @@
-import { supabase } from '@/libs/supabaseClient';
+import { createClient} from '@/libs/supabaseClient';
 
 export const adminBookingService = async () => {
   // 1️⃣ Fetch bookings
+  const supabase = createClient();
   const { data: bookings, error: bookingError } = await supabase.from('bookings').select('*');
 
   if (bookingError) throw bookingError;

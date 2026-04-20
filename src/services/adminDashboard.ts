@@ -1,4 +1,6 @@
-import { supabase } from '@/libs/supabaseClient';
+import { createClient} from '@/libs/supabaseClient';
+
+const supabase = createClient();
 
 export async function getBookings() {
   return await supabase.from('bookings').select('*');

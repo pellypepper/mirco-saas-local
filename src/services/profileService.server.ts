@@ -1,6 +1,7 @@
 import { supabaseAdmin } from '@/libs/supabaseAdmin';
 
 export async function getEmail(providerId: string) {
+ 
   const { data: profile, error: profileError } = await supabaseAdmin
     .from('profiles')
     .select('*')

@@ -1,4 +1,4 @@
-import { supabase } from '@/libs/supabaseClient';
+import {createClient } from '@/libs/supabaseClient';
 
 export type NotificationType =
   | 'new_booking'
@@ -39,8 +39,12 @@ export interface Notification {
 }
 
 export const notificationService = {
+    
+
   // Subscribe to real-time notifications
   subscribeToNotifications: (onNotification: (n: Notification) => void) => {
+    const supabase =  createClient();
+    
     const channel = supabase
       .channel('notifications-feed')
       .on(

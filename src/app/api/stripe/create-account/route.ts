@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/libs/supabaseAdmin';
+import { supabaseAdmin} from '@/libs/supabaseAdmin';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing STRIPE_SECRET_KEY in environment variables');
@@ -11,6 +11,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 });
 
 export async function POST(req: Request) {
+   
+
   try {
     const { userId } = await req.json();
 

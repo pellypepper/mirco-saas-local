@@ -1,7 +1,11 @@
-import { supabaseAdmin } from '@/libs/supabaseAdmin';
+import {supabaseAdmin } from '@/libs/supabaseAdmin';
 
 export const fetchCustomerData = {
+
+
   async getProfiles() {
+
+
     const { data, error } = await supabaseAdmin.from('profiles').select('*').eq('role', 'customer');
 
     if (error) {
@@ -13,6 +17,8 @@ export const fetchCustomerData = {
   },
 
   async getBookings() {
+    
+
     const { data, error } = await supabaseAdmin.from('bookings').select('*');
 
     if (error) {
@@ -24,6 +30,8 @@ export const fetchCustomerData = {
   },
 
   async getProviders() {
+  
+
     const { data, error } = await supabaseAdmin
       .from('profiles')
       .select('id, full_name, avatar_url')
@@ -38,6 +46,8 @@ export const fetchCustomerData = {
   },
 
   async getServices() {
+
+
     const { data, error } = await supabaseAdmin
       .from('services')
       .select('id, title, price, description');

@@ -7,7 +7,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
+ 
+    
+    const { searchParams } = new URL(req.url);
   const accountId = searchParams.get('accountId');
 
   if (!accountId) {

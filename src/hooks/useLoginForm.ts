@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { loginWithEmail } from '@/services/loginService';
 import { getUserRole } from '@/services/authService';
-import { supabase } from '@/libs/supabaseClient';
+import { createClient } from '@/libs/supabaseClient';
+
+const supabase =  createClient();
 
 export function useLoginForm() {
   const router = useRouter();

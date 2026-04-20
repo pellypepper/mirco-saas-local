@@ -2,6 +2,8 @@ import { supabaseAdmin } from '@/libs/supabaseAdmin';
 
 class BookingService {
   static async bookingExists(paymentId: string) {
+    
+
     const { data } = await supabaseAdmin
       .from('bookings')
       .select('id')
@@ -12,6 +14,7 @@ class BookingService {
   }
 
   static async createBooking({ paymentId, metadata, customer_email }: any) {
+
     const { error } = await supabaseAdmin.from('bookings').insert({
       provider_id: metadata.provider_id,
       customer_id: metadata.customer_id,
@@ -31,6 +34,8 @@ class BookingService {
   }
 
   static async fetchBookingsByCustomer(customerId: string) {
+       
+
     const { data, error } = await supabaseAdmin
       .from('bookings')
       .select(
@@ -60,6 +65,8 @@ class BookingService {
   }
 
   static async fetchBookingsByProvider(providerId: string) {
+  
+
     const { data, error } = await supabaseAdmin
       .from('bookings')
       .select(
@@ -89,6 +96,8 @@ class BookingService {
   }
 
   static async updateBookingStatus(bookingId: string, status: string) {
+        
+
     const { data, error } = await supabaseAdmin
       .from('bookings')
       .update({ status })
@@ -105,6 +114,8 @@ class BookingService {
   }
 
   static async cancelBooking(bookingId: string, availabilityId: string) {
+      
+
     try {
       // Fetch booking to get provider + slot info
       const { data: booking, error: fetchError } = await supabaseAdmin
@@ -150,6 +161,8 @@ class BookingService {
   }
 
   static async fetchAvailableSlots(providerId: string, date: string) {
+
+
     try {
       // Define start and end of the day as time strings
       const startTime = '00:00:00';
@@ -188,6 +201,8 @@ class BookingService {
   }
 
   static async rescheduleBooking(bookingId: string, timestamp: string, availability_id: string) {
+     
+
     try {
       const { data, error } = await supabaseAdmin
         .from('bookings')
@@ -209,6 +224,8 @@ class BookingService {
   }
   // bookingService.ts
   static async makeSlotAvailable(providerId: string | number, availabilityId: string) {
+   
+
     try {
       const { data, error } = await supabaseAdmin
         .from('availability')
@@ -230,6 +247,8 @@ class BookingService {
   }
 
   static async markSlotUnavailable(providerId: string | number, availabilityId: string) {
+  
+
     try {
       const { data, error } = await supabaseAdmin
         .from('availability')
@@ -249,6 +268,8 @@ class BookingService {
   }
 
   static async deleteBookingForCustomer(bookingId: string) {
+
+
     const { data, error } = await supabaseAdmin
       .from('bookings')
       .update({ deleted_by_customer: true })
@@ -263,6 +284,8 @@ class BookingService {
   }
 
   static async deleteBookingForProvider(bookingId: string) {
+      
+
     try {
       const { data, error } = await supabaseAdmin
         .from('bookings')

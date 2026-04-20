@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '../libs/supabaseClient';
+import { createClient } from '../libs/supabaseClient';
 
 import { sanitize, isValidEmail, isStrongPassword } from '@/lib/sanitizehelper';
-import { set } from 'react-hook-form';
+
+
+    
 
 export const useSignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -15,6 +17,9 @@ export const useSignUp = () => {
     setLoading(true);
     setError(null);
     setMessage(null);
+
+  const supabase=  createClient();
+
 
     const cleanEmail = sanitize(email).toLowerCase();
     const cleanName = sanitize(fullName, 100);
@@ -87,6 +92,7 @@ export const useProviderSignUp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+    const supabase=  createClient();
 
   const signUpProvider = async (
     email: string,
@@ -190,10 +196,14 @@ export const useForgotPassword = ({
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+   
+
   const sendResetEmail = async (email: string, redirectTo?: string) => {
     setLoading(true);
     setMessage(null);
     setError(null);
+
+     const supabase=  createClient();
 
     try {
       if (!isValidEmail(email)) {
@@ -282,6 +292,7 @@ export const useResetPassword = () => {
     setError(null);
     setMessage(null);
 
+ const supabase=  createClient();
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
 
@@ -306,6 +317,8 @@ export const useChangeEmail = () => {
     setLoading(true);
     setError(null);
     setMessage(null);
+
+     const supabase=  createClient();
 
     try {
       if (!newEmail || !/\S+@\S+\.\S+/.test(newEmail)) {
@@ -389,6 +402,8 @@ export const useChangePassword = () => {
     setLoading(true);
     setError(null);
     setMessage(null);
+
+     const supabase=  createClient();
 
     try {
       if (!currentPassword) {

@@ -1,5 +1,7 @@
-import { supabase } from '@/libs/supabaseClient';
+import { createClient} from '@/libs/supabaseClient';
 import { Service } from '@/types/type';
+
+const supabase =  createClient();
 
 // FETCH ALL SERVICES OF PROVIDER
 export async function getServices(providerId: string) {

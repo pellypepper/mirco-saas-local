@@ -1,7 +1,8 @@
-import { supabase } from '@/libs/supabaseClient';
-import { supabaseAdmin } from '@/libs/supabaseAdmin'; 
+import { createClient as supabaseClient} from '@/libs/supabaseClient';
+import {supabaseAdmin } from '@/libs/supabaseAdmin'; 
 
 export const fetchServiceTypes = async (): Promise<string[]> => {
+  const supabase =  supabaseClient();
   const { data, error } = await supabase.from('profiles').select('service_type');
   if (error) {
     console.error('Error fetching service types:', error);
@@ -30,6 +31,7 @@ export const upsertProviderProfile = async ({
   address: string;
   country: string;
 }) => {
+  const supabase =  supabaseClient();
   return await supabase.from('profiles').upsert({
     id,
     role: 'provider',
@@ -41,12 +43,14 @@ export const upsertProviderProfile = async ({
 };
 
 export const fetchProviderProfile = async () => {
+ const supabase =  supabaseClient();
   const { data, error } = await supabase.from('profiles').select('*').eq('role', 'provider');
 
   if (!error) return data || [];
 };
 
 export const fetchProviderById = async (providerId: string) => {
+  const supabase =  supabaseClient();
   const { data, error } = await supabase.from('profiles').select('*').eq('id', providerId).single();
 
   if (!error) return data || [];
@@ -55,6 +59,7 @@ export const fetchProviderById = async (providerId: string) => {
 export const getProviderStripeId = async (
   providerId: string
 ): Promise<{ stripeAccountId: string; payoutEnabled: boolean; currency: string } | null> => {
+
   const { data, error } = await supabaseAdmin
     .from('profiles')
   .select('stripe_account_id, payout_enabled, default_currency')

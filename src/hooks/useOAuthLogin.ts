@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { supabase } from '@/libs/supabaseClient';
+import { createClient } from '@/libs/supabaseClient';
 import type { Provider } from '@supabase/supabase-js';
+
+const supabase = createClient();
 
 export default function useOAuthLogin() {
   const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null);

@@ -1,5 +1,6 @@
-import { supabase } from '@/libs/supabaseClient';
-import { supabaseAdmin } from '@/libs/supabaseAdmin';
+import { createClient as supabaseClient} from '@/libs/supabaseClient';
+import {supabaseAdmin 
+} from '@/libs/supabaseAdmin'; 
 
 export const upsertUserProfile = async (
   userId: string,
@@ -7,6 +8,9 @@ export const upsertUserProfile = async (
   fullName: string,
   extraFields: Record<string, any> = {},
 ) => {
+
+  const supabase =  supabaseClient();
+
   const { error } = await supabase.from('profiles').upsert(
     {
       id: userId,
@@ -23,6 +27,8 @@ export const upsertUserProfile = async (
 };
 
 export async function getCurrentSession() {
+  const supabase =  supabaseClient();
+
   const {
     data: { session },
   } = await supabase.auth.getSession();
@@ -31,6 +37,7 @@ export async function getCurrentSession() {
 
 // Fetches the user profile/role from Supabase
 export async function getUserRole(userId: string) {
+  const supabase =  supabaseClient();
   const { data: profile, error } = await supabase
     .from('profiles')
     .select('role, full_name, id')
@@ -42,6 +49,7 @@ export async function getUserRole(userId: string) {
 
 // Check if user has a profile
 export async function hasUserProfile(userId: string) {
+  const supabase =  supabaseClient();
   const { data, error } = await supabase
     .from('profiles')
     .select('id')
@@ -53,6 +61,7 @@ export async function hasUserProfile(userId: string) {
 
 // Create initial profile for OAuth users
 export async function createOAuthProfile(userId: string, email: string, fullName?: string) {
+  const supabase =  supabaseClient();
   const { data, error } = await supabase
     .from('profiles')
     .insert({
@@ -74,6 +83,7 @@ export async function insertProfile(
   fullName: string,
   extraFields: Record<string, any> = {},
 ) {
+
   const { data, error } = await supabaseAdmin
     .from('profiles')
     .insert({
@@ -95,6 +105,7 @@ export async function insertProfile(
 }
 
 export async function resendVerificationEmail(email: string) {
+  const supabase =  supabaseClient();
   const { error } = await supabase.auth.resend({
     type: 'signup',
     email,

@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/libs/supabaseAdmin';
+import {supabaseAdmin} from '@/libs/supabaseAdmin';
 
 export async function GET() {
   // Fetch ONLY providers
+ 
   const { data: profiles, error: profileError } = await supabaseAdmin
     .from('profiles')
     .select('*')

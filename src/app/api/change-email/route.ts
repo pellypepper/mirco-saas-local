@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/libs/supabaseAdmin';
+import {supabaseAdmin } from '@/libs/supabaseAdmin';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
@@ -7,7 +7,6 @@ export async function POST(request: Request) {
   const { newEmail } = await request.json();
   const cookieStore = await cookies();
 
-  // Get current user
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

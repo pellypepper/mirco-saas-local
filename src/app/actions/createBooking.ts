@@ -16,10 +16,14 @@ interface BookingData {
   paymentId: string;
   customer_email: string;
 }
+ 
 
 export const createBookingAction = async (data: BookingData) => {
   'use server'; // REQUIRED for client-side calling
 
+
+  
+  
   const { error } = await supabaseAdmin.from('bookings').insert({
     provider_id: data.metadata.provider_id,
     customer_id: data.metadata.customer_id,
@@ -36,7 +40,7 @@ export const createBookingAction = async (data: BookingData) => {
   });
 
   if (error) {
-    console.log('Supabase error:', error);
+ 
     throw error;
   }
 };

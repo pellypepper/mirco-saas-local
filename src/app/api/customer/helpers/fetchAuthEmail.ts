@@ -1,6 +1,9 @@
-import { supabaseAdmin } from '@/libs/supabaseAdmin';
+import { supabaseAdmin} from '@/libs/supabaseAdmin';
 
 export async function fetchAuthEmails(): Promise<Record<string, string>> {
+
+
+
   const emailMap: Record<string, string> = {};
   let page = 1;
   const perPage = 1000;

@@ -1,10 +1,11 @@
-import { supabase } from '@/libs/supabaseClient';
+import { createClient } from '@/libs/supabaseClient';
 import { AvailabilityRecord } from '@/types/type';
 
 /**
  * Fetch availability records for a provider
  */
 export async function fetchAvailability(providerId: string): Promise<AvailabilityRecord[]> {
+  const supabase =  createClient();
   const { data, error } = await supabase
     .from('availability')
     .select('*')
@@ -18,6 +19,7 @@ export async function fetchAvailability(providerId: string): Promise<Availabilit
 }
 
 export async function fetchAvailabilityProvider(providerId: string): Promise<AvailabilityRecord[]> {
+  const supabase =  createClient();
   const { data, error } = await supabase
     .from('availability')
     .select('*')
@@ -33,6 +35,7 @@ export async function fetchAvailabilityProvider(providerId: string): Promise<Ava
  * Save (upsert) new availability records
  */
 export async function saveAvailability(records: AvailabilityRecord[]): Promise<void> {
+  const supabase =  createClient();
   const { error } = await supabase.from('availability').upsert(records);
   if (error) throw error;
 }
@@ -41,6 +44,7 @@ export async function saveAvailability(records: AvailabilityRecord[]): Promise<v
  * Delete a specific time slot
  */
 export async function deleteSlot(slotId: string): Promise<void> {
+  const supabase =  createClient();
   const { error } = await supabase.from('availability').delete().eq('id', slotId);
   if (error) throw error;
 }
@@ -49,6 +53,7 @@ export async function deleteSlot(slotId: string): Promise<void> {
  * Fetch availability records for a customer
  */
 export async function getProviderAvailability(providerId: string): Promise<AvailabilityRecord[]> {
+  const supabase =  createClient();
   const { data, error } = await supabase
     .from('availability')
     .select('*')
@@ -62,6 +67,7 @@ export async function getProviderAvailability(providerId: string): Promise<Avail
 export async function getAvailabilityById(
   availabilityId: string,
 ): Promise<{ is_booked: boolean } | null> {
+  const supabase =  createClient();
   const { data, error } = await supabase
     .from('availability')
     .select('is_booked')
@@ -75,6 +81,7 @@ export async function getAvailabilityById(
 }
 
 export async function markAvailabilityAsBooked(availabilityId: string): Promise<void> {
+  const supabase =  createClient();
   const { error } = await supabase
     .from('availability')
     .update({ is_booked: true })
@@ -86,6 +93,7 @@ export async function markAvailabilityAsBooked(availabilityId: string): Promise<
 }
 
 export async function checkAvailabilitySlotExists(availabilityId: string): Promise<boolean> {
+  const supabase =  createClient();
   const { data, error } = await supabase
     .from('availability')
     .select('is_booked')

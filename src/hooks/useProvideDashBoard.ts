@@ -3,12 +3,14 @@
 import { Calendar, Users, Settings } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import BookingService from '@/services/bookingService';
-import { supabase } from '@/libs/supabaseClient';
+import { createClient } from '@/libs/supabaseClient';
 import { fetchAvailabilityProvider } from '@/services/availabilityService';
 
 import { normalizeDate, getMonthStr, getWeekRange } from '@/lib/dashboardDateUtils';
 
 import { calculatePercentageChange, formatActivityMessage } from '@/hooks/dashboardCalculations';
+
+const supabase =  createClient();
 
 const useProvideDashBoard = () => {
   const [loading, setLoading] = useState(true);
