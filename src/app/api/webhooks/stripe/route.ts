@@ -1,3 +1,13 @@
+import { NextResponse } from 'next/server';
+import Stripe from 'stripe';
+import StripeWebhookService from '@/services/stripeWebhookService';
+
+export const runtime = 'nodejs';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2022-11-15',
+});
+
 export async function POST(req: Request) {
   console.log('🔔 Webhook received');
   try {
