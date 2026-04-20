@@ -18,31 +18,39 @@ export const useBooking = (sessionId: string | null, customerId: string | null) 
 
     let attempts = 0;
     const maxAttempts = 10;
+    let interval: NodeJS.Timeout;
 
-    const tryFetch = async (): Promise<boolean> => {
+    const tryFetch = async () => {
       attempts++;
       const data = await fetchBookingByPayment(sessionId, customerId);
+
       if (data) {
         setBooking(data);
-        return true;
+        setLoading(false);       // ✅ only stop loading when found
+        clearInterval(interval);
+        return;
       }
-      return false;
+
+      if (attempts >= maxAttempts) {
+        setLoading(false);       // ✅ give up after max attempts
+        clearInterval(interval);
+      }
     };
 
-    const fetchBooking = async () => {
-      const found = await tryFetch();
-      if (!found && attempts < maxAttempts) {
-        const interval = setInterval(async () => {
-          const foundNow = await tryFetch();
-          if (foundNow || attempts >= maxAttempts) clearInterval(interval);
-        }, 1000);
+    // Try immediately, then every second
+    tryFetch();
+    interval = setInterval(tryFetch, 1000);
 
-        setTimeout(() => clearInterval(interval), maxAttempts * 1000);
-      }
+    // Safety cleanup after 15 seconds
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
       setLoading(false);
-    };
+    }, 15000);
 
-    fetchBooking();
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
   }, [sessionId, customerId]);
 
   useEffect(() => {

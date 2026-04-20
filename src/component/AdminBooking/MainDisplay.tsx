@@ -15,7 +15,7 @@ import {
 import Header from './component/Header';
 import Booking from './component/Booking';
 import SelectedBooking from './component/SelectedBooking';
-import { adminBookingService } from '@/services/adminBooking';
+
 
 const MainDisplay = () => {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -32,7 +32,8 @@ const MainDisplay = () => {
     const fetchBookings = async () => {
       setLoading(true);
       try {
-        const result = await adminBookingService();
+       const res = await fetch('/api/admin/bookings');
+const result = await res.json();
 
         setBookings(result.bookings);
       } catch (error) {
