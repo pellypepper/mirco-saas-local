@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { insertProfile } from '@/services/authService';
+import { insertProfile } from '@/services/authService.server';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);

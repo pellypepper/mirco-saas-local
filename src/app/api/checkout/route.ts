@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import StripeService from '@/services/stripeService';
 import { getAvailabilityById } from '@/services/availabilityService';
-import { getProviderStripeId } from '@/services/providerService';
+import { getProviderStripeId } from '@/services/providerService.server';
 import { validateCheckoutInput } from '@/services/validationService';
 import { calculateFees } from '@/services/feeService';
 
