@@ -18,7 +18,7 @@ export const useBooking = (sessionId: string | null, customerId: string | null) 
 
     let attempts = 0;
     const maxAttempts = 10;
-    const interval: NodeJS.Timeout = null as any;
+    let interval: NodeJS.Timeout = null as any;
 
     const tryFetch = async () => {
       attempts++;

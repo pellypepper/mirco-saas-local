@@ -30,41 +30,95 @@ class StripeWebhookService {
   }
 
   // PAYMENT HANDLING LOGIC
- static async handlePayment(payment: Stripe.PaymentIntent) {
+static async handlePayment(payment: Stripe.PaymentIntent) {
   console.log('💳 handlePayment called, payment id:', payment.id);
   const metadata = payment.metadata as unknown as PaymentMetadata;
   console.log('📋 metadata:', metadata);
 
-  ValidateMetaService.validateMetadata(metadata);
+  // Guard: skip incomplete metadata (CLI test events, etc.)
+  if (!metadata?.provider_id || !metadata?.customer_id || 
+      !metadata?.availability_id || !metadata?.services_id) {
+    console.warn('⚠️ Skipping - missing required metadata fields:', metadata);
+    return { received: true, skipped: true };
+  }
+
+  try {
+    ValidateMetaService.validateMetadata(metadata);
+  } catch (err: any) {
+    console.error('❌ Metadata validation failed:', err.message);
+    return { received: true, skipped: true };
+  }
 
   const exists = await BookingService.bookingExists(payment.id);
   console.log('🔍 booking exists:', exists);
-  if (exists) return;
+  if (exists) {
+    console.log('⚠️ Booking already exists, skipping');
+    return { received: true, skipped: true };
+  }
 
-  const provider = await getEmail(metadata.provider_id);
-  const customer = await getEmail(metadata.customer_id);
+  const [provider, customer] = await Promise.all([
+    getEmail(metadata.provider_id),
+    getEmail(metadata.customer_id),
+  ]);
   console.log('👤 provider:', provider?.email, 'customer:', customer?.email);
 
-  const service = await fetchServiceById(metadata.services_id);
-  console.log('🛎 service:', service?.title);
+  if (!provider?.email) {
+    console.error('❌ Provider email not found for id:', metadata.provider_id);
+    return;
+  }
 
-  const available = await checkAvailabilitySlotExists(metadata.availability_id);
-  console.log('📅 slot available:', available);
+  if (!customer?.email) {
+    console.error('❌ Customer email not found for id:', metadata.customer_id);
+    return;
+  }
+
+  const [service, available] = await Promise.all([
+    fetchServiceById(metadata.services_id),
+    checkAvailabilitySlotExists(metadata.availability_id),
+  ]);
+  console.log('🛎 service:', service?.title, '📅 slot available:', available);
+
   if (!available) {
     console.error('❌ Slot not available, stopping');
     return;
   }
 
-  const customer_email = await customerEmailService.getCustomerEmail(payment.id);
+  // Get customer email from Stripe session — falls back to profile email
+  let customer_email: string | null = null;
+  try {
+    customer_email = await customerEmailService.getCustomerEmail(payment.id);
+  } catch (err) {
+    console.warn('⚠️ Could not fetch Stripe customer email, using profile email');
+  }
+
+  // Fallback to profile email if Stripe lookup fails
+  customer_email = customer_email || customer.email;
   console.log('📧 customer_email:', customer_email);
+
   if (!customer_email) {
-    console.error('❌ No customer email found');
+    console.error('❌ No customer email found from any source');
     return;
   }
 
   console.log('📨 Sending emails...');
-  await EmailService.sendCustomerEmail({ to: customer_email!, paymentId: payment.id, metadata, provider, service });
-  await EmailService.sendProviderEmail({ to: provider.email!, paymentId: payment.id, metadata, customer, service, customer_email });
+  await Promise.all([
+    EmailService.sendCustomerEmail({ 
+      to: customer_email, 
+      paymentId: payment.id, 
+      metadata, 
+      provider, 
+      service 
+    }),
+    EmailService.sendProviderEmail({ 
+      to: provider.email, 
+      paymentId: payment.id, 
+      metadata, 
+      customer, 
+      service, 
+      customer_email 
+    }),
+  ]);
+  console.log('✅ Emails sent');
 
   const fixedMetadata = { ...metadata, amount: Number(metadata.amount) };
 
@@ -74,6 +128,8 @@ class StripeWebhookService {
 
   await markAvailabilityAsBooked(metadata.availability_id);
   console.log('✅ Availability marked as booked');
+
+  return { received: true };
 }
 }
 
