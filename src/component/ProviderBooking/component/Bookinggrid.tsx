@@ -118,10 +118,10 @@ export const ProviderBookingGrid = ({
               </div>
               <div>
                 <h3 className={`text-lg font-black ${textPrimary} leading-tight`}>
-                  {booking.customer.full_name}
+                  {booking.customer?.[0]?.full_name}
                 </h3>
                 <p className={`text-sm ${textSecondary} leading-tight mt-1 font-medium`}>
-                  {booking.services.title}
+                  {booking.services?.[0]?.title}
                 </p>
               </div>
             </div>

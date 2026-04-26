@@ -64,8 +64,8 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
     if (!search) return bookings;
     return bookings.filter(
       (b) =>
-        b.customer[0]?.full_name.toLowerCase().includes(search.toLowerCase()) ||
-        b.services[0]?.title.toLowerCase().includes(search.toLowerCase()),
+        b.customer?.[0]?.full_name.toLowerCase().includes(search.toLowerCase()) ||
+        b.services?.[0]?.title.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, bookings]);
 
