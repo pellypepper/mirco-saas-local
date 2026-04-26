@@ -68,7 +68,7 @@ export async function deleteService(id: string) {
 export async function fetchServiceById(serviceId: string): Promise<Service | null> {
   const { data, error } = await supabase.from('services').select('*').eq('id', serviceId).single();
   if (error) {
-    console.error('fetchServiceById error:', error);
+       throw new Error('Failed to fetch service. Please try again.');
     return null;
   }
   return data as Service;

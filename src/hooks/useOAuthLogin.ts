@@ -23,11 +23,11 @@ export default function useOAuthLogin() {
       });
 
       if (error) {
-        console.error('OAuth error:', error);
+        throw new Error('OAuth login failed. Please try again.');
         setLoadingProvider(null);
       }
     } catch (err) {
-      console.error('OAuth error:', err);
+     throw new Error('An unexpected error occurred during OAuth login. Please try again.');
       setLoadingProvider(null);
     }
   };

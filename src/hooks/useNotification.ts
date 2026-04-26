@@ -30,11 +30,7 @@ export function useNotifications() {
 
       // Show browser notification if permission granted
       if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(notification.title, {
-          body: notification.message,
-          icon: '/logo.png',
-          badge: '/logo.png',
-        });
+       throw new Error('Failed to show browser notification. Please try again.');
       }
 
       // Play notification sound
@@ -43,7 +39,7 @@ export function useNotifications() {
         audio.volume = 0.5;
         audio.play();
       } catch (error) {
-        console.log('Could not play notification sound');
+       throw new Error('Failed to play notification sound.');
       }
     });
 

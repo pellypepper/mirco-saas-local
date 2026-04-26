@@ -17,7 +17,7 @@ export const useProvider = (providerId: string) => {
         const p = await fetchProviderById(providerId);
         setProviderData(p);
       } catch (err) {
-        console.error('Failed to fetch provider', err);
+         throw new Error('Failed to load provider data. Please try again.');
       } finally {
         setProviderLoading(false);
       }

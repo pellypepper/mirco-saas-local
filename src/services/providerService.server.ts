@@ -10,7 +10,7 @@ export const getProviderStripeId = async (
     .maybeSingle();
 
   if (error || !data?.stripe_account_id) {
-    console.error('getProviderStripeId error:', error);
+      throw new Error('Failed to fetch provider Stripe account. Please try again.');
     return null;
   }
 

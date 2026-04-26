@@ -66,7 +66,7 @@ export default function useAvailability(providerId: string) {
       setDaySlots(grouped);
       setError(null);
     } catch (err: any) {
-      console.error(err);
+  
       setError(err.message || 'Failed to load availability');
     } finally {
       setLoading(false);
@@ -160,7 +160,7 @@ export default function useAvailability(providerId: string) {
       setSuccessModal('Time slot removed successfully ');
       return true;
     } catch (err) {
-      console.error('Error deleting slot:', err);
+   
       setErrorModal('Failed to delete slot');
       return false;
     }
@@ -204,7 +204,7 @@ export default function useAvailability(providerId: string) {
         return updated;
       });
     } catch (err) {
-      console.error(err);
+    
       setErrorModal('Failed to save new availability');
     }
   };
@@ -230,7 +230,7 @@ export default function useAvailability(providerId: string) {
         const slots = await getProviderAvailability(providerId);
         setAvailability(slots);
       } catch (err) {
-        console.error('Failed to fetch availability', err);
+        setError(err instanceof Error ? err.message : 'Failed to load provider availability');
       } finally {
         setLoading(false);
       }

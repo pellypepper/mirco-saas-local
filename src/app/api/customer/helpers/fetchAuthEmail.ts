@@ -16,7 +16,7 @@ export async function fetchAuthEmails(): Promise<Record<string, string>> {
       });
 
       if (error) {
-        console.error('Auth list users error:', error);
+      
         throw error;
       }
 
@@ -32,7 +32,7 @@ export async function fetchAuthEmails(): Promise<Record<string, string>> {
 
     return emailMap;
   } catch (authError) {
-    console.error('Failed to fetch auth users:', authError);
+    
 
     return {};
   }

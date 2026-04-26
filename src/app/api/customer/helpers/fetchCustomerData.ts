@@ -9,7 +9,7 @@ export const fetchCustomerData = {
     const { data, error } = await supabaseAdmin.from('profiles').select('*').eq('role', 'customer');
 
     if (error) {
-      console.error('Profile fetch error:', error);
+     
       throw new Error(`Failed to fetch profiles: ${error.message}`);
     }
 
@@ -22,7 +22,7 @@ export const fetchCustomerData = {
     const { data, error } = await supabaseAdmin.from('bookings').select('*');
 
     if (error) {
-      console.error('Booking fetch error:', error);
+   
       throw new Error(`Failed to fetch bookings: ${error.message}`);
     }
 
@@ -38,7 +38,7 @@ export const fetchCustomerData = {
       .eq('role', 'provider');
 
     if (error) {
-      console.error('Provider fetch error:', error);
+    
       throw new Error(`Failed to fetch providers: ${error.message}`);
     }
 
@@ -53,7 +53,7 @@ export const fetchCustomerData = {
       .select('id, title, price, description');
 
     if (error) {
-      console.error('Service fetch error:', error);
+
       throw new Error(`Failed to fetch services: ${error.message}`);
     }
 

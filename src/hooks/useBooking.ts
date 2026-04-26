@@ -100,7 +100,7 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
 
   const handleConfirmBooking = async (id: string) => {
     if (!selectedBooking?.provider_id) {
-      console.error('Missing provider_id');
+       throw new Error('Missing provider_id in selected booking');
       return;
     }
     setLoading(true);
@@ -156,7 +156,7 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
     setLoading(true);
 
     if (!selectedBooking) {
-      console.error('No booking selected');
+      throw new Error('No booking selected');
       return;
     }
 
@@ -271,8 +271,8 @@ export const useCustomerBooking = ({ user }: { user: { id: string } }) => {
       const data = await res.json();
       setBookings(data);
     } catch (err) {
-      console.error('Error fetching bookings:', err);
-      setError('Failed to load bookings. Please try again.');
+        
+      setError(err instanceof Error ? err.message : 'Failed to load bookings. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -296,7 +296,7 @@ export const useCustomerBooking = ({ user }: { user: { id: string } }) => {
 
   const handleBookAgain = async (booking: BookingCustomer) => {
     if (!booking?.provider_id) {
-      console.error('Missing provider_id');
+      throw new Error('Missing provider_id in booking');
       return;
     }
     setLoading(true);
@@ -482,7 +482,7 @@ export const useConfirmBooking = ({
       if (!url) throw new Error('Stripe checkout URL missing');
       window.location.href = url;
     } catch (err: any) {
-      console.error(err);
+     throw new Error(err.message || 'An error occurred during booking. Please try again.');
       setErrorMessage(err.message);
       setShowError(true);
     }

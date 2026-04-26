@@ -20,7 +20,7 @@ export async function insertProfile(
     .maybeSingle();
 
   if (error) {
-    console.error('Profile insertion error:', error);
+     throw new Error('Failed to create user profile. Please try again.');
     return { data: null, error };
   }
   return { data, error };

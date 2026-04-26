@@ -90,8 +90,8 @@ export const downloadReceipt = async (
       URL.revokeObjectURL(url);
     });
   } catch (error) {
-    console.error('Error generating receipt:', error);
-    alert('Error generating receipt. Please try again.');
+       throw new Error('Error generating receipt. Please try again.');
+  
   }
 };
 
@@ -149,8 +149,7 @@ END:VCALENDAR`;
       URL.revokeObjectURL(url);
     }
   } catch (error) {
-    console.error('Error adding to calendar:', error);
-    alert('Error adding to calendar. Please try again.');
+      throw new Error('Error adding to calendar. Please try again.');
   }
 };
 
@@ -178,7 +177,7 @@ export const shareBooking = async (
         url: shareUrl,
       });
     } catch (error) {
-      console.log('Share cancelled');
+   throw new Error('Error sharing booking. Please try again.');
     }
   } else {
     let url = '';

@@ -23,7 +23,7 @@ export function useAdminUser() {
 
         setUser(Array.isArray(json.users) ? json.users : []);
       } catch (err: any) {
-        console.error(err);
+    
         setUser([]);
         setError(err.message || 'Something went wrong');
       } finally {

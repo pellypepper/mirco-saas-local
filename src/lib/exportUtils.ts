@@ -41,7 +41,7 @@ export async function toXLSX(rows: any[], filename = 'export.xlsx') {
     a.click();
     URL.revokeObjectURL(url);
   } catch (e) {
-    console.error('XLSX export failed (missing library).', e);
+     throw new Error('Excel export failed (missing library). Please try CSV export instead.');
     // fallback to CSV
     toCSV(rows, filename.replace(/xlsx$/, 'csv'));
   }
@@ -61,7 +61,7 @@ export async function toPDF(rows: any[], filename = 'export.pdf', title = 'Expor
     autoTable(doc, { head: [header], body });
     doc.save(filename);
   } catch (e) {
-    console.error('PDF export failed (missing library).', e);
+   throw new Error('PDF export failed (missing library). Please try CSV export instead.');
     // fallback to CSV
     toCSV(rows, filename.replace(/pdf$/, 'csv'));
   }

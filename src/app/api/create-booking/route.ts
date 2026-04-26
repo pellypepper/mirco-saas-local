@@ -24,10 +24,10 @@ export async function POST(request: Request) {
   const { data: result, error } = await supabaseAdmin.from('bookings').insert(bookingData).select();
 
   if (error) {
-    console.error('Error:', error);
+  
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  console.log('✅ Success');
+
   return NextResponse.json({ success: true, data: result });
 }

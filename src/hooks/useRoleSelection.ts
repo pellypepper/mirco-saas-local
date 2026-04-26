@@ -31,7 +31,7 @@ export function useRoleSelection() {
 
       router.replace('/dashboard');
     } catch (err: any) {
-      console.error('Error setting role:', err);
+       throw new Error(err?.message || 'Failed to set role. Please try again.');
       setError(err.message || 'Failed to set role. Please try again.');
       setLoading(false);
     }

@@ -176,7 +176,7 @@ const useProvideDashBoard = () => {
       setRecentActivity(activity);
       setTips(tip);
     } catch (error) {
-      console.error('Dashboard load error:', error);
+     throw new Error('Failed to load dashboard data. Please try again.');
     } finally {
       setLoading(false);
     }

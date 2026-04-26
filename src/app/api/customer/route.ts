@@ -25,7 +25,7 @@ export async function GET() {
 
     return NextResponse.json({ users });
   } catch (error) {
-    console.error('Unexpected error in /api/customer:', error);
+   
     return NextResponse.json(
       {
         error: 'Internal server error',

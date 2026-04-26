@@ -299,8 +299,7 @@ export function useAdminDashboard(timeRange: string = '6m') {
         setCategoryData(categoryPerf);
         setLoading(false);
       } catch (error) {
-        console.error('Admin Dashboard Load Error:', error);
-      }
+         throw new Error(error instanceof Error ? error.message : String(error))     }
     };
 
     fetchDashboardData();

@@ -36,8 +36,8 @@ const MainDisplay = () => {
 const result = await res.json();
 
         setBookings(result.bookings);
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
+      } catch (error: any) {
+        throw new Error(`Failed to fetch bookings: ${error.message}`);
       } finally {
         setLoading(false);
       }

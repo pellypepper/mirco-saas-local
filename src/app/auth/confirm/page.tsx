@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/libs/supabaseClient';
 import { Suspense } from 'react';
+import Loader from "@/component/Spinner"
 
 function ConfirmPage() {
   const searchParams = useSearchParams();
@@ -26,12 +27,12 @@ function ConfirmPage() {
         if (error) {
           router.push('/login?error=auth_failed');
         } else {
-          router.push('/api/callback/complete'); // hits server to check profile
+          router.push('/api/callback/complete'); 
         }
       });
   }, []);
 
-  return <p>Verifying your email...</p>;
+  return <Loader message='Confirming your email...' />;
 }
 
 export default function Page() {

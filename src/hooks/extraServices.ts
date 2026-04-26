@@ -12,7 +12,7 @@ const useExtraService = (providerId?: string) => {
       const fetched = await getServices(providerId);
       setServices(fetched);
     } catch (err) {
-      console.error('Failed to fetch services', err);
+    throw new Error(`Failed to load services: ${err instanceof Error ? err.message : String(err)}`);
     }
   }, [providerId]);
 

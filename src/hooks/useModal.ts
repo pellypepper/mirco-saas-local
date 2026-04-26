@@ -40,7 +40,7 @@ export const useCustomerModal = ({
       const slots = await res.json();
       setAvailableSlots(slots);
     } catch (error) {
-      console.error('Error fetching slots:', error);
+  throw  new Error('Failed to load available slots. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ export const useCustomerModal = ({
   const handleReschedule = async () => {
     if (!selectedDate || !selectedTime || !availabilityId) return;
     if (!selectedTime.includes(' - ')) {
-      console.error('Invalid selectedTime format:', selectedTime);
+   throw new Error('Invalid time format. Please select a valid time slot.');
       return;
     }
 
@@ -116,7 +116,7 @@ export const useCustomerModal = ({
         onClose();
       }, 2000);
     } catch (error) {
-      console.error('Error rescheduling:', error);
+      throw new Error('Failed to reschedule booking. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -165,7 +165,7 @@ export const useCustomerModal = ({
         onClose();
       }, 2000);
     } catch (error) {
-      console.error('Error cancelling booking:', error);
+    throw new Error('Failed to cancel booking. Please try again.');
     } finally {
       setLoading(false);
     }

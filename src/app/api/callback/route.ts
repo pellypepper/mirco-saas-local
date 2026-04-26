@@ -16,10 +16,10 @@ export async function GET(request: Request) {
       type: type as any,
     });
 
-    console.log('verifyOtp result:', data, error); // ← add this log
+
 
     if (error) {
-      console.error('Token hash error:', error);
+
       return NextResponse.redirect(new URL('/login?error=auth_failed', requestUrl.origin));
     }
 
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
         const { error: insertError } = await insertProfile(user.id, null, fullName, undefined);
 
         if (insertError) {
-          console.error('Failed to insert profile:', insertError);
+    
           return NextResponse.redirect(new URL('/login?error=profile_creation_failed', requestUrl.origin));
         }
 
@@ -61,7 +61,7 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (error) {
-      console.error('OAuth error:', error);
+
       return NextResponse.redirect(new URL('/login?error=auth_failed', requestUrl.origin));
     }
 

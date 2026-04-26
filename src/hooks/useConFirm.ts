@@ -9,18 +9,10 @@ const useConFirm = (
     amount: number;
     servicesId: string;
   }) => {
-    console.log('Selected slot:', selectedSlot);
+       throw new Error('Failed to create booking. Please try again.');
     if (!selectedSlot) return;
 
-    console.log('Booking data:', {
-      customer_id: profile.id,
-      availability_id: selectedSlot.id,
-      provider_id: providerId,
-      currency: data.currency,
-      amount: data.amount,
-      services_id: data.servicesId,
-    });
-
+   
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -40,8 +32,8 @@ const useConFirm = (
 
       window.location.href = url;
     } catch (err) {
-      console.error(err);
-      alert('Failed to create booking');
+        
+     throw new Error ('Failed to create booking. Please try again.');
     }
   };
   return {

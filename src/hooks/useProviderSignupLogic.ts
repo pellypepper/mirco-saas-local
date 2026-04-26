@@ -73,7 +73,7 @@ export function useProviderSignupForm(parentOnSubmit?: (data: any) => void) {
       reset();
       router.push(`/auth/check-email?email=${encodeURIComponent(payload.email)}`);
     } catch (err: any) {
-      console.error('Signup failed:', err);
+        throw new Error(err?.message || 'Signup failed. Please try again.');  
       setErrorMessage(err?.message || 'Signup failed');
       setErrorOpen(true);
     }

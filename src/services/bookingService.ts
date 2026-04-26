@@ -2,8 +2,6 @@ import { supabaseAdmin } from '@/libs/supabaseAdmin';
 
 class BookingService {
   static async bookingExists(paymentId: string) {
-    
-
     const { data } = await supabaseAdmin
       .from('bookings')
       .select('id')
@@ -14,7 +12,6 @@ class BookingService {
   }
 
   static async createBooking({ paymentId, metadata, customer_email }: any) {
-
     const { error } = await supabaseAdmin.from('bookings').insert({
       provider_id: metadata.provider_id,
       customer_id: metadata.customer_id,
@@ -34,12 +31,9 @@ class BookingService {
   }
 
   static async fetchBookingsByCustomer(customerId: string) {
-       
-
     const { data, error } = await supabaseAdmin
       .from('bookings')
-      .select(
-        `
+      .select(`
         id,
         amount,
         currency,
@@ -48,56 +42,42 @@ class BookingService {
         status,
         booking_date,
         customer_email,
-       availability:bookings_availability_id_fkey(id,date, start_time, end_time),
-      services:booking_services_id_fkey(id, title, description, duration_minutes),
-      provider:profiles!bookings_provider_id_fkey(id, full_name, location, phone_number, country)
-      `,
-      )
+        availability:bookings_availability_id_fkey(id,date, start_time, end_time),
+        services:booking_services_id_fkey(id, title, description, duration_minutes),
+        provider:profiles!bookings_provider_id_fkey(id, full_name, location, phone_number, country)
+      `)
       .eq('customer_id', customerId)
       .eq('deleted_by_customer', false)
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('fetchBookingsByCustomer error:', error);
-      return [];
-    }
+    if (error) return [];
     return data || [];
   }
 
   static async fetchBookingsByProvider(providerId: string) {
-  
-
     const { data, error } = await supabaseAdmin
       .from('bookings')
-      .select(
-        `
-      id,
-      amount,
-      currency,
-      status,
-      booking_date,
-      provider_id,
-      customer_email,
-         availability:bookings_availability_id_fkey(id, date, start_time, end_time),
-      services:services_id(id, title, description, duration_minutes),
-      customer:profiles!bookings_customer_id_fkey(id, role, full_name, phone_number, country)
-      `,
-      )
+      .select(`
+        id,
+        amount,
+        currency,
+        status,
+        booking_date,
+        provider_id,
+        customer_email,
+        availability:bookings_availability_id_fkey(id, date, start_time, end_time),
+        services:services_id(id, title, description, duration_minutes),
+        customer:profiles!bookings_customer_id_fkey(id, role, full_name, phone_number, country)
+      `)
       .eq('provider_id', providerId)
       .eq('deleted_by_provider', false)
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('fetchBookingsByProvider error:', error);
-      return [];
-    }
-
+    if (error) return [];
     return data || [];
   }
 
   static async updateBookingStatus(bookingId: string, status: string) {
-        
-
     const { data, error } = await supabaseAdmin
       .from('bookings')
       .update({ status })
@@ -105,42 +85,26 @@ class BookingService {
       .select()
       .single();
 
-    if (error) {
-      console.error('updateBookingStatus error:', error);
-      return null;
-    }
-
+    if (error) return null;
     return data;
   }
 
   static async cancelBooking(bookingId: string, availabilityId: string) {
-      
-
     try {
-      // Fetch booking to get provider + slot info
       const { data: booking, error: fetchError } = await supabaseAdmin
         .from('bookings')
         .select('id, provider_id, booking_date, status')
         .eq('id', bookingId)
         .single();
 
-      if (fetchError || !booking) {
-        console.error('cancelBooking fetch error:', fetchError);
-        return { error: 'Booking not found' };
-      }
+      if (fetchError || !booking) return { error: 'Booking not found' };
 
-      //Update booking status → cancelled
       const { error: updateError } = await supabaseAdmin
         .from('bookings')
         .update({ status: 'cancelled' })
         .eq('id', bookingId);
 
-      if (updateError) {
-        console.error('cancelBooking update error:', updateError);
-        return { error: 'Failed to cancel booking' };
-      }
-
-      // make the slot available again
+      if (updateError) return { error: 'Failed to cancel booking' };
 
       const { error: slotError } = await supabaseAdmin
         .from('availability')
@@ -148,61 +112,33 @@ class BookingService {
         .eq('provider_id', booking.provider_id)
         .eq('id', availabilityId);
 
-      if (slotError) {
-        console.error('cancelBooking slot free error:', slotError);
-        return { error: 'Booking cancelled but slot was not freed' };
-      }
+      if (slotError) return { error: 'Booking cancelled but slot was not freed' };
 
       return { success: true };
-    } catch (err) {
-      console.error('cancelBooking unexpected error:', err);
+    } catch {
       return { error: 'Unexpected error while cancelling booking' };
     }
   }
 
   static async fetchAvailableSlots(providerId: string, date: string) {
-
-
     try {
-      // Define start and end of the day as time strings
-      const startTime = '00:00:00';
-      const endTime = '23:59:59';
-
-      // Fetch availability for the provider
       const { data, error } = await supabaseAdmin
         .from('availability')
-        .select(
-          `
-        id,
-        start_time,
-        end_time,
-        is_booked
-      `,
-        )
+        .select('id, start_time, end_time, is_booked')
         .eq('provider_id', providerId)
         .eq('date', date)
-        .gte('start_time', startTime)
-        .lte('start_time', endTime)
+        .gte('start_time', '00:00:00')
+        .lte('start_time', '23:59:59')
         .order('start_time', { ascending: true });
 
-      if (error) {
-        console.error('fetchAvailableSlots error:', error);
-        return [];
-      }
-
-      // Filter only unbooked slots
-      const availableSlots = data?.filter((slot: any) => !slot.is_booked) || [];
-
-      return availableSlots;
-    } catch (err) {
-      console.error('Error fetching available slots:', err);
+      if (error) return [];
+      return data?.filter((slot: any) => !slot.is_booked) || [];
+    } catch {
       return [];
     }
   }
 
   static async rescheduleBooking(bookingId: string, timestamp: string, availability_id: string) {
-     
-
     try {
       const { data, error } = await supabaseAdmin
         .from('bookings')
@@ -211,21 +147,14 @@ class BookingService {
         .select()
         .single();
 
-      if (error) {
-        console.error('rescheduleBooking error:', error);
-        return null;
-      }
-
+      if (error) return null;
       return data;
-    } catch (err) {
-      console.error('Error rescheduling booking:', err);
+    } catch {
       return null;
     }
   }
-  // bookingService.ts
-  static async makeSlotAvailable(providerId: string | number, availabilityId: string) {
-   
 
+  static async makeSlotAvailable(providerId: string | number, availabilityId: string) {
     try {
       const { data, error } = await supabaseAdmin
         .from('availability')
@@ -234,21 +163,14 @@ class BookingService {
         .eq('id', availabilityId)
         .select();
 
-      if (error) {
-        console.error('makeSlotAvailable error:', error);
-        return null;
-      }
-
+      if (error) return null;
       return data;
-    } catch (err) {
-      console.error('Error making slot available:', err);
+    } catch {
       return null;
     }
   }
 
   static async markSlotUnavailable(providerId: string | number, availabilityId: string) {
-  
-
     try {
       const { data, error } = await supabaseAdmin
         .from('availability')
@@ -256,36 +178,26 @@ class BookingService {
         .eq('provider_id', providerId)
         .eq('id', availabilityId);
 
-      if (error) {
-        console.error('markSlotUnavailable error:', error);
-        return null;
-      }
+      if (error) return null;
       return data;
-    } catch (error) {
-      console.error('markSlotUnavailable error:', error);
+    } catch {
       return null;
     }
   }
 
   static async deleteBookingForCustomer(bookingId: string) {
-
-
     const { data, error } = await supabaseAdmin
       .from('bookings')
       .update({ deleted_by_customer: true })
       .eq('id', bookingId)
       .select()
       .single();
-    if (error) {
-      console.error('deleteBookingForCustomer error:', error);
-      return null;
-    }
+
+    if (error) return null;
     return data;
   }
 
   static async deleteBookingForProvider(bookingId: string) {
-      
-
     try {
       const { data, error } = await supabaseAdmin
         .from('bookings')
@@ -294,16 +206,12 @@ class BookingService {
         .select()
         .single();
 
-      if (error) {
-        console.error('deleteBookingForProvider error:', error);
-        return null;
-      }
-
+      if (error) return null;
       return data;
-    } catch (err) {
-      console.error('deleteBookingForProvider exception:', err);
+    } catch {
       return null;
     }
   }
 }
+
 export default BookingService;

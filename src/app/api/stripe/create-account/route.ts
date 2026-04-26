@@ -70,7 +70,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ url: link.url });
   } catch (error: any) {
-    console.error('Stripe Connect API error:', error);
+
     return NextResponse.json(
       { error: error.message || 'Stripe onboarding failed' },
       { status: 500 }

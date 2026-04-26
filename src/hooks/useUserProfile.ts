@@ -107,7 +107,7 @@ const useUserProfile = (profile: any) => {
       setSuccessMessage('Image uploaded successfully. click save to update your profile');
       setShowSuccessModal(true);
     } catch (err) {
-      console.error(err);
+        throw new Error('Image upload failed. Please try again.');
       setError('Image upload failed');
       setErrorMessage(' Image upload failed. Please try again.');
       setShowErrorModal(true);
@@ -127,7 +127,8 @@ const useUserProfile = (profile: any) => {
       setSuccessMessage('Profile updated successfully');
       setShowSuccessModal(true);
     } catch (err) {
-      console.error(err);
+     throw new Error('Profile update failed. Please try again.');
+      setError('Profile update failed');
       setErrorMessage('Profile update failed');
       setShowErrorModal(true);
     } finally {

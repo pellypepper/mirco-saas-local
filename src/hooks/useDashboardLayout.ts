@@ -36,7 +36,7 @@ export function useDashboardLayout() {
       await logoutUser();
       router.replace('/');
     } catch (err) {
-      console.error('Logout failed:', err);
+   throw new Error('Logout failed. Please try again.');
     } finally {
       setLogoutLoading(false);
     }

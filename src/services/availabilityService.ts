@@ -74,7 +74,7 @@ export async function getAvailabilityById(
     .eq('id', availabilityId)
     .single();
   if (error) {
-    console.error('getAvailabilityById error:', error);
+     throw new Error('Failed to fetch availability. Please try again.');
     return null;
   }
   return data || null;
@@ -87,7 +87,7 @@ export async function markAvailabilityAsBooked(availabilityId: string): Promise<
     .update({ is_booked: true })
     .eq('id', availabilityId);
   if (error) {
-    console.error('markAvailabilityAsBooked error:', error);
+   throw new Error('Failed to book the slot. Please try again.');
     throw error;
   }
 }
@@ -100,7 +100,7 @@ export async function checkAvailabilitySlotExists(availabilityId: string): Promi
     .eq('id', availabilityId)
     .single();
   if (error) {
-    console.error('checkAvailabilitySlotExists error:', error);
+   throw new Error('Failed to check availability. Please try again.');
     return false;
   }
   return !data?.is_booked;

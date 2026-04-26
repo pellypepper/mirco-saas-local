@@ -60,7 +60,7 @@ export function useLoginForm() {
         checkUserRoleAndRedirect();
       }, 1500);
     } catch (err: any) {
-      console.error('Login error:', err);
+
       setErrorMsg('An unexpected error occurred. Please try again.');
       setErrorOpen(true);
     } finally {

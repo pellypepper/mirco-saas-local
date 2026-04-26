@@ -1,4 +1,4 @@
-// app/api/callback/complete/route.ts
+
 import { createClient } from '@/libs/supabaseServer';
 import { NextResponse } from 'next/server';
 import { insertProfile } from '@/services/authService.server';

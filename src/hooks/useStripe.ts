@@ -12,8 +12,8 @@ const useStripe = ({ profile }: { profile: Profile }) => {
 
       if (!res.ok) {
         const text = await res.text();
-        console.error('Server error:', text);
-        alert('Stripe error — check server logs.');
+   throw new Error(`Stripe account creation failed: ${text}`);
+       
         return;
       }
 
@@ -21,7 +21,7 @@ const useStripe = ({ profile }: { profile: Profile }) => {
 
       if (data.url) window.location.href = data.url;
     } catch (err) {
-      console.error('Client error:', err);
+        throw new Error('Failed to create Stripe account. Please try again.');
     }
   };
 

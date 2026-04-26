@@ -6,7 +6,7 @@ export const fetchServiceTypes = async (): Promise<string[]> => {
   const supabase =  supabaseClient();
   const { data, error } = await supabase.from('profiles').select('service_type');
   if (error) {
-    console.error('Error fetching service types:', error);
+   throw new Error('Failed to fetch service types. Please try again.');
     return [];
   }
   const uniqueTypes = Array.from(

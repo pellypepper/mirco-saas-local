@@ -26,13 +26,13 @@ export const useBooking = (sessionId: string | null, customerId: string | null) 
 
       if (data) {
         setBooking(data);
-        setLoading(false);       // ✅ only stop loading when found
+        setLoading(false);       // only stop loading when found
         clearInterval(interval);
         return;
       }
 
       if (attempts >= maxAttempts) {
-        setLoading(false);       // ✅ give up after max attempts
+        setLoading(false);       //  give up after max attempts
         clearInterval(interval);
       }
     };
