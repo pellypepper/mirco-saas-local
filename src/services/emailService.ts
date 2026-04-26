@@ -17,19 +17,19 @@ class EmailService {
     if (!to) return;
 
     await sendConfirmationEmail({
-      to,
+       to,
       bookingId: paymentId,
-      amount: metadata.amount,
+      amount: metadata.amount?.toString() ?? '0',
       formattedDate: new Date().toLocaleDateString('en-GB'),
       bookingTime: new Date().toLocaleTimeString('en-GB'),
-      serviceName: service.title,
-      serviceDescription: service.description,
-      providerName: provider.full_name,
-      duration_minutes: service.duration_minutes,
-      phone_number: provider.phone_number,
-      email: provider.email,
-      location: provider.location,
-      country: provider.country,
+      serviceName: service?.title ?? '',
+      serviceDescription: service?.description ?? '',
+      providerName: provider?.full_name ?? '',
+      duration_minutes: service?.duration_minutes ?? 0,
+      phone_number: provider?.phone_number ?? '',
+      email: provider?.email ?? '',
+      location: provider?.location ?? '',
+      country: provider?.country ?? '',
     });
   }
 
@@ -51,17 +51,17 @@ class EmailService {
     if (!to) return;
 
     await sendProviderNotificationEmail({
-      to,
+        to,
       bookingId: paymentId,
-      amount: metadata.provider_amount.toString(),
+      amount: metadata.amount?.toString() ?? '0',  // ← was metadata.provider_amount
       formattedDate: new Date().toLocaleDateString('en-GB'),
       bookingTime: new Date().toLocaleTimeString('en-GB'),
-      serviceName: service.title,
-      serviceDescription: service.description,
-      customerName: customer.full_name,
-      duration_minutes: service.duration_minutes,
+      serviceName: service?.title ?? '',
+      serviceDescription: service?.description ?? '',
+      customerName: customer?.full_name ?? '',
+      duration_minutes: service?.duration_minutes ?? 0,
       customerEmail: customer_email,
-      customerPhone: customer.phone_number,
+      customerPhone: customer?.phone_number ?? '',
     });
   }
 }
