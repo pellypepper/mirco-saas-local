@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { MainNavProvider } from '@/hooks/MainNavContext';
 import ThemeIcon from '@/component/Theme';
+import ReconnectHandler from '@/hooks/dashboard/dashboardReconnect';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,7 +33,7 @@ export default function RootLayout({
       >
         <MainNavProvider>
           <ThemeIcon />
-
+          <ReconnectHandler />
           {children}
         </MainNavProvider>
       </body>

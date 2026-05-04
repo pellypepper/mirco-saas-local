@@ -19,6 +19,8 @@ interface LayoutProps {
 export default function DashboardLayout({ children }: LayoutProps) {
   const [isClient, setIsClient] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [timeoutReached, setTimeoutReached] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
 
   const {
     user,
@@ -43,10 +45,31 @@ export default function DashboardLayout({ children }: LayoutProps) {
 
   useDashboardAuth(user, profile, loading);
   const { isDarkMode } = useMainNavBar();
-  // client-side rendering for modals
+  
   useEffect(() => setIsClient(true), []);
 
-  // Notification dropdown animation every 1 minute
+   useEffect(() => {
+    const update = () => setIsOnline(navigator.onLine);
+
+    update();
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+
+    return () => {
+      window.removeEventListener('online', update);
+      window.removeEventListener('offline', update);
+    };
+  }, []);
+
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    setTimeoutReached(true);
+  }, 8000); // 8s fallback
+
+  return () => clearTimeout(timer);
+}, []);
+
+  // Notification dropdown 
   useEffect(() => {
     if (!notifications) return;
 
@@ -64,10 +87,19 @@ export default function DashboardLayout({ children }: LayoutProps) {
     return () => clearInterval(interval);
   }, [notifications]);
 
-  if (loading || !user || !profile) {
+if (!profile && loading && !timeoutReached) {
+  return (
+    <div className="p-4 text-center">
+      <Loader message="Loading Dashboard..." />
+    </div>
+  );
+}
+
+ if (!isOnline) {
     return (
       <div className="p-4 text-center">
-        <Loader message="Loading Dashboard..." />
+        <p>No internet connection</p>
+        <p>Reconnecting automatically...</p>
       </div>
     );
   }

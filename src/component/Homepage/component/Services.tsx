@@ -6,8 +6,8 @@ import { useMainNavBar } from '@/hooks/MainNavContext';
 
 const Services = () => {
   const services = [
-    { name: 'Plumbing', icon: '🔧', gradient: '#219ebc' }, // ✅ Removed brackets
-    { name: 'Electrical', icon: '⚡', gradient: '#219ebc' }, // ✅ Removed brackets
+    { name: 'Plumbing', icon: '🔧', gradient: '#219ebc' }, 
+    { name: 'Electrical', icon: '⚡', gradient: '#219ebc' }, 
     { name: 'Cleaning', icon: '🧹', gradient: '#219ebc' },
     { name: 'Painting', icon: '🎨', gradient: '#219ebc' },
     { name: 'Carpentry', icon: '🔨', gradient: '#219ebc' },
