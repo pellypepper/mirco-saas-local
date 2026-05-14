@@ -3,14 +3,15 @@ import { NextResponse } from 'next/server';
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { data, error } = await supabaseAdmin
+
+const { data, error } = await supabaseAdmin
   .from('bookings')
   .select(`
     *,
     customer:profiles!bookings_customer_id_fkey(*),
     provider:profiles!bookings_provider_id_fkey(*),
     services(*),
-    availability(*)
+    availability!bookings_availability_id_fkey(*)
   `)
   .eq('customer_id', id);
 
