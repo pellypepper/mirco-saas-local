@@ -17,7 +17,8 @@ export async function GET() {
       services(*),
       availability!bookings_availability_id_fkey(*)
     `)
-    .eq('provider_id', user.id);
+    .eq('provider_id', user.id)
+     .eq('deleted_by_provider', false); 
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json(data);

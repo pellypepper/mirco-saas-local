@@ -5,7 +5,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   const { id } = await params;
   const { newDate, availabilityId, oldAvailabilityId } = await request.json();
 
-  // 1. Free up the old slot
+  // Free  old slot
   const { error: oldSlotError } = await supabaseAdmin
     .from('availability')
     .update({ is_booked: false })
@@ -13,7 +13,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   if (oldSlotError) return NextResponse.json({ error: oldSlotError.message }, { status: 400 });
 
-  // 2. Book the new slot
+  // Book new slot
   const { error: newSlotError } = await supabaseAdmin
     .from('availability')
     .update({ is_booked: true })
@@ -21,13 +21,13 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   if (newSlotError) return NextResponse.json({ error: newSlotError.message }, { status: 400 });
 
-  // 3. Update the booking with new date, new availability, and reset to pending
+  // Update  booking with new date, new availability, and reset to pending
   const { error: bookingError } = await supabaseAdmin
     .from('bookings')
     .update({
       booking_date: newDate,
       availability_id: availabilityId,
-      status: 'pending',        // ✅ reset so provider must confirm again
+      status: 'pending',     
     })
     .eq('id', id);
 

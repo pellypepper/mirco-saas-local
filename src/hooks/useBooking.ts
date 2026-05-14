@@ -209,15 +209,17 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
 
   const cancelDeleteModal = () => setOpenDelete(false);
 
-  const onConfirmDelete = async (booking: any) => {
-    if (!booking) return;
-
-    await fetch(`/api/bookings/${booking.id}`, { method: 'DELETE' });
-
-    setOpenDelete(false);
-    fetchBookings();
-    setSuccessMessage('Booking deleted successfully!');
-  };
+const onConfirmDelete = async (booking: any) => {
+  if (!booking) return;
+  await fetch(`/api/bookings/${booking.id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ role: 'provider' }),  // ✅
+  });
+  setOpenDelete(false);
+  fetchBookings();
+  setSuccessMessage('Booking deleted successfully!');
+};
 
   return {
     onConfirmDelete,
@@ -401,13 +403,18 @@ setBookings(Array.isArray(data) ? data : []);
 
   const cancelDeleteModal = () => setOpenDelete(false);
 
-  const onConfirmDelete = async (booking: any) => {
-    if (!booking) return;
-    await fetch(`/api/bookings/${booking.id}`, { method: 'DELETE' });
-    setOpenDelete(false);
-    fetchBookings();
-    setSuccessMessage('Booking deleted successfully!');
-  };
+ const onConfirmDelete = async (booking: any) => {
+  if (!booking) return;
+  await fetch(`/api/bookings/${booking.id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ role: 'customer' }),  // ✅
+  });
+  setOpenDelete(false);
+  fetchBookings();
+  setSuccessMessage('Booking deleted successfully!');
+};
+
 
 const filteredBookings = Array.isArray(bookings)
   ? bookings.filter(

@@ -13,7 +13,8 @@ const { data, error } = await supabaseAdmin
     services(*),
     availability!bookings_availability_id_fkey(*)
   `)
-  .eq('customer_id', id);
+  .eq('customer_id', id)
+  .eq('deleted_by_customer', false); 
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json(data);
