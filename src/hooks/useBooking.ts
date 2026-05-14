@@ -64,7 +64,7 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
     if (!search) return bookings;
     return bookings.filter(
       (b) =>
-        b.customer?.[0]?.full_name.toLowerCase().includes(search.toLowerCase()) ||
+        b.customer?.full_name.toLowerCase().includes(search.toLowerCase()) ||
         b.services?.[0]?.title.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, bookings]);
@@ -112,7 +112,7 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
     });
 
     const provider = await getEmail(selectedBooking?.provider_id);
-    const customer = await getEmail(selectedBooking?.customer[0]?.id);
+    const customer = await getEmail(selectedBooking?.customer?.id);
 
     setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status: 'confirmed' } : b)));
     setShowConfirmModal(false);
@@ -161,7 +161,7 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
     }
 
     const provider = await getEmail(selectedBooking?.provider_id);
-    const customer = await getEmail(selectedBooking?.customer[0]?.id);
+    const customer = await getEmail(selectedBooking?.customer?.id);
 
     await fetch(`/api/bookings/${id}/status`, {
       method: 'PATCH',
@@ -169,7 +169,7 @@ export const useProviderBooking = ({ user }: { user: { id: string } }) => {
       body: JSON.stringify({ status: 'cancelled' }),
     });
 
-    await fetch(`/api/availability/${selectedBooking?.availability[0]?.id}/available`, {
+    await fetch(`/api/availability/${selectedBooking?.availability?.id}/available`, {
       method: 'PATCH',
     });
 
@@ -323,7 +323,7 @@ setBookings(Array.isArray(data) ? data : []);
       formattedDate: formatDate(booking.booking_date),
       bookingTime: formatTime(booking.booking_date),
       serviceName: booking.services[0]?.title,
-      serviceDescription: booking.services[0]?.description,
+ serviceDescription: booking.services[0]?.description ?? '', 
       duration_minutes: booking.services[0]?.duration_minutes,
       customerName: customer.full_name ?? '',
       customerEmail: customer.email ?? '',
@@ -337,13 +337,13 @@ setBookings(Array.isArray(data) ? data : []);
       formattedDate: formatDate(booking.booking_date),
       bookingTime: formatTime(booking.booking_date),
       serviceName: booking.services[0]?.title,
-      serviceDescription: booking.services[0]?.description,
+       serviceDescription: booking.services[0]?.description ?? '', 
       duration_minutes: booking.services[0]?.duration_minutes,
       providerName: provider.full_name ?? '',
       location: provider.location ?? '',
-      country: booking.provider[0]?.country,
-      email: provider.email,
-      phone_number: booking.provider[0]?.phone_number || '',
+      country: booking.provider?.country ?? '', 
+  email: provider.email ?? '',  
+      phone_number: booking.provider?.phone_number ?? '',
     });
 
     setLoading(false);

@@ -1,4 +1,4 @@
-// app/api/bookings/provider/route.ts
+
 import { supabaseAdmin } from '@/libs/supabaseAdmin';
 import { createClient } from '@/libs/supabaseServer';
 import { NextResponse } from 'next/server';
@@ -10,7 +10,13 @@ export async function GET() {
 
   const { data, error } = await supabaseAdmin
     .from('bookings')
-    .select('*')
+    .select(`
+      *,
+      customer:profiles!bookings_customer_id_fkey(*),
+      provider:profiles!bookings_provider_id_fkey(*),
+      services(*),
+      availability!bookings_availability_id_fkey(*)
+    `)
     .eq('provider_id', user.id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });

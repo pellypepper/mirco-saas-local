@@ -6,18 +6,25 @@ export interface TimeSlot {
   isSaved?: boolean;
 }
 
+export type Profile = {
+  id: string;
+  full_name: string;
+  email?: string;
+  phone_number?: string;
+  location?: string;
+  country?: string;
+};
+
 export interface Slot {
   id: string;
- 
   start_time: string;
   end_time: string;
   is_booked: boolean;
- 
 }
 
 export interface AvailabilityRecord {
   id?: string;
-  provider_id: string;
+  provider_id?: string;
   date: string;
   start_time: string;
   end_time: string;
@@ -31,7 +38,7 @@ export interface Service {
   price: number;
   description?: string;
   currency?: string;
-  duration_minutes?: number;
+  duration_minutes: number;
   created_at: string;
 }
 
@@ -54,49 +61,31 @@ export interface BookingProvider {
   booking_date: string;
   customer_email: string;
   provider_id: string;
-  availability: {
-    id: string;
-    date: string;
-    start_time: string;
-    end_time: string;
-  }[];
 
-  services: {
-    title: string;
-    description: string;
-    duration_minutes: number;
-  }[];
+  // Named FK joins → single objects
+  availability: AvailabilityRecord;
+  customer: Profile;
+  provider: Profile;
 
-  customer: {
-    id: string;
-    full_name: string;
-    phone_number?: string;
-    country?: string;
-  }[];
+  // True array relation
+  services: Service[];
 }
-
-
 
 export interface BookingCustomer {
   id: string;
-  customer_id: string; // ✅ ADD THIS
+  customer_id: string;
   customer_email: string;
   provider_id: string;
-  provider: {
-    id: string;
-    full_name: string;
-    phone_number?: string;
-    location: string;
-    country: string;
-  }[];
-  services: {
-    id: string;
-    title: string;
-    description: string;
-    duration_minutes: number;
-  }[];
   booking_date: string;
   amount: number;
   currency: string;
   status: string;
-};
+
+  // Named FK joins → single objects
+  availability: AvailabilityRecord;
+  provider: Profile;
+  customer: Profile;
+
+  // True array relation
+  services: Service[];
+}
