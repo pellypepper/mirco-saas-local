@@ -117,10 +117,10 @@ const DetailsModal = ({
                 className={`flex items-center gap-4 p-4 rounded-xl border ${surfaceInner} ${border}`}
               >
                 <div className="w-16 h-16 rounded-full bg-chart-4 flex items-center justify-center text-white text-2xl font-black border-2 border-zinc-200">
-                  {booking.provider[0]?.full_name.charAt(0)}
+                  {booking.provider?.full_name.charAt(0)}
                 </div>
                 <div className="flex-1">
-                  <p className="font-black text-xl">{booking.provider[0]?.full_name}</p>
+                  <p className="font-black text-xl">{booking.provider?.full_name}</p>
                   <div className="flex items-center gap-2 mt-1">
                     <Star className="w-4 h-4 fill-chart-2 text-chart-2" />
                     <span className={textMuted}>(reviews)</span>
@@ -132,7 +132,7 @@ const DetailsModal = ({
                 <ContactRow
                   icon={<MapPin className="text-chart-2" />}
                   label="Location"
-                  value={`${booking.provider[0]?.location}, ${booking.provider[0]?.country}`}
+                  value={`${booking.provider?.location}, ${booking.provider?.country}`}
                   surfaceInner={surfaceInner}
                   border={border}
                 />
@@ -140,7 +140,7 @@ const DetailsModal = ({
                 <ContactRow
                   icon={<Phone className="text-green-600" />}
                   label="Phone"
-                  value={booking.provider[0]?.phone_number}
+                  value={booking.provider?.phone_number}
                   surfaceInner={surfaceInner}
                   border={border}
                 />
