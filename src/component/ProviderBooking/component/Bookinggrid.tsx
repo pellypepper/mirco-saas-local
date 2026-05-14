@@ -97,11 +97,11 @@ export const ProviderBookingGrid = ({
               <Trash2 className="w-4 h-4 text-chart-1" />
             </button>
           </div>
-
+     <div className="fixed inset-0 z-50 flex items-center justify-center">
           {openDelete && (
             <DeleteModal onCancel={cancelDeleteModal} onConfirm={onConfirm} booking={booking} />
           )}
-
+  </div>
           <SuccessModal
             open={!!successMessage}
             message={successMessage}
