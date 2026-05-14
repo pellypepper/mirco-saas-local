@@ -268,8 +268,19 @@ export const useCustomerBooking = ({ user }: { user: { id: string } }) => {
       setLoading(true);
       setError(null);
       const res = await fetch(`/api/bookings/customer/${user?.id}`);
-      const data = await res.json();
-      setBookings(data);
+  if (!res.ok) {
+  const errData = await res.json().catch(() => null);
+
+  throw new Error(
+    errData?.error ||
+      errData?.message ||
+      'Failed to load bookings'
+  );
+}
+
+const data = await res.json();
+
+setBookings(Array.isArray(data) ? data : []);
     } catch (err) {
         
       setError(err instanceof Error ? err.message : 'Failed to load bookings. Please try again.');
@@ -297,7 +308,7 @@ export const useCustomerBooking = ({ user }: { user: { id: string } }) => {
   const handleBookAgain = async (booking: BookingCustomer) => {
     if (!booking?.provider_id) {
       throw new Error('Missing provider_id in booking');
-      return;
+
     }
     setLoading(true);
     setSelectedBooking(booking);
@@ -398,10 +409,11 @@ export const useCustomerBooking = ({ user }: { user: { id: string } }) => {
     setSuccessMessage('Booking deleted successfully!');
   };
 
-  const filteredBookings = bookings.filter(
-    (booking) => filter === 'all' || booking.status === filter,
-  );
-
+const filteredBookings = Array.isArray(bookings)
+  ? bookings.filter(
+      (booking) => filter === 'all' || booking.status === filter,
+    )
+  : [];
   return {
     bookings,
     loading,

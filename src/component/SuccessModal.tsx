@@ -38,9 +38,9 @@ export default function SuccessModal({
           </DialogDescription>
         </VisuallyHidden>
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.25 }}
+       initial={false}
+  animate={{ scale: 1, opacity: 1 }}
+  transition={{ duration: 0.25 }}
           className="flex flex-col items-center space-y-4"
         >
           <CheckCircle2 className="text-green-500 w-16 h-16" />
