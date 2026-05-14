@@ -54,7 +54,7 @@ export const useCustomerModal = ({
     if (!selectedDate || !selectedTime || !availabilityId) return;
     if (!selectedTime.includes(' - ')) {
    throw new Error('Invalid time format. Please select a valid time slot.');
-      return;
+   
     }
 
     setLoading(true);
